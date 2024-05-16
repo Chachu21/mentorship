@@ -41,7 +41,7 @@ const SubNavBar = () => {
           <Link
             href={link.href}
             key={link.id}
-            className="text-gray-600 hover:text-[#14A800] hover:underline"
+            className="text-gray-500 hover:text-[#14A800] hover:underline"
           >
             {link.name}
           </Link>
