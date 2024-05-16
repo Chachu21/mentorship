@@ -35,7 +35,7 @@ const SubNavBar = () => {
     },
   ];
   return (
-    <div className="fixed top-16 left-0 inset-0 max-w-[1336px] container mx-auto z-50 py-4">
+    <div className="py-5 bg-white">
       <div className="flex space-x-3">
         {links.map((link) => (
           <Link

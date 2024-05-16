@@ -13,7 +13,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
+import SubNavBar from "./SubNavBar";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -67,15 +68,15 @@ const NavBar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 inset-0 max-w-[1336px] container mx-auto z-50">
-      <nav className="flex justify-between items-center  shadow-sm py-2">
+    <header className="fixed top-0 left-0 inset-0 max-w-[1336px] container mx-auto z-40">
+      <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div className="flex mr-5">
             <Link href="/">
               <Image src="/mentorship.jpg" alt="logo" width={46} height={64} />
             </Link>
           </div>
-          <NavigationMenu>
+          <NavigationMenu className="z-50">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="hover:text-[#14A800]">
@@ -219,6 +220,8 @@ const NavBar = () => {
           </div>
         </div>
       </nav>
+      <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+      <SubNavBar />
     </header>
   );
 };
