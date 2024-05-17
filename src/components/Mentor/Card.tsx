@@ -101,8 +101,8 @@ const Cards = () => {
         {mentors.map((mentor) => (
           <div key={mentor.id} className="pl-1 md:basis-1/2 lg:basis-1/3">
             <div className="p-1">
-              <Card className="flex flex-col items-center space-y-5  w-[600px] h-[340px] p-5">
-                <div className="flex justify-between items-center px-4">
+              <Card className="flex flex-col items-center space-y-5  md:w-[600px] w-[400px] h-[340px] p-5">
+                <div className="flex justify-between items-center md:px-4 px-1">
                   <div className="flex flex-col space-y-1">
                     <Image
                       src={mentor.image}

@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 
@@ -35,7 +36,7 @@ const SubNavBar = () => {
     },
   ];
   return (
-    <div className="py-5 bg-white">
+    <div className="py-5 bg-white hidden md:flex">
       <div className="flex space-x-3">
         {links.map((link) => (
           <Link

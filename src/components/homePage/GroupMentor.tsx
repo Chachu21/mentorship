@@ -48,7 +48,7 @@ const GroupMentor = () => {
   ];
 
   return (
-    <div className="flex flex-col space-y-5">
+    <div className="flex flex-col space-y-5 md:items-start items-center">
       <h3 className="text-2xl py-3">Explore Mentors by Expertise</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {mentorsCatagories.map((mentor) => (

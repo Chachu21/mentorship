@@ -5,8 +5,8 @@ import Image from "next/image";
 
 const Hero = () => {
   return (
-    <section className="bg-white h-screen dark:bg-gray-900 dark:text-white items-center w-full">
-      <div className="container py-5 mx-auto">
+    <section className="bg-white h-full mb-12 dark:bg-gray-900 dark:text-white items-center w-full">
+      <div className="md:container py-5 md:mx-auto">
         <div className="items-center md:flex">
           <div className="w-full md:w-1/2">
             <div className="md:max-w-md space-y-8">
@@ -25,11 +25,14 @@ const Hero = () => {
               </Link>
             </div>
           </div>
-          {
-            //change the image after finish dashbord
-          }
           <div className="relative flex items-center justify-center w-full mt-6 md:mt-0 md:w-1/2">
-            <Image src="/assets/hero.jpg" alt="hero" width={700} height={500} />
+            <Image
+              src="/assets/hero.jpg"
+              alt="hero"
+              width={700}
+              height={500}
+              layout="responsive"
+            />
           </div>
         </div>
       </div>

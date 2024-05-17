@@ -7,7 +7,7 @@ import Cards from "@/components/Mentor/Card";
 
 export default function Home() {
   return (
-    <main className="flex flex-col mt-32 space-y-4">
+    <main className="flex flex-col md:mt-32 mt-16 space-y-4">
       <Hero />
       <GroupMentor />
       <HowItWork />

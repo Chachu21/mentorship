@@ -5,7 +5,7 @@ import React from "react";
 const ForMentee = () => {
   return (
     <section className="bg-[#134CDE] dark:bg-gray-900 dark:text-white items-center w-full">
-      <div className="container py-5 mx-auto">
+      <div className="md:container py-5 md:mx-auto">
         <div className="items-center md:flex">
           <div className="w-full md:w-1/2 relative">
             <span className="absolute -top-32 left-2 text-white text-2xl">
