@@ -81,8 +81,8 @@ const NavBar = () => {
     <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
-          <div className="flex mr-5 items-center md:space-x-0 space-x-3">
-            <div className="md:hidden">
+          <div className="flex mr-5 items-center lg:space-x-0 space-x-3">
+            <div className="lg:hidden">
               <button
                 className="flex justify-center items-center"
                 onClick={toggleMobileMenu}
@@ -92,14 +92,14 @@ const NavBar = () => {
               </button>
             </div>
             <Link href="/" className="font-pacifico">
-              <h1 className="md:text-2xl text-xl  text-[#14A800]">
+              <h1 className="lg:text-2xl text-xl  text-[#14A800]">
                 Mentorship
               </h1>
             </Link>
           </div>
-          <div className={isOpenMobile ? "flex" : " hidden md:flex"}>
+          <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
             <ul
-              className="flex text-xl container font-medium bg-white dark:bg-gray-900 dark:text-white absolute md:relative flex-col md:flex-row md:space-x-5 w-full shadow md:shadow-none text-center top-[45px] left-0 md:top-0 md:flex"
+              className="flex text-xl container font-medium bg-white dark:bg-gray-900 dark:text-white absolute lg:relative flex-col lg:flex-row lg:space-x-5 w-full shadow lg:shadow-none text-center top-[45px] left-0 lg:top-0 lg:flex"
               // onClick={toggleMobileMenu}
             >
               <NavigationMenu className="z-50 flex">
@@ -111,12 +111,12 @@ const NavBar = () => {
                     <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
-                        className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"
+                        className="grid gap-3 p-6 lg:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"
                       >
                         <li className="row-span-3">
                           <NavigationMenuLink asChild>
                             <a
-                              className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                              className="flex h-full w-full select-none flex-col justify-end rounded-lg bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-lg"
                               href="/"
                             >
                               {/* <Icons.logo className="h-6 w-6" /> */}
@@ -157,7 +157,7 @@ const NavBar = () => {
                     <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
-                        className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] "
+                        className="grid w-[400px] gap-3 p-4 lg:w-[500px] lg:grid-cols-2 lg:w-[600px] "
                       >
                         {components.map((component) => (
                           <ListItem
@@ -188,11 +188,11 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
-        <div className="flex items-center md:space-x-16 space-x-5">
+        <div className="flex items-center lg:space-x-16 space-x-5">
           {!isOpenMobile && (
             <button type="button" onClick={toggleMobileSearchInput}>
               <Search
-                className="flex md:hidden text-gray-700 items-center"
+                className="flex lg:hidden text-gray-700 items-center"
                 color="gray"
                 size={24}
               />
@@ -201,8 +201,8 @@ const NavBar = () => {
           <div
             className={
               showMobileSearch
-                ? "flex absolute top-[49px] w-full left-1/2 transform -translate-x-1/2 bg-white z-50"
-                : " hidden md:flex"
+                ? "flex absolute top-[49px] w-full left-1/2 transform -translate-x-1/2 md:right-0 md:-translate-x-0 bg-white z-50"
+                : " hidden lg:flex"
             }
           >
             <div className="flex  relative items-center rounded-2xl border border-gray-200">
@@ -221,7 +221,7 @@ const NavBar = () => {
                 <input
                   type="text"
                   placeholder="Search"
-                  className="pl-10 pr-3 hover:bg-gray-200 h-10 md:w-[280px] sm:w-[250px] w-[200px]  rounded-2xl outline-none"
+                  className="pl-10 pr-3 hover:bg-gray-200 h-10 lg:w-[280px] sm:w-[250px] w-[200px]  rounded-2xl outline-none"
                 />
               </div>
               <div className="flex justify-center group items-center w-fit hover:bg-gray-200 h-10 rounded-2xl">
@@ -240,7 +240,7 @@ const NavBar = () => {
                     </svg>
                   </button>
                   {isOpen && (
-                    <div className="absolute z-10 mt-1 w-[230px]  bg-white border border-gray-300 rounded-md shadow-lg">
+                    <div className="absolute z-10 mt-1 w-[230px]  bg-white border border-gray-300 rounded-lg shadow-lg">
                       <ul>
                         <li
                           onClick={() => handleOptionClick("mentor")}
@@ -268,12 +268,12 @@ const NavBar = () => {
             </div>
           </div>
           <div className="flex space-x-5 items-center">
-            <div className={isOpenMobile ? "flex" : " hidden md:flex"}>
-              <Link href="/login">Log in</Link>
+            <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
+              <Link href="/auth/login">Log in</Link>
             </div>
-            <div className={isOpenMobile ? " hidden md:flex" : "flex"}>
-              <Link href="/signup">
-                <Button className="h-8 rounded-md px-5 font-bold">
+            <div className={isOpenMobile ? " hidden lg:flex" : "flex"}>
+              <Link href="/auth/signup">
+                <Button className="h-8 rounded-lg px-5 font-bold">
                   Sign up
                 </Button>
               </Link>
@@ -299,7 +299,7 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className
           )}
           {...props}

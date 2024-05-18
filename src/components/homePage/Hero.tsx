@@ -18,7 +18,7 @@ const Hero = () => {
                 interface.Right here. Right now.
               </p>
 
-              <Link href="/signup">
+              <Link href="/auth/signup">
                 <Button className=" flex justify-end items-center w-fit px-5 mt-6 text-md tracking-wider text-white capitalize transition-colors duration-300 transform rounded-md md:w-auto focus:outline-none ">
                   Get started
                 </Button>

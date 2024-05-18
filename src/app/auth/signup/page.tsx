@@ -1,0 +1,90 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
+import Link from "next/link";
+import React, { useState } from "react";
+
+const Page = () => {
+  const [selectedRole, setSelectedRole] = useState("");
+  // const router = useRouter();
+  // const handleClicked = () => {
+  //   router.push("/");
+  // };
+
+  return (
+    <div className="mt-16 md:mt-32 h-full flex justify-center space-y-5 items-center flex-col mb-10">
+      <div className="text-3xl">Join as a mentee or mentor</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div
+          className={`w-full md:w-72 bg-white border rounded-md flex space-y-3 flex-col py-5 pl-3 md:pl-8 transition-colors ${
+            selectedRole === "mentee"
+              ? "border-[#14A800] bg-gray-50"
+              : "border-gray-300"
+          }`}
+        >
+          <div className="flex justify-end items-end pr-3">
+            <input
+              type="radio"
+              name="role"
+              id="mentee"
+              className="input-radio"
+              onChange={() => setSelectedRole("mentee")}
+              checked={selectedRole === "mentee"}
+            />
+          </div>
+          <User />
+          <span className="text-lg">
+            I&apos;m a mentee, looking mentor for mentorship
+          </span>
+        </div>
+        <div
+          className={`w-full md:w-72 bg-white border rounded-md flex space-y-3 flex-col py-5 pl-3 md:pl-8 transition-colors ${
+            selectedRole === "mentor"
+              ? "border-[#14A800] bg-gray-50"
+              : "border-gray-300"
+          }`}
+        >
+          <div className="flex justify-end items-end pr-3">
+            <input
+              type="radio"
+              name="role"
+              id="mentor"
+              className="input-radio"
+              onChange={() => setSelectedRole("mentor")}
+              checked={selectedRole === "mentor"}
+            />
+          </div>
+          <User />
+          <span className="text-lg">
+            I&apos;m a mentor, looking mentee for mentorship
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <Button
+          className={`rounded-lg text-lg mt-10 ${
+            !selectedRole ? "bg-gray-200 text-gray-900 text-sm" : ""
+          }`}
+          disabled={!selectedRole}
+        >
+          {!selectedRole
+            ? "Create Account"
+            : selectedRole === "mentor"
+            ? "Apply as a Mentor"
+            : "Join as a Mentee"}
+        </Button>
+      </div>
+      <div>
+        <p>
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#14A800] underline">
+            Log In
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Page;
