@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -60,6 +60,22 @@ const NavBar = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(0);
+
+  useEffect(() => {
+    // This code runs only on the client side
+    setScreenWidth(window.innerWidth);
+
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -76,7 +92,6 @@ const NavBar = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
-
   return (
     <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
@@ -99,11 +114,15 @@ const NavBar = () => {
           </div>
           <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
             <ul
-              className="flex text-xl container font-medium bg-white dark:bg-gray-900 dark:text-white absolute lg:relative flex-col lg:flex-row lg:space-x-5 w-full shadow lg:shadow-none text-center top-[45px] left-0 lg:top-0 lg:flex"
+              className="flex container font-normal bg-white dark:bg-gray-900 dark:text-white absolute lg:relative flex-col lg:flex-row lg:space-x-5 w-full shadow lg:shadow-none text-center top-[45px] left-0 lg:top-0 lg:flex"
               // onClick={toggleMobileMenu}
             >
-              <NavigationMenu className="z-50 flex">
-                <NavigationMenuList>
+              <NavigationMenu className="z-50">
+                <NavigationMenuList
+                  className={`flex ${
+                    screenWidth < 473 ? "flex-col" : "flex-row"
+                  }`}
+                >
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
                       Find Mentor
@@ -111,7 +130,7 @@ const NavBar = () => {
                     <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
-                        className="grid gap-3 p-6 lg:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"
+                        className="grid gap-3 p-6 w-full md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]"
                       >
                         <li className="row-span-3">
                           <NavigationMenuLink asChild>
@@ -157,7 +176,7 @@ const NavBar = () => {
                     <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
-                        className="grid w-[400px] gap-3 p-4 lg:w-[500px] lg:grid-cols-2 lg:w-[600px] "
+                        className="grid w-[375px] gap-3 p-4 md:w-[500px] lg:grid-cols-2 lg:w-[600px] "
                       >
                         {components.map((component) => (
                           <ListItem
@@ -188,7 +207,7 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
-        <div className="flex items-center lg:space-x-16 space-x-5">
+        <div className="flex items-center md:space-x-16 space-x-5">
           {!isOpenMobile && (
             <button type="button" onClick={toggleMobileSearchInput}>
               <Search
@@ -205,7 +224,7 @@ const NavBar = () => {
                 : " hidden lg:flex"
             }
           >
-            <div className="flex  relative items-center rounded-2xl border border-gray-200">
+            <div className="flex relative items-center rounded-2xl border border-gray-200">
               <div className="relative">
                 <svg
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500"
@@ -267,13 +286,13 @@ const NavBar = () => {
               </div>
             </div>
           </div>
-          <div className="flex space-x-5 items-center">
+          <div className="flex space-x-3 items-center">
             <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
-              <Link href="/auth/login">Log in</Link>
+              <Link href="/login">Login</Link>
             </div>
             <div className={isOpenMobile ? " hidden lg:flex" : "flex"}>
-              <Link href="/auth/signup">
-                <Button className="h-8 rounded-lg px-5 font-bold">
+              <Link href="/signup">
+                <Button className="h-8 rounded-lg md:px-5 px-2 font-bold">
                   Sign up
                 </Button>
               </Link>

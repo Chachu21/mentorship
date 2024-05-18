@@ -8,10 +8,10 @@ const ForMentee = () => {
       <div className="md:container py-5 md:mx-auto">
         <div className="items-center md:flex">
           <div className="w-full md:w-1/2 relative">
-            <span className="absolute -top-32 left-2 text-white text-2xl">
+            <span className="absolute md:-top-32 -top-10 my-3 md:py-0 left-2  text-white text-2xl">
               for mentee
             </span>
-            <div className="md:max-w-md space-y-8">
+            <div className="md:max-w-md w-full space-y-8 px-2">
               <h1 className="text-3xl  font-bold text-white dark:text-white md:text-4xl leading-8">
                 Discover Mentors on Your Terms{" "}
               </h1>
