@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
-import register from "../../public/assets/register.webp";
+import register from "../../../public/assets/register.webp";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";

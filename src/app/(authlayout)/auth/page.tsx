@@ -6,10 +6,6 @@ import React, { useState } from "react";
 
 const Page = () => {
   const [selectedRole, setSelectedRole] = useState("");
-  // const router = useRouter();
-  // const handleClicked = () => {
-  //   router.push("/");
-  // };
 
   return (
     <div className="mt-16 md:mt-32 h-full flex justify-center space-y-5 items-center flex-col mb-10">
@@ -62,23 +58,25 @@ const Page = () => {
       </div>
 
       <div>
-        <Button
-          className={`rounded-lg text-lg mt-10 ${
-            !selectedRole ? "bg-gray-200 text-gray-900 text-sm" : ""
-          }`}
-          disabled={!selectedRole}
-        >
-          {!selectedRole
-            ? "Create Account"
-            : selectedRole === "mentor"
-            ? "Apply as a Mentor"
-            : "Join as a Mentee"}
-        </Button>
+        <Link href="/auth/signup">
+          <Button
+            className={`rounded-lg text-lg mt-10 ${
+              !selectedRole ? "bg-gray-200 text-gray-900 text-sm" : ""
+            }`}
+            disabled={!selectedRole}
+          >
+            {!selectedRole
+              ? "Create Account"
+              : selectedRole === "mentor"
+              ? "Apply as a Mentor"
+              : "Join as a Mentee"}
+          </Button>
+        </Link>
       </div>
       <div>
         <p>
           Already have an account?{" "}
-          <Link href="/login" className="text-[#14A800] underline">
+          <Link href="/auth/login" className="text-[#14A800] underline">
             Log In
           </Link>
         </p>

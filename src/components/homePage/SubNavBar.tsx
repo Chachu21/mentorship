@@ -7,32 +7,32 @@ const SubNavBar = () => {
     {
       id: 1,
       name: "Development & IT",
-      href: "#",
+      href: "/catagory-of-mentor",
     },
     {
       id: 2,
       name: "Design & Creativity Art",
-      href: "#",
+      href: "/catagory-of-mentor",
     },
     {
       id: 3,
       name: "Health & Fitness",
-      href: "#",
+      href: "/catagory-of-mentor",
     },
     {
       id: 4,
       name: "Lifestyle",
-      href: "#",
+      href: "/catagory-of-mentor",
     },
     {
       id: 5,
       name: "Social & Business",
-      href: "#",
+      href: "/catagory-of-mentor",
     },
     {
       id: 6,
       name: "Markating & finances",
-      href: "#",
+      href: "/catagory-of-mentor",
     },
   ];
   return (

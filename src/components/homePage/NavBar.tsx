@@ -120,7 +120,7 @@ const NavBar = () => {
               <NavigationMenu className="z-50">
                 <NavigationMenuList
                   className={`flex ${
-                    screenWidth < 473 ? "flex-col" : "flex-row"
+                    screenWidth < 473 ? "flex-col md:flex-row" : "flex-row"
                   }`}
                 >
                   <NavigationMenuItem>
@@ -130,42 +130,11 @@ const NavBar = () => {
                     <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
-                        className="grid gap-3 p-6 w-full md:w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]"
+                        className="flex flex-col p-6 w-full"
                       >
-                        <li className="row-span-3">
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="flex h-full w-full select-none flex-col justify-end rounded-lg bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-lg"
-                              href="/"
-                            >
-                              {/* <Icons.logo className="h-6 w-6" /> */}
-                              <div className="mb-2 mt-4 text-lg font-medium">
-                                shadcn/ui
-                              </div>
-                              <p className="text-sm leading-tight text-muted-foreground">
-                                Beautifully designed components that you can
-                                copy and paste into your apps. Accessible.
-                                Customizable. Open Source.
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                        </li>
-                        <ListItem href="/docs" title="Introduction">
-                          Re-usable components built using Radix UI and Tailwind
-                          CSS.
-                        </ListItem>
-                        <ListItem
-                          href="/docs/installation"
-                          title="Installation"
-                        >
-                          How to install dependencies and structure your app.
-                        </ListItem>
-                        <ListItem
-                          href="/docs/primitives/typography"
-                          title="Typography"
-                        >
-                          Styles for headings, paragraphs, lists...etc
-                        </ListItem>
+                        <ListItem href="/">Free</ListItem>
+                        <ListItem href="/">Paid</ListItem>
+                        <ListItem href="/mentors">all</ListItem>
                       </ul>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
@@ -173,7 +142,7 @@ const NavBar = () => {
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
                       Find Mentee
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent>
+                    {/* <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
                         className="grid w-[375px] gap-3 p-4 md:w-[500px] lg:grid-cols-2 lg:w-[600px] "
@@ -189,10 +158,10 @@ const NavBar = () => {
                           </ListItem>
                         ))}
                       </ul>
-                    </NavigationMenuContent>
+                    </NavigationMenuContent> */}
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
-                    <Link href="/docs" legacyBehavior passHref>
+                    <Link href="/why-mentorship" legacyBehavior passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
@@ -288,10 +257,10 @@ const NavBar = () => {
           </div>
           <div className="flex space-x-3 items-center">
             <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
-              <Link href="/login">Login</Link>
+              <Link href="/auth/login">Login</Link>
             </div>
             <div className={isOpenMobile ? " hidden lg:flex" : "flex"}>
-              <Link href="/signup">
+              <Link href="/auth">
                 <Button className="h-8 rounded-lg md:px-5 px-2 font-bold">
                   Sign up
                 </Button>
