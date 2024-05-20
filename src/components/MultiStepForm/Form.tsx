@@ -6,7 +6,6 @@ import Heading from "./Heading";
 import FormView from "./FormView";
 import Sidebar from "./SideBar";
 import Input from "./Input";
-import comfirmedIcon from "../../../public/images/icon-thank-you.svg";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -348,18 +347,18 @@ const Form = () => {
     );
   }
 
-  if (step === STEPS.CONFIRMED) {
-    bodyContent = (
-      <div className="flex flex-col justify-center items-center h-full py-10 gap-5 md:py-0">
-        <Image src={comfirmedIcon} alt="Thank You" className="w-14 md:w-16" />
-        <Heading
-          title="Thank you!"
-          subTitle="Thanks for confirming your subscription! We hope you have fun using our platform. If you ever need support, plase feel free to email us at support@loregaming.com."
-          center
-        />
-      </div>
-    );
-  }
+  // if (step === STEPS.CONFIRMED) {
+  //   bodyContent = (
+  //     <div className="flex flex-col justify-center items-center h-full py-10 gap-5 md:py-0">
+  //       <Image src={comfirmedIcon} alt="Thank You" className="w-14 md:w-16" />
+  //       <Heading
+  //         title="Thank you!"
+  //         subTitle="Thanks for confirming your subscription! We hope you have fun using our platform. If you ever need support, plase feel free to email us at support@loregaming.com."
+  //         center
+  //       />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="md:flex md:bg-white md:rounded-2xl md:p-5">
