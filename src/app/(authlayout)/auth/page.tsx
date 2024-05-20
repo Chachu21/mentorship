@@ -1,11 +1,20 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { setRoleBeforeLogin } from "@/redux/features/userSlice";
+import { AppDispatch } from "@/redux/store";
 import { User } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const Page = () => {
   const [selectedRole, setSelectedRole] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleRoleChange = (role: string) => {
+    setSelectedRole(role);
+    dispatch(setRoleBeforeLogin(role));
+  };
 
   return (
     <div className="mt-16 md:mt-32 h-full flex justify-center space-y-5 items-center flex-col mb-10">
@@ -24,7 +33,7 @@ const Page = () => {
               name="role"
               id="mentee"
               className="input-radio"
-              onChange={() => setSelectedRole("mentee")}
+              onChange={() => handleRoleChange("mentee")}
               checked={selectedRole === "mentee"}
             />
           </div>
@@ -46,7 +55,7 @@ const Page = () => {
               name="role"
               id="mentor"
               className="input-radio"
-              onChange={() => setSelectedRole("mentor")}
+              onChange={() => handleRoleChange("mentor")}
               checked={selectedRole === "mentor"}
             />
           </div>
@@ -58,7 +67,13 @@ const Page = () => {
       </div>
 
       <div>
-        <Link href="/auth/signup">
+        <Link
+          href={{
+            pathname: "/auth/signup",
+            query: { role: selectedRole },
+          }}
+          as={`/auth/signup?role=${selectedRole}`}
+        >
           <Button
             className={`rounded-lg text-lg mt-10 ${
               !selectedRole ? "bg-gray-200 text-gray-900 text-sm" : ""

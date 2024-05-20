@@ -1,14 +1,18 @@
 "use client";
-// import axios from "axios";
+import axios from "axios";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as yup from "yup";
 import logins from "../../../public/assets/logins.jpg";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 // Correct import
 import Image from "next/image";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { usePathname, useRouter } from "next/navigation";
+import { loginSuccess } from "@/redux/features/userSlice";
+import { AppDispatch } from "@/redux/store";
 
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
@@ -27,31 +31,31 @@ const basicSchema = yup.object().shape({
 });
 
 const Login = () => {
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
-  // const location = useLocation();
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useRouter();
+  const location = usePathname();
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState<string>("");
 
-  // useEffect(() => {
-  //   // Check if user data exists in localStorage
-  //   const storedUserData = localStorage.getItem("user");
-  //   if (storedUserData) {
-  //     // Automatically log in user if data exists
-  //     const userData = JSON.parse(storedUserData);
-  //     dispatch(loginSuccess(userData));
-  //     if (userData.role === "admin") {
-  //       navigate("/admin");
-  //     } else if (userData.role === "user") {
-  //       navigate("/userDashboard");
-  //     } else if (userData.role === "creator") {
-  //       navigate("/equbCreatorDashboard");
-  //     } else {
-  //       navigate("/login");
-  //     }
-  //   }
-  // }, [dispatch, navigate]);
+  useEffect(() => {
+    // Check if user data exists in localStorage
+    const storedUserData = localStorage.getItem("user");
+    if (storedUserData) {
+      // Automatically log in user if data exists
+      const userData = JSON.parse(storedUserData);
+      dispatch(loginSuccess(userData));
+      if (userData.role === "admin") {
+        navigate.push("/admin");
+      } else if (userData.role === "user") {
+        navigate.push("/userDashboard");
+      } else if (userData.role === "creator") {
+        navigate.push("/equbCreatorDashboard");
+      } else {
+        navigate.push("/login");
+      }
+    }
+  }, [dispatch, navigate]);
 
   const {
     values,
@@ -68,69 +72,66 @@ const Login = () => {
       rememberMe: false, // Add rememberMe field for checkbox
     },
     validationSchema: basicSchema,
-    onSubmit: (values, actions) => {
-      console.log(values, actions);
+    onSubmit: async (values, actions) => {
+      try {
+        //Todo change backend endpoint for login
+        const response = await axios.post(
+          "http://localhost:5000/api/v1/users/login",
+          {
+            email: values.email,
+            password: values.password,
+          }
+        );
+        const userData = response.data;
+        dispatch(loginSuccess(userData));
+        toast.success(response.data.message);
+
+        if (userData && userData.role) {
+          // Handle role-based navigation
+          if (location && location === "/group") {
+            navigate.push(`/group`);
+          } else {
+            navigate.push(
+              userData.role === "admin"
+                ? "/admin"
+                : userData.role === "user"
+                ? "/userDashboard"
+                : userData.role === "creator"
+                ? "/equbCreatorDashboard"
+                : "/"
+            );
+          }
+        } else {
+          // Handle error: userData or role property is missing
+          toast.error("Invalid user data received from the server");
+        }
+
+        if (values.rememberMe) {
+          localStorage.setItem("user", JSON.stringify(userData));
+        }
+        localStorage.setItem("user", JSON.stringify(userData));
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          // Type guard for AxiosError
+          console.error("Axios error:", error);
+          if (error.response?.status === 401) {
+            // Handle unauthorized error
+            console.log(error.response);
+            setError(error.response.data.error);
+          } else if (error.response?.status === 500) {
+            toast.error(error.response.data.error);
+          } else {
+            // Handle other Axios errors
+            toast.error("something gone un wanted");
+          }
+        } else {
+          console.error("Unexpected error:", error);
+          // Handle non-Axios errors (e.g., network errors)
+        }
+      }
+      // Reset form and set submitting state
+      actions.setSubmitting(false);
     },
-
-    // onSubmit: async (values, actions) => {
-    //   try {
-    //     const response = await axios.post(
-    //       "http://localhost:5000/api/v1/users/login",
-    //       {
-    //         email: values.email,
-    //         password: values.password,
-    //       }
-    //     );
-    //     const userData = response.data;
-    //     dispatch(loginSuccess(userData));
-    //     toast.success(response.data.message);
-
-    //     if (userData && userData.role) {
-    //       // Handle role-based navigation
-    //       if (location.state && location.state.from === "/group") {
-    //         navigate(`/group`);
-    //       } else {
-    //         navigate(
-    //           userData.role === "admin"
-    //             ? "/admin"
-    //             : userData.role === "user"
-    //             ? "/userDashboard"
-    //             : userData.role === "creator"
-    //             ? "/equbCreatorDashboard"
-    //             : "/"
-    //         );
-    //       }
-    //     } else {
-    //       // Handle error: userData or role property is missing
-    //       toast.error("Invalid user data received from the server");
-    //     }
-
-    //     if (values.rememberMe) {
-    //       localStorage.setItem("user", JSON.stringify(userData));
-    //     }
-    //     localStorage.setItem("user", JSON.stringify(userData));
-    //   } catch (error) {
-    //     if (axios.isAxiosError(error)) {
-    //       // Type guard for AxiosError
-    //       console.error("Axios error:", error);
-    //       if (error.response?.status === 401) {
-    //         // Handle unauthorized error
-    //         console.log(error.response);
-    //         setError(error.response.data.error);
-    //       } else if (error.response?.status === 500) {
-    //         toast.error(error.response.data.error);
-    //       } else {
-    //         // Handle other Axios errors
-    //         toast.error("something gone un wanted");
-    //       }
-    //     } else {
-    //       console.error("Unexpected error:", error);
-    //       // Handle non-Axios errors (e.g., network errors)
-    //     }
-    //   }
-    //   // Reset form and set submitting state
-    //   actions.setSubmitting(false);
-    // },
   });
 
   const handleToggle = () => {
