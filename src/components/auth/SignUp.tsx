@@ -6,7 +6,6 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
@@ -47,7 +46,6 @@ const basicSchema = yup.object().shape({
 
 const Register = () => {
   const navigate = useRouter();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const role = useSelector((state: RootState) => state.users.roleBeforLogin);
   console.log(role);
