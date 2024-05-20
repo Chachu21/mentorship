@@ -72,6 +72,7 @@ const Register = () => {
     //we have to handle the requests
     onSubmit: async (values, actions) => {
       try {
+        navigate.push("/auth/verify-email");
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/signUp",
           {

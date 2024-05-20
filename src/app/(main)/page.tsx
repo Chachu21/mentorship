@@ -1,3 +1,4 @@
+import EmailVerificationTemplate from "@/components/auth/EmailVerification";
 import ForMentee from "@/components/homePage/ForMentee";
 import GroupMentor from "@/components/homePage/GroupMentor";
 import Hero from "@/components/homePage/Hero";
