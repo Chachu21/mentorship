@@ -5,24 +5,27 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-// import Image from "next/image";
 import { Button } from "../ui/button";
-import SubNavBar from "./SubNavBar";
 import { Menu, Search, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Card, CardContent, CardTitle } from "../ui/card";
+import { Settings, Power, Circle } from "lucide-react";
 
-const NavBar = () => {
+const MentorNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
+  const [showCard, setShowCard] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     // This code runs only on the client side
@@ -54,6 +57,10 @@ const NavBar = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+  const handleLogout = () => {
+    router.push("/login");
+  };
+  const isOnline = true;
   return (
     <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
@@ -68,17 +75,14 @@ const NavBar = () => {
                 <X size={24} className={isOpenMobile ? "flex" : "hidden"} />
               </button>
             </div>
-            <Link href="/" className="font-pacifico">
+            <Link href="/mentordashboard" className="font-pacifico">
               <h1 className="lg:text-2xl text-xl  text-[#14A800]">
                 Mentorship
               </h1>
             </Link>
           </div>
           <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
-            <ul
-              className="flex container font-normal bg-white dark:bg-gray-900 dark:text-white absolute lg:relative flex-col lg:flex-row lg:space-x-5 w-full shadow lg:shadow-none text-center top-[45px] left-0 lg:top-0 lg:flex"
-              // onClick={toggleMobileMenu}
-            >
+            <ul className="flex container font-normal bg-white dark:bg-gray-900 dark:text-white absolute lg:relative flex-col lg:flex-row lg:space-x-5 w-full shadow lg:shadow-none text-center top-[45px] left-0 lg:top-0 lg:flex">
               <NavigationMenu className="z-50">
                 <NavigationMenuList
                   className={`flex ${
@@ -87,49 +91,33 @@ const NavBar = () => {
                 >
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentor
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul
-                        onClick={toggleMobileMenu}
-                        className="flex flex-col p-6 w-full"
-                      >
-                        <ListItem href="/">Free</ListItem>
-                        <ListItem href="/">Paid</ListItem>
-                        <ListItem href="/mentors">all</ListItem>
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="hover:text-[#14A800]">
                       Find Mentee
                     </NavigationMenuTrigger>
-                    {/* <NavigationMenuContent>
-                      <ul
-                        onClick={toggleMobileMenu}
-                        className="grid w-[375px] gap-3 p-4 md:w-[500px] lg:grid-cols-2 lg:w-[600px] "
-                      >
-                        {components.map((component) => (
-                          <ListItem
-                            key={component.title}
-                            title={component.title}
-                            href={component.href}
-                            className="hover:text-[#14A800]"
-                          >
-                            {component.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent> */}
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
-                    <Link href="/why-mentorship" legacyBehavior passHref>
+                    <Link href="/message" legacyBehavior passHref>
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
-                        <span className="hover:text-[#14A800] ">
-                          Why Mentorship
-                        </span>
+                        <span className="hover:text-[#14A800] ">Message</span>
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                    <Link href="/report" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <span className="hover:text-[#14A800] ">Report</span>
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                    <Link href="/schedule" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <span className="hover:text-[#14A800] ">Calender</span>
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -180,7 +168,7 @@ const NavBar = () => {
                     onClick={toggleDropdown}
                     className="flex justify-center group items-center px-5 w-fit hover:bg-gray-200 h-10 rounded-2xl outline-none"
                   >
-                    {selectedOption || "Mentor"}
+                    {selectedOption || "Mentee"}
                     <svg
                       className="ml-2 h-8 w-5 fill-current text-gray-600 group-hover:text-gray-900"
                       xmlns="http://www.w3.org/2000/svg"
@@ -217,27 +205,70 @@ const NavBar = () => {
               </div>
             </div>
           </div>
-          <div className="flex space-x-3 items-center">
-            <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
-              <Link href="/auth/login">Login</Link>
+          <div className="relative">
+            <div
+              className="cursor-pointer"
+              onClick={() => setShowCard(!showCard)}
+            >
+              <Image
+                src="/assets/hero.jpg"
+                alt="Profile"
+                className="w-16 h-16 object-cover rounded-full"
+                width={64}
+                height={64}
+              />
             </div>
-            <div className={isOpenMobile ? " hidden lg:flex" : "flex"}>
-              <Link href="/auth">
-                <Button className="h-8 rounded-lg md:px-5 px-2 font-bold">
-                  Sign up
-                </Button>
-              </Link>
-            </div>
+            {showCard && (
+              <Card className="absolute right-0 top-full mt-2 w-64 shadow-lg py-3">
+                <div className="flex flex-col items-center space-y-2">
+                  <Image
+                    src={"/assets/hero.jpg"}
+                    alt={`User photo `}
+                    className="w-16 h-16 object-cover rounded-full"
+                    width={64}
+                    height={64}
+                  />
+                </div>
+                <CardContent className="flex flex-col items-center p-1 space-y-2">
+                  <div className="px-4 text-center flex flex-col space-y-1">
+                    <span> {"abebe"}</span>
+                    <span>{"Mentor"}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Circle
+                      className={`w-3 h-3 ${
+                        isOnline ? "bg-green-500" : "text-gray-500"
+                      }`}
+                    />
+                    <span>availbilty</span>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => router.push("/settings")}
+                    >
+                      <Settings className="w-5 h-5" />
+                      <span className="ml-1">Settings</span>
+                    </Button>
+                    <Button variant="outline" onClick={handleLogout}>
+                      <Power className="w-5 h-5" />
+                      <span className="ml-1">Logout</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </nav>
+
       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-      <SubNavBar />
     </header>
   );
 };
 
-export default NavBar;
+export default MentorNavBar;
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,

@@ -6,7 +6,7 @@ const EmailVerificationTemplate: React.FC = () => {
   const router = useRouter();
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string>("");
-  const inputRefs = useRef<HTMLInputElement[]>(Array(6).fill(null));
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
   const handleChange = (index: number, value: string) => {
     // If the value is not a digit and not empty, return
@@ -74,7 +74,9 @@ const EmailVerificationTemplate: React.FC = () => {
               {otp.map((digit, index) => (
                 <input
                   key={index}
-                  ref={(el) => (inputRefs.current[index] = el!)}
+                  ref={(el) => {
+                    inputRefs.current[index] = el;
+                  }}
                   type="text"
                   value={digit}
                   onChange={(e) => handleChange(index, e.target.value)}
