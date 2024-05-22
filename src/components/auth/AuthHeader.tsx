@@ -43,7 +43,6 @@ const AuthHeader = () => {
           )}
         </div>
         <div className="flex md:hidden">
-          {" "}
           {pathname === "/auth/signup" && (
             <Link href="/auth/login">Log in</Link>
           )}

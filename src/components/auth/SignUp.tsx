@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { Span } from "next/dist/trace";
 
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
@@ -117,7 +118,12 @@ const Register = () => {
             className="bg-white shadow-sm rounded text-[#1F284F] px-0 md:px-8 md:my-10 pb-2  space-y-5"
           >
             <h2 className="text-2xl font-semibold pt-5 mb-6 text-center text-[#1F284F] ">
-              Create Account
+              Create Account as{" "}
+              {role == "mentor" ? (
+                <span className="text-cc">Mentor</span>
+              ) : (
+                <span className="text-cc">Mentee</span>
+              )}
             </h2>
             <div className="mb-4">
               <label

@@ -23,7 +23,6 @@ enum STEPS {
 
 const Form = () => {
   const [userData, setUserData] = useState<FieldValues | null>(null);
-  // const [imageFront, setImageFront] = useState<string>("");
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const router = useRouter();
   const user = useSelector((state: RootState) => state.users.user);
@@ -156,8 +155,8 @@ const Form = () => {
   let bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading
-        title="Personal info"
-        subTitle="Please provide your name, email address and phone number profile picture."
+        title="A few Quick Question, have you been mentor before or experaince ?"
+        subTitle="this lets know how much helpto give you along the way. we won't share your answer with anyone else, including potential mentees"
       />
 
       <Input

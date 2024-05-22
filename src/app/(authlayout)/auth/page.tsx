@@ -21,6 +21,9 @@ const Page = () => {
       <div className="text-3xl">Join as a mentee or mentor</div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div
+          onClick={() => {
+            handleRoleChange("mentee");
+          }}
           className={`w-full md:w-72 bg-white border rounded-md flex space-y-3 flex-col py-5 pl-3 md:pl-8 transition-colors ${
             selectedRole === "mentee"
               ? "border-[#14A800] bg-gray-50"
@@ -33,7 +36,6 @@ const Page = () => {
               name="role"
               id="mentee"
               className="input-radio"
-              onChange={() => handleRoleChange("mentee")}
               checked={selectedRole === "mentee"}
             />
           </div>
@@ -43,6 +45,9 @@ const Page = () => {
           </span>
         </div>
         <div
+          onClick={() => {
+            handleRoleChange("mentor");
+          }}
           className={`w-full md:w-72 bg-white border rounded-md flex space-y-3 flex-col py-5 pl-3 md:pl-8 transition-colors ${
             selectedRole === "mentor"
               ? "border-[#14A800] bg-gray-50"
@@ -55,7 +60,6 @@ const Page = () => {
               name="role"
               id="mentor"
               className="input-radio"
-              onChange={() => handleRoleChange("mentor")}
               checked={selectedRole === "mentor"}
             />
           </div>

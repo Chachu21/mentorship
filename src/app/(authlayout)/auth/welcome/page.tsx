@@ -12,7 +12,7 @@ const Welcome = () => {
     router.push("/auth/signup-detail");
   };
   return (
-    <section className="flex flex-col space-y-5 mt-32 md:mt-16 h-screen justify-center">
+    <section className="flex flex-col space-y-5 mt-16 md:mt-16 min-h-screen justify-center">
       <div className="text-2xl">
         Hey jone, ready for next step of your profile
       </div>
@@ -35,7 +35,7 @@ const Welcome = () => {
           </Button>
         </div>
         <div className="mt-4">
-          <Card className="flex flex-col items-center space-y-5 w-full md:w-[400px] p-4">
+          <Card className="flex flex-col items-center space-y-5 w-full md:w-[500px] p-4">
             <div className="flex rounded-full w-20 h-20 object-contain">
               <Image
                 src="/assets/hero.jpg"

@@ -19,8 +19,8 @@ export default function AuthLayout({
       >
         <ReduxProvider>
           <AuthHeader />
-          <main className="md:my-5 my-16">{children}</main>
-          <div className="container my-3 mx-auto max-w-[1336px] bg-gray-900  text-center text-white bottom-0 py-16">
+          <main>{children}</main>
+          <div className="md:container my-3 md:mx-auto max-w-[1336px] bg-gray-900  text-center text-white bottom-0 py-16">
             &copy; {year} Mentorship &reg; plc. all right are reserved.
           </div>
         </ReduxProvider>
