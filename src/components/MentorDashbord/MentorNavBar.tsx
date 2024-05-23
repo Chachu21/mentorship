@@ -95,7 +95,11 @@ const MentorNavBar = () => {
                     </NavigationMenuTrigger>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
-                    <Link href="/message" legacyBehavior passHref>
+                    <Link
+                      href="/mentordashboard/message"
+                      legacyBehavior
+                      passHref
+                    >
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
@@ -213,9 +217,9 @@ const MentorNavBar = () => {
               <Image
                 src="/assets/hero.jpg"
                 alt="Profile"
-                className="w-16 h-16 object-cover rounded-full"
-                width={64}
-                height={64}
+                className="w-12 h-12 object-cover rounded-full"
+                width={48}
+                height={48}
               />
             </div>
             {showCard && (
