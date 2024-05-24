@@ -18,7 +18,7 @@ const CheckProfile = () => {
     //       `http://localhost:5000/api/v1/users/update/${id}`,
     //       profile
     //     );
-    router.push("/dashboard");
+    router.push("/mentordashboard");
   };
 
   return (

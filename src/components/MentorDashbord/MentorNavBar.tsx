@@ -108,7 +108,11 @@ const MentorNavBar = () => {
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
-                    <Link href="/report" legacyBehavior passHref>
+                    <Link
+                      href="/mentordashboard/report"
+                      legacyBehavior
+                      passHref
+                    >
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
@@ -117,7 +121,11 @@ const MentorNavBar = () => {
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
-                    <Link href="/schedule" legacyBehavior passHref>
+                    <Link
+                      href="/mentordashboard/schedule"
+                      legacyBehavior
+                      passHref
+                    >
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >

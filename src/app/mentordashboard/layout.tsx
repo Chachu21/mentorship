@@ -23,7 +23,7 @@ export default function RootLayout({
       >
         <Redux_Provider>
           <MentorNavBar />
-          <main>{children}</main>
+          <main> {children}</main>
           <Footer />
         </Redux_Provider>
       </body>
