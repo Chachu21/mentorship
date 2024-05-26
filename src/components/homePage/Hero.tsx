@@ -8,7 +8,7 @@ const Hero = () => {
       subTitle=" Experience an unprecedented user journey with our intuitive
                 interface.Right here. Right now."
       buttonText="Get Started"
-      image="/assets/hero.jpg"
+      image="/heros.webp"
     />
   );
 };
