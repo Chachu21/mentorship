@@ -7,7 +7,7 @@ import StepFour from "./StepFour";
 import StepFive from "./StepFive";
 import StepSix from "./StepSix";
 import StepSeven from "./StepSeven";
-import StepEight from "./StepEight";
+// import StepEight from "./StepEight";
 import StepNine from "./StepNine";
 import StepTen from "./StepTen";
 import CheckProfile from "./CheckProfile";
@@ -33,18 +33,18 @@ const MultiStepForm = () => {
         return <StepSeven />;
       case 8:
         return <StepNine />;
+      // case 9:
+      //   return <StepEight />;
       case 9:
-        return <StepEight />;
-      case 10:
         return <StepTen />;
-      case 11:
+      case 10:
         return <CheckProfile />;
       default:
         return <StepOne />;
     }
   };
 
-  return <div className="container mx-auto p-4">{renderStep()}</div>;
+  return <div className="container mx-auto p-4 mt-16">{renderStep()}</div>;
 };
 
 export default MultiStepForm;

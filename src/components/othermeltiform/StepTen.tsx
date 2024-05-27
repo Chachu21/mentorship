@@ -12,15 +12,15 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import profile from "../../../public/assets/profile.jpeg";
 
-const StepTen: React.FC = () => {
+const StepTen = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
 
-  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [profileImage, setProfileImage] = useState<string>("");
   const [profileImageUrl, setProfileImageUrl] = useState(
     data.profileImageUrl || profile
   );
-  const [address, setAddress] = useState(data.address || "");
+  const [region, setAddress] = useState(data.region || "");
   const [city, setCity] = useState(data.city || "");
   const [state, setState] = useState(data.state || "");
   const [zipCode, setZipCode] = useState(data.zipCode || "");
@@ -36,7 +36,7 @@ const StepTen: React.FC = () => {
       setFormData({
         profileImage,
         profileImageUrl,
-        address,
+        region,
         city,
         state,
         zipCode,
@@ -45,11 +45,17 @@ const StepTen: React.FC = () => {
     dispatch(nextStep());
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setProfileImage(file);
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageData = reader.result as string;
+        setProfileImage(imageData);
+      };
       setProfileImageUrl(URL.createObjectURL(file));
+
+      reader.readAsDataURL(file);
     }
   };
 
@@ -100,12 +106,22 @@ const StepTen: React.FC = () => {
         </div>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="address">Address</Label>
+            <Label htmlFor="state">Country</Label>
             <Input
-              id="address"
-              value={address}
+              id="state"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              placeholder="Enter your state"
+              className="mt-2"
+            />
+          </div>
+          <div>
+            <Label htmlFor="region">Region</Label>
+            <Input
+              id="region"
+              value={region}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter your address"
+              placeholder="Enter your region"
               className="mt-2"
             />
           </div>
@@ -119,16 +135,7 @@ const StepTen: React.FC = () => {
               className="mt-2"
             />
           </div>
-          <div>
-            <Label htmlFor="state">State</Label>
-            <Input
-              id="state"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              placeholder="Enter your state"
-              className="mt-2"
-            />
-          </div>
+
           <div>
             <Label htmlFor="zipCode">Zip Code</Label>
             <Input

@@ -1,13 +1,19 @@
 "use client";
+import { RootState } from "@/redux/store";
+import { IUser } from "@/type";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
+import { useSelector } from "react-redux";
+import { Button } from "../ui/button";
+import { toast } from "react-toastify";
 
-const EmailVerificationTemplate: React.FC = () => {
+const EmailVerificationTemplate = () => {
   const router = useRouter();
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
-
+  const user: IUser = useSelector((state: RootState) => state.users.data);
   const handleChange = (index: number, value: string) => {
     // If the value is not a digit and not empty, return
     if (!/^[0-9]$/.test(value) && value !== "") return;
@@ -28,14 +34,44 @@ const EmailVerificationTemplate: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const otpValue = otp.join("");
     if (validateOtp(otpValue)) {
-      router.push("/auth/welcome");
+      try {
+        console.log(user.email);
+        const response = await axios.post(
+          `http://localhost:5000/api/v1/users/verify-email`,
+          {
+            email: user.email,
+            verificationCode: otpValue,
+          }
+        );
+        if (response.status === 200) {
+          router.push("/auth/welcome");
+        }
+      } catch (error) {
+        setError("Failed to verify email");
+      }
     }
   };
+  const handlereSend = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/users/resend-verification-code`,
+        {
+          email: user.email,
+        }
+      );
 
+      if (response.status === 200) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("something went wrong !");
+    }
+  };
   const validateOtp = (input: string) => {
     const otpPattern = /^[0-9]{6}$/;
     if (!input.match(otpPattern)) {
@@ -65,7 +101,7 @@ const EmailVerificationTemplate: React.FC = () => {
           </div>
         </div>
         <main className="mt-8 px-5 sm:px-10">
-          <h2 className="text-gray-700">Hello John Deo,</h2>
+          <h2 className="text-gray-700">Hello {user.fullName},</h2>
           <p className="mt-2 leading-loose text-gray-600">
             Please use the following One Time Password(OTP)
           </p>
@@ -86,12 +122,25 @@ const EmailVerificationTemplate: React.FC = () => {
               ))}
             </div>
             {error && <p className="mt-2 text-red-600">{error}</p>}
-            <button
+            <Button
               type="submit"
               className="px-6 py-2 mt-6 text-sm font-bold tracking-wider text-white capitalize transition-colors duration-300 transform bg-orange-600 rounded-lg hover:bg-orange-500 focus:outline-none focus:ring focus:ring-orange-300 focus:ring-opacity-80"
             >
               Verify email
-            </button>
+            </Button>
+            <div className="flex space-x-3 items-center mt-4">
+              <p className=" leading-loose text-gray-600">
+                Didn&apos;t receive the email?
+              </p>
+              <Button
+                type="button"
+                onClick={handlereSend}
+                variant={"outline"}
+                className="cursor-pointer"
+              >
+                Resend
+              </Button>
+            </div>
           </form>
           <p className="mt-4 leading-loose text-gray-600">
             This passcode will only be valid for the next
@@ -112,9 +161,9 @@ const EmailVerificationTemplate: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            sales@infynno.com
+            mentormentee@gmail.com
           </a>
-          . If you&apos;d rather not receive this kind of email, you can{" "}
+          . If you&apos;d rather not receive this kind of email, you can
           <a href="#" className="text-[#14A800] hover:underline">
             unsubscribe
           </a>{" "}

@@ -31,7 +31,7 @@ const goals = [
   },
 ];
 
-const StepTwo: React.FC = () => {
+const StepTwo = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
   const [selectedGoal, setSelectedGoal] = useState<string>(data.goal || "");
@@ -53,7 +53,7 @@ const StepTwo: React.FC = () => {
       <div className="space-y-3">
         <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
           <span className="md:flex hidden">A few quick questions:</span>{" "}
-          What&apos;s your biggest goal for mentorship?
+          What&apos;s your biggest goal for mentoring in mentorship?
         </h2>
         <p className="max-w-4xl">
           Different people come to mentorship for guidance and mentoring. We

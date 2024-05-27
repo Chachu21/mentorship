@@ -10,10 +10,11 @@ import Image from "next/image";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { loginSuccess } from "@/redux/features/userSlice";
 import { AppDispatch } from "@/redux/store";
-
+import { Button } from "../ui/button";
+import cookies from "js-cookie";
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 
@@ -33,7 +34,6 @@ const basicSchema = yup.object().shape({
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useRouter();
-  const location = usePathname();
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState<string>("");
@@ -44,15 +44,25 @@ const Login = () => {
     if (storedUserData) {
       // Automatically log in user if data exists
       const userData = JSON.parse(storedUserData);
-      dispatch(loginSuccess(userData));
+      if (userData) {
+        cookies.set(
+          "data",
+          JSON.stringify({ isLogin: true, role: userData.role }),
+          {
+            expires: 1,
+          } // Expires in 1 day
+          // Secure option if transmitting over HTTPS
+        );
+        dispatch(loginSuccess(userData));
+      }
       if (userData.role === "admin") {
         navigate.push("/admin");
-      } else if (userData.role === "user") {
-        navigate.push("/userDashboard");
-      } else if (userData.role === "creator") {
-        navigate.push("/equbCreatorDashboard");
+      } else if (userData.role === "mentor") {
+        navigate.push("/mentordashboard");
+      } else if (userData.role === "mentee") {
+        navigate.push("/menteedashboard");
       } else {
-        navigate.push("/login");
+        navigate.push("/");
       }
     }
   }, [dispatch, navigate]);
@@ -83,23 +93,36 @@ const Login = () => {
           }
         );
         const userData = response.data;
-        dispatch(loginSuccess(userData));
-        toast.success(response.data.message);
+
+        if (response.status === 200) {
+          console.log(userData);
+          dispatch(loginSuccess(userData));
+          cookies.set(
+            "data",
+            JSON.stringify({ isLogin: true, role: userData.role }),
+            {
+              expires: 1,
+            } // Expires in 1 day
+            // Secure option if transmitting over HTTPS
+          );
+          toast.success(response.data.message);
+        }
 
         if (userData && userData.role) {
           // Handle role-based navigation
-          if (location && location === "/group") {
-            navigate.push(`/group`);
-          } else {
-            navigate.push(
-              userData.role === "admin"
-                ? "/admin"
-                : userData.role === "user"
-                ? "/userDashboard"
-                : userData.role === "creator"
-                ? "/equbCreatorDashboard"
-                : "/"
-            );
+          switch (userData.role) {
+            case "admin":
+              navigate.push("/admin");
+              break;
+            case "mentor":
+              navigate.push("/mentordashboard");
+              break;
+            case "mentee":
+              navigate.push("/menteedashboard");
+              break;
+            default:
+              navigate.push("/");
+              break;
           }
         } else {
           // Handle error: userData or role property is missing
@@ -160,7 +183,9 @@ const Login = () => {
           }}
           className="md:max-w-xl w-full md:mx-auto mx-0  bg-white text-[#1F284F]  shadow-sm rounded px-0 md:px-8 md:pt-5 pb-2 md:my-2 space-y-4"
         >
-          <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center text-cc">
+            Welcome Back!
+          </h2>
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -229,7 +254,7 @@ const Login = () => {
             <div className="flex items-center">
               <Link
                 href="/forgotpassword"
-                className="text-[#008B8B] text-sm md:text-base"
+                className="text-cc text-sm md:text-base"
               >
                 Forgot Password?
               </Link>
@@ -237,13 +262,13 @@ const Login = () => {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              className="w-full bg-[#008B8B] hover:bg-[#7da7a7] text-white font-bold py-2 px-4 rounded my-10"
+              className="w-full text-white font-bold py-2 px-4 rounded my-10"
               disabled={isSubmitting}
             >
               Login
-            </button>
+            </Button>
           </div>
         </form>
 
@@ -251,7 +276,7 @@ const Login = () => {
         <div className=" text-center py-4">
           <p>
             Don&apos;t have an account?{" "}
-            <Link href={"/auth"} className="text-[#008B8B] font-semibold">
+            <Link href={"/auth"} className="text-cc font-semibold">
               Sign up
             </Link>
           </p>

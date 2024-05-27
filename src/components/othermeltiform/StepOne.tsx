@@ -17,8 +17,8 @@ const levels = [
   {
     id: 2,
     icon: <Edit3 size={50} />,
-    content: "I have some level",
-    value: "some",
+    content: "I have some experience",
+    value: "some experience",
   },
   {
     id: 3,

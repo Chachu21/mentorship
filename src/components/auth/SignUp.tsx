@@ -6,9 +6,11 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import { Span } from "next/dist/trace";
+import { setData } from "@/redux/features/userSlice";
+import { Button } from "../ui/button";
 
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
@@ -48,8 +50,8 @@ const basicSchema = yup.object().shape({
 const Register = () => {
   const navigate = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch<AppDispatch>();
   const role = useSelector((state: RootState) => state.users.roleBeforLogin);
-  console.log(role);
   // useFormik hook for form handling
   const {
     values,
@@ -73,7 +75,6 @@ const Register = () => {
     //we have to handle the requests
     onSubmit: async (values, actions) => {
       try {
-        navigate.push("/auth/verify-email");
         const response = await axios.post(
           "http://localhost:5000/api/v1/users/signUp",
           {
@@ -82,11 +83,15 @@ const Register = () => {
             password: values.password, // Pass values.password
             phone: values.phone, // Pass values.email
             agreeTerms: values.agreeTerms,
+            role: role,
           }
         );
         toast.success(response.data.message);
-
-        navigate.push("/login");
+        if (response.status == 201) {
+          dispatch(setData(response.data.user));
+          navigate.push("/auth/verify-email");
+        }
+        // navigate.push("/auth/signup-detail");
       } catch (error) {
         const axiosError = error as AxiosError<{ error: string }>;
         if (axiosError.response?.status === 400) {
@@ -264,13 +269,13 @@ const Register = () => {
             {errors.agreeTerms && touched.agreeTerms && (
               <p className="text-red-500 text-sm italic">{errors.agreeTerms}</p>
             )}
-            <button
+            <Button
               type="submit"
-              className="w-full bg-[#008B8B] hover:bg-[#7da7a7] text-white font-bold py-2 px-4 rounded"
+              className="w-full  text-white font-bold py-2 px-4 rounded"
               disabled={isSubmitting}
             >
               Sign Up
-            </button>
+            </Button>
           </form>
 
           <p className="text-center mb-2">or</p>
@@ -279,7 +284,7 @@ const Register = () => {
               Already have an account?{" "}
               <Link
                 href={"/auth/login"}
-                className="text-[#008B8B] font-semibold"
+                className="text-cc underline font-semibold"
               >
                 Login
               </Link>

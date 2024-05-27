@@ -1,7 +1,7 @@
 import EmailVerificationTemplate from "@/components/auth/EmailVerification";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <EmailVerificationTemplate />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

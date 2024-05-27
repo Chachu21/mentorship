@@ -1,20 +1,23 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PersonStanding, Star } from "lucide-react";
+import { RootState } from "@/redux/store";
+import { LucideUsers2, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const Welcome = () => {
   const router = useRouter();
+  const { fullName } = useSelector((state: RootState) => state.users.data);
   const handleClicked = () => {
     router.push("/auth/signup-detail");
   };
   return (
     <section className="flex flex-col space-y-5 mt-16 md:mt-16 min-h-screen justify-center">
       <div className="text-2xl">
-        Hey jone, ready for next step of your profile
+        Hey {fullName} 👋, ready for next step of your profile
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-20 gap-5 items-center">
         <div className="flex flex-col space-y-4 ">
@@ -47,14 +50,16 @@ const Welcome = () => {
             </div>
             <p className="text-gray-500">ABCD DEF</p>
             <p>Graphics Design / Full stack developer</p>
-            <div className="flex space-x-2 items-center">
-              <p className="flex space-x-1">
-                <Star color="green" />
+            <div className="flex space-x-5 items-center">
+              <p className="flex space-x-2 items-center">
+                <Star className="text-cc" />
                 <span> 5.0</span>
               </p>
-              <span>$60/month, $100/3month</span>
-              <p className="flex space-x-1">
-                <PersonStanding color="green" />
+              <p>
+                <span>$60/month, $100/3month</span>
+              </p>
+              <p className="flex space-x-2 items-center">
+                <LucideUsers2 color="green" />
                 <span> 134 mentee</span>
               </p>
             </div>

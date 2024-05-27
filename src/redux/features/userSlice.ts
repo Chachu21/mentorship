@@ -1,3 +1,4 @@
+import { IUser } from "@/type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserType {
@@ -13,6 +14,7 @@ interface UserState {
   isClicked: boolean;
   isLogin: boolean;
   roleBeforLogin: string;
+  data: IUser;
 }
 
 // Function to retrieve user data from localStorage
@@ -30,6 +32,12 @@ const initialState: UserState = {
   isLogin: false,
   isClicked: false,
   roleBeforLogin: "",
+  data: {
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    _id: "",
+  },
 };
 const userSlice = createSlice({
   name: "user",
@@ -52,8 +60,11 @@ const userSlice = createSlice({
       localStorage.removeItem("user"); // Remove user data from localStorage
     },
     setRoleBeforeLogin: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
       state.roleBeforLogin = action.payload;
+    },
+    setData: (state, action: PayloadAction<IUser>) => {
+      console.log(action.payload);
+      state.data = action.payload;
     },
   },
 });
@@ -64,5 +75,6 @@ export const {
   logoutSuccess,
   closeMenuBar,
   setRoleBeforeLogin,
+  setData,
 } = userSlice.actions;
 export default userSlice.reducer;

@@ -17,6 +17,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent, CardTitle } from "../ui/card";
 import { Settings, Power, Circle } from "lucide-react";
+import { logoutSuccess } from "@/redux/features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import axios from "axios";
+import { IUser } from "@/type";
 
 const MentorNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,8 +30,11 @@ const MentorNavBar = () => {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
   const [showCard, setShowCard] = useState(false);
+  const [userdata, setUserdata] = useState<IUser>();
   const router = useRouter();
-
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.users.user);
+  const id = user?._id;
   useEffect(() => {
     // This code runs only on the client side
     setScreenWidth(window.innerWidth);
@@ -41,6 +49,21 @@ const MentorNavBar = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/v1/users/get/${id}`
+        );
+        // console.log(res.data);
+        setUserdata(res.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [id]);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -58,7 +81,12 @@ const MentorNavBar = () => {
     setIsOpen(false);
   };
   const handleLogout = () => {
-    router.push("/login");
+    try {
+      dispatch(logoutSuccess());
+      router.push("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
   const isOnline = true;
   return (
@@ -223,7 +251,9 @@ const MentorNavBar = () => {
               onClick={() => setShowCard(!showCard)}
             >
               <Image
-                src="/assets/hero.jpg"
+                src={
+                  userdata ? userdata.profileImage.url : "/assets/profile.jpeg"
+                }
                 alt="Profile"
                 className="w-12 h-12 object-cover rounded-full"
                 width={48}
@@ -234,7 +264,11 @@ const MentorNavBar = () => {
               <Card className="absolute right-0 top-full mt-2 w-64 shadow-lg py-3">
                 <div className="flex flex-col items-center space-y-2">
                   <Image
-                    src={"/assets/hero.jpg"}
+                    src={
+                      userdata
+                        ? userdata.profileImage.url
+                        : "/assets/profile.jpeg"
+                    }
                     alt={`User photo `}
                     className="w-16 h-16 object-cover rounded-full"
                     width={64}
@@ -243,8 +277,8 @@ const MentorNavBar = () => {
                 </div>
                 <CardContent className="flex flex-col items-center p-1 space-y-2">
                   <div className="px-4 text-center flex flex-col space-y-1">
-                    <span> {"abebe"}</span>
-                    <span>{"Mentor"}</span>
+                    <span className="capitalize"> {userdata?.fullName}</span>
+                    <span className="capitalize">{userdata?.role}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Circle

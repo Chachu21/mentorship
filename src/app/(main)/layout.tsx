@@ -4,6 +4,8 @@ import "../globals.css";
 import NavBar from "@/components/homePage/NavBar";
 import Footer from "@/components/homePage/Footer";
 import Redux_Provider from "../Redux_Provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -24,6 +26,7 @@ export default function RootLayout({
         <Redux_Provider>
           <NavBar />
           <main>{children}</main>
+          <ToastContainer />
           <Footer />
         </Redux_Provider>
       </body>
