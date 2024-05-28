@@ -76,3 +76,13 @@ export interface formData {
   state: string;
   zipCode: string;
 }
+export interface mentorshipType {
+  skill: string;
+  description: string;
+  goal: string;
+  benefit: string;
+  service: string;
+  amount: number;
+  duration: string;
+  _id?: string;
+}
