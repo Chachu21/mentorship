@@ -32,11 +32,14 @@ export default function middleware(request: NextRequest) {
   const role = parsedData.role ?? ""; // Default to empty string if role is missing
   const isLogin = parsedData.isLogin ?? false; // Default to false if isLogin is missing
 
-  // Check role and redirect based on allowed roles
-  if (isLogin && allowedRoles[request.nextUrl.pathname]?.includes(role)) {
+  // Extract the base path (first part of the path)
+  const pathname = request.nextUrl.pathname;
+  const basePath = `/${pathname.split("/")[1]}`;
+  // Check if user is logged in and has the appropriate role
+  if (isLogin && allowedRoles[basePath]?.includes(role)) {
     return NextResponse.next(); // Allow access
   } else {
-    return NextResponse.redirect(new URL("/", request.url)); // Redirect to auth page
+    return NextResponse.redirect(new URL("/", request.url)); // Redirect to login page
   }
 }
 
@@ -46,5 +49,5 @@ export const config = {
     "/admin/:path*",
     "/mentordashboard/:path*",
     "/menteedashboard/:path*",
-  ], // Adjust the paths as necessary
+  ],
 };

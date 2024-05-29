@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import { Menu, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Card, CardContent, CardTitle } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Settings, Power, Circle } from "lucide-react";
 import { logoutSuccess } from "@/redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -289,10 +289,13 @@ const MentorNavBar = () => {
                     <span>availbilty</span>
                   </div>
 
-                  <div className="flex space-x-2">
+                  <div
+                    className="flex space-x-2"
+                    onClick={() => setShowCard(!showCard)}
+                  >
                     <Button
                       variant="outline"
-                      onClick={() => router.push("/settings")}
+                      onClick={() => router.push("/mentordashboard/settings")}
                     >
                       <Settings className="w-5 h-5" />
                       <span className="ml-1">Settings</span>

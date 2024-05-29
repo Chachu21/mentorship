@@ -14,9 +14,11 @@ const CheckProfile = () => {
   const router = useRouter();
   const profile = useSelector((state: RootState) => state.form.data);
   const user = useSelector((state: RootState) => state.users.data);
+  const data = useSelector((state: RootState) => state.users.user);
+  const user_id = data?._id;
   const handleSubmit = async () => {
     //Todo
-    const id = user?._id;
+    const id = user?._id ? user?._id : user_id;
     console.log(id);
     const res = await axios.put(
       `http://localhost:5000/api/v1/users/update/${id}`,
@@ -198,7 +200,8 @@ const CheckProfile = () => {
               profile.languages.map((language: string, index: number) => (
                 <p key={index} className="text-gray-500 flex space-x-2">
                   <Check className="text-cc" />
-                  <span className="capitalize">{language}</span> very fleuent
+                  <span className="capitalize pr-3">{language}</span> very
+                  fleuent
                 </p>
               ))
             ) : (

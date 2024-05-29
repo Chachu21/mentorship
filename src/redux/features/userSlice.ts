@@ -1,3 +1,4 @@
+import cookies from "js-cookie";
 import { IUser } from "@/type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -37,6 +38,10 @@ const initialState: UserState = {
     phoneNumber: "",
     email: "",
     _id: "",
+    profileImage: {
+      public_id: "",
+      url: "",
+    },
   },
 };
 const userSlice = createSlice({
@@ -57,6 +62,7 @@ const userSlice = createSlice({
       state.user = null;
       state.isLogin = false;
       state.isClicked = false;
+      cookies.remove("data");
       localStorage.removeItem("user"); // Remove user data from localStorage
     },
     setRoleBeforeLogin: (state, action: PayloadAction<string>) => {

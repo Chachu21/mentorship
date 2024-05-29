@@ -92,7 +92,7 @@ const NavBar = () => {
                     <NavigationMenuContent>
                       <ul
                         onClick={toggleMobileMenu}
-                        className="flex flex-col p-6 w-full"
+                        className="flex justify-evenly p-6 w-full"
                       >
                         <ListItem href="/">Free</ListItem>
                         <ListItem href="/">Paid</ListItem>

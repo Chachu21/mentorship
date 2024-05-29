@@ -110,19 +110,24 @@ const Login = () => {
 
         if (userData && userData.role) {
           // Handle role-based navigation
-          switch (userData.role) {
-            case "admin":
-              navigate.push("/admin");
-              break;
-            case "mentor":
-              navigate.push("/mentordashboard");
-              break;
-            case "mentee":
-              navigate.push("/menteedashboard");
-              break;
-            default:
-              navigate.push("/");
-              break;
+          if (userData.isVerified) {
+            switch (userData.role) {
+              case "admin":
+                navigate.push("/admin");
+                break;
+              case "mentor":
+                navigate.push("/mentordashboard");
+                break;
+              case "mentee":
+                navigate.push("/menteedashboard");
+                break;
+              default:
+                navigate.push("/");
+                break;
+            }
+          } else {
+            toast.warning("Please verify your account");
+            navigate.push("/auth/verify-email");
           }
         } else {
           // Handle error: userData or role property is missing

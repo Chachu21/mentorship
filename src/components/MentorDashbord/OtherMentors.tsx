@@ -1,6 +1,6 @@
-import { Link } from "lucide-react";
 import React from "react";
 import DetailPageOfMentor from "../Mentor/MentorsList";
+import Link from "next/link";
 
 const OtherMentors = () => {
   return (
@@ -10,7 +10,7 @@ const OtherMentors = () => {
           <h2 className="text-2xl font-semibold">
             Other mentor or Experts for Helping you in your skill
           </h2>
-          <Link href={"/mentor/all"} className="text-cc text-2xl">
+          <Link href={"#"} className="text-cc text-2xl hover:underline">
             Browse Exprets
           </Link>
         </div>

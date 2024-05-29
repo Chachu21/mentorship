@@ -3,7 +3,7 @@ import { RootState } from "@/redux/store";
 import { IUser } from "@/type";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
+import React, { useState, useRef, FormEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { toast } from "react-toastify";
@@ -12,8 +12,22 @@ const EmailVerificationTemplate = () => {
   const router = useRouter();
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string>("");
+  const [userData, setUserData] = useState<IUser | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
+
   const user: IUser = useSelector((state: RootState) => state.users.data);
+  const data = useSelector((state: RootState) => state.users.user);
+  const _id = data?._id;
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await axios.get(
+        `http://localhost:5000/api/v1/users/get/${_id}`
+      );
+      setUserData(res.data.user);
+    };
+    fetchUser();
+  }, [_id]);
+
   const handleChange = (index: number, value: string) => {
     // If the value is not a digit and not empty, return
     if (!/^[0-9]$/.test(value) && value !== "") return;
@@ -39,11 +53,10 @@ const EmailVerificationTemplate = () => {
     const otpValue = otp.join("");
     if (validateOtp(otpValue)) {
       try {
-        console.log(user.email);
         const response = await axios.post(
           `http://localhost:5000/api/v1/users/verify-email`,
           {
-            email: user.email,
+            email: user.email ? user.email : userData?.email,
             verificationCode: otpValue,
           }
         );
@@ -51,7 +64,9 @@ const EmailVerificationTemplate = () => {
           router.push("/auth/welcome");
         }
       } catch (error) {
-        setError("Failed to verify email");
+        setError(
+          "Failed to verify email, Invalid or expired verification code , please resend again"
+        );
       }
     }
   };
@@ -60,7 +75,7 @@ const EmailVerificationTemplate = () => {
       const response = await axios.post(
         `http://localhost:5000/api/v1/users/resend-verification-code`,
         {
-          email: user.email,
+          email: user.email ? user.email : userData?.email,
         }
       );
 
@@ -101,7 +116,9 @@ const EmailVerificationTemplate = () => {
           </div>
         </div>
         <main className="mt-8 px-5 sm:px-10">
-          <h2 className="text-gray-700">Hello {user.fullName},</h2>
+          <h2 className="text-gray-700">
+            Hello {user.fullName ? user.fullName : userData?.fullName},
+          </h2>
           <p className="mt-2 leading-loose text-gray-600">
             Please use the following One Time Password(OTP)
           </p>

@@ -141,18 +141,18 @@ const YourMentorshipPost = () => {
               delete this file from our servers?
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex space-x-10 justify-center items-center my-8">
+          <DialogFooter className="flex justify-center items-center my-8">
+            <DialogClose asChild className="md:flex hidden mr-10">
+              <Button type="button" variant="secondary" className="px-4">
+                Cancel
+              </Button>
+            </DialogClose>
             <Button
               onClick={handleDeletePosts}
               className="mr-2 bg-red-600 hover:bg-red-400 text-white px-4"
             >
               Delete
             </Button>
-            <DialogClose asChild>
-              <Button type="button" variant="secondary" className="px-4">
-                Cancel
-              </Button>
-            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
