@@ -7,8 +7,10 @@ import React, { useState, useRef, FormEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { toast } from "react-toastify";
-
+import { backend_url } from "@/components/constant";
+const api = process.env.BACKEND_URL;
 const EmailVerificationTemplate = () => {
+  console.log(api);
   const router = useRouter();
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string>("");
@@ -20,9 +22,7 @@ const EmailVerificationTemplate = () => {
   const _id = data?._id;
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/api/v1/users/get/${_id}`
-      );
+      const res = await axios.get(`${backend_url}/api/v1/users/get/${_id}`);
       setUserData(res.data.user);
     };
     fetchUser();
@@ -54,7 +54,7 @@ const EmailVerificationTemplate = () => {
     if (validateOtp(otpValue)) {
       try {
         const response = await axios.post(
-          `http://localhost:5000/api/v1/users/verify-email`,
+          `${backend_url}/api/v1/users/verify-email`,
           {
             email: user.email ? user.email : userData?.email,
             verificationCode: otpValue,
@@ -73,7 +73,7 @@ const EmailVerificationTemplate = () => {
   const handlereSend = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/users/resend-verification-code`,
+        `${backend_url}/api/v1/users/resend-verification-code`,
         {
           email: user.email ? user.email : userData?.email,
         }

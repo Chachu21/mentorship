@@ -9,6 +9,7 @@ import { RootState } from "../../redux/store";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import { backend_url } from "../constant";
 
 const CheckProfile = () => {
   const router = useRouter();
@@ -17,31 +18,26 @@ const CheckProfile = () => {
   const data = useSelector((state: RootState) => state.users.user);
   const user_id = data?._id;
   const handleSubmit = async () => {
-    //Todo
     const id = user?._id ? user?._id : user_id;
-    console.log(id);
-    const res = await axios.put(
-      `http://localhost:5000/api/v1/users/update/${id}`,
-      {
-        updates: {
-          level: profile.level,
-          profileImage: profile.profileImage,
-          bio: profile.bio,
-          location: {
-            state: profile.state,
-            region: profile.region,
-            city: profile.city,
-            zipCode: profile.zipCode,
-          },
-          skills: profile.skills,
-          languages: profile.languages,
-          experiences: profile.experiences,
-          educations: profile.educations,
-          professionalRoles: profile.professionalRoles,
-          goal: profile.goal,
+    const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
+      updates: {
+        level: profile.level,
+        profileImage: profile.profileImage,
+        bio: profile.bio,
+        location: {
+          state: profile.state,
+          region: profile.region,
+          city: profile.city,
+          zipCode: profile.zipCode,
         },
-      }
-    );
+        skills: profile.skills,
+        languages: profile.languages,
+        experiences: profile.experiences,
+        educations: profile.educations,
+        professionalRole: profile.professionalRoles,
+        goal: profile.goal,
+      },
+    });
     if (res.status === 200) {
       router.push("/mentordashboard");
     }

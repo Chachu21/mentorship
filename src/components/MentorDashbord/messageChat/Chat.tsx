@@ -1,9 +1,13 @@
 "use client";
+import { backend_url } from "@/components/constant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SendHorizontal } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+const socket = io(`${backend_url}`);
 
 const Persons = [
   {
@@ -104,6 +108,20 @@ const Chat = () => {
     }
   }, [selectedContact, contacts]);
 
+  useEffect(() => {
+    if (selectedContact !== null) {
+      socket.emit("joinRoom", selectedContact);
+    }
+
+    socket.on("newMessage", (message: Message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [selectedContact]);
+
   const selectContact = (id: number) => {
     setSelectedContact(id);
     const updatedContacts = contacts.map((contact) => {
@@ -120,19 +138,18 @@ const Chat = () => {
   };
 
   const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      const updatedMessages = [
-        ...messages,
-        {
-          id: messages.length + 1,
-          sender: "You",
-          receiver:
-            selectedContact !== null ? Persons[selectedContact].name : "",
-          text: newMessage,
-          time: new Date().toLocaleTimeString(), // Add the time property
-        },
-      ];
-      setMessages(updatedMessages);
+    if (newMessage.trim() && selectedContact !== null) {
+      const message = {
+        id: messages.length + 1,
+        sender: "You",
+        receiver: Persons[selectedContact].name,
+        text: newMessage,
+        time: new Date().toLocaleTimeString(),
+      };
+
+      socket.emit("sendMessage", { message, roomId: selectedContact });
+
+      setMessages((prevMessages) => [...prevMessages, message]);
       setNewMessage("");
     }
   };
@@ -159,48 +176,104 @@ const Chat = () => {
             </svg>
             <h2 className="text-gray-700 text-xl">Mentorship Chatting</h2>
           </div>
-          <div className="overflow-y-auto">
-            {contacts.map((person) => (
-              <div
-                onClick={() => selectContact(person.id)}
-                key={person.id}
-                className={
-                  "flex items-center space-x-2 p-2 hover:bg-gray-200 cursor-pointer " +
-                  (person.id === selectedContact ? "bg-blue-300 px-2" : "")
-                }
-              >
-                <Image
-                  src={person.avatar}
-                  alt={person.name}
-                  className="w-12 h-12 rounded-full"
-                  width={48}
-                  height={48}
-                />
-                <div className="flex flex-col flex-grow">
-                  <div className="flex justify-between">
-                    <h3 className="text-gray-700 text-sm">{person.name}</h3>
-                    <span className="text-gray-500 text-sm">
-                      {person.message.length > 0 &&
-                        person.message[person.message.length - 1].time}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="text-gray-500 flex-grow text-sm overflow-hidden line-clamp-1">
-                      {person.message.length > 0
-                        ? person.message[person.message.length - 1].text
-                        : ""}
-                    </div>
-
-                    {person.unreadMessages > 0 && (
-                      <div className="w-8 p-2 text-center rounded-full bg-slate-400 ml-auto">
-                        <span className="">{person.unreadMessages}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="flex justify-end items-center">
+            <Button>create group chat</Button>
           </div>
+          <Tabs defaultValue="private" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="private">Private</TabsTrigger>
+              <TabsTrigger value="groups">groups</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="private">
+              <div className="overflow-y-auto">
+                {contacts.map((person) => (
+                  <div
+                    onClick={() => selectContact(person.id)}
+                    key={person.id}
+                    className={
+                      "flex items-center space-x-2 p-2 hover:bg-gray-200 cursor-pointer " +
+                      (person.id === selectedContact ? "bg-blue-300 px-2" : "")
+                    }
+                  >
+                    <Image
+                      src={person.avatar}
+                      alt={person.name}
+                      className="w-12 h-12 rounded-full"
+                      width={48}
+                      height={48}
+                    />
+                    <div className="flex flex-col flex-grow">
+                      <div className="flex justify-between">
+                        <h3 className="text-gray-700 text-sm">{person.name}</h3>
+                        <span className="text-gray-500 text-sm">
+                          {person.message.length > 0 &&
+                            person.message[person.message.length - 1].time}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-500 flex-grow text-sm overflow-hidden line-clamp-1">
+                          {person.message.length > 0
+                            ? person.message[person.message.length - 1].text
+                            : ""}
+                        </div>
+
+                        {person.unreadMessages > 0 && (
+                          <div className="w-8 p-2 text-center rounded-full bg-slate-400 ml-auto">
+                            <span className="">{person.unreadMessages}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="groups">
+              <div className="overflow-y-auto">
+                {contacts.map((person) => (
+                  <div
+                    onClick={() => selectContact(person.id)}
+                    key={person.id}
+                    className={
+                      "flex items-center space-x-2 p-2 hover:bg-gray-200 cursor-pointer " +
+                      (person.id === selectedContact ? "bg-blue-300 px-2" : "")
+                    }
+                  >
+                    <Image
+                      src={person.avatar}
+                      alt={person.name}
+                      className="w-12 h-12 rounded-full"
+                      width={48}
+                      height={48}
+                    />
+                    <div className="flex flex-col flex-grow">
+                      <div className="flex justify-between">
+                        <h3 className="text-gray-700 text-sm">{person.name}</h3>
+                        <span className="text-gray-500 text-sm">
+                          {person.message.length > 0 &&
+                            person.message[person.message.length - 1].time}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-gray-500 flex-grow text-sm overflow-hidden line-clamp-1">
+                          {person.message.length > 0
+                            ? person.message[person.message.length - 1].text
+                            : ""}
+                        </div>
+
+                        {person.unreadMessages > 0 && (
+                          <div className="w-8 p-2 text-center rounded-full bg-slate-400 ml-auto">
+                            <span className="">{person.unreadMessages}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
         </aside>
         <main className="md:w-2/3 bg-white hidden md:flex flex-col p-4">
           <div className="flex-grow overflow-y-auto p-3 bg-gray-100 rounded">

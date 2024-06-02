@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import axios from "axios";
 import { IUser } from "@/type";
+import { backend_url } from "../constant";
 
 const MentorNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,9 +53,7 @@ const MentorNavBar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/v1/users/get/${id}`
-        );
+        const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
         // console.log(res.data);
         setUserdata(res.data.user);
       } catch (error) {

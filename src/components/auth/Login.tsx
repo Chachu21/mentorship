@@ -15,6 +15,7 @@ import { loginSuccess } from "@/redux/features/userSlice";
 import { AppDispatch } from "@/redux/store";
 import { Button } from "../ui/button";
 import cookies from "js-cookie";
+import { backend_url } from "../constant";
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 
@@ -85,13 +86,10 @@ const Login = () => {
     onSubmit: async (values, actions) => {
       try {
         //Todo change backend endpoint for login
-        const response = await axios.post(
-          "http://localhost:5000/api/v1/users/login",
-          {
-            email: values.email,
-            password: values.password,
-          }
-        );
+        const response = await axios.post(`${backend_url}/api/v1/users/login`, {
+          email: values.email,
+          password: values.password,
+        });
         const userData = response.data;
 
         if (response.status === 200) {

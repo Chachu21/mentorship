@@ -8,10 +8,9 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { Span } from "next/dist/trace";
 import { setData } from "@/redux/features/userSlice";
 import { Button } from "../ui/button";
-
+import { backend_url } from "../constant";
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 
@@ -76,7 +75,7 @@ const Register = () => {
     onSubmit: async (values, actions) => {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/v1/users/signUp",
+          `${backend_url}/api/v1/users/signUp`,
           {
             name: values.name,
             email: values.email, // Pass values.email

@@ -10,7 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { backend_url } from "../constant";
 
 const MentoringPost = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -24,7 +24,6 @@ const MentoringPost = () => {
     amount: 0,
     duration: "",
   });
-  const router = useRouter();
   const user = useSelector((state: RootState) => state.users.user);
   const token = user?.token;
 
@@ -55,7 +54,7 @@ const MentoringPost = () => {
       // Sending request to server
       //   console.log(mentorshipData);
       const res = await axios.post(
-        "http://localhost:5000/api/v1/mentorship/create",
+        `${backend_url}/api/v1/mentorship/create`,
         mentorshipData,
         {
           headers: {
@@ -77,6 +76,7 @@ const MentoringPost = () => {
         duration: "",
       });
       setIsDialogOpen(false);
+      window.location.reload();
     } catch (error) {
       console.error("There was an error creating the mentorship:", error);
     }

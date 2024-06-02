@@ -60,7 +60,7 @@ const StepThree: React.FC = () => {
           id="professionalrole"
           value={professionalRole}
           onChange={(e) => setProfessionalRole(e.target.value)}
-          placeholder="Software Engineer / Backend / Node.js"
+          placeholder="Software Engineer / finance managment"
         />
       </div>
       <div className="flex justify-end space-x-10">

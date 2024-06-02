@@ -5,15 +5,8 @@ import { Card } from "../ui/card";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import ModelForDelete from "../ReusedComponent/ModelForDelete";
+import { backend_url } from "../constant";
 
 const YourMentorshipPost = () => {
   const [mentorships, setMentorships] = useState<mentorshipType[]>([]);
@@ -29,7 +22,7 @@ const YourMentorshipPost = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await axios.get(
-        `http://localhost:5000/api/v1/mentorship/getbymentor/${id}`
+        `${backend_url}/api/v1/mentorship/getbymentor/${id}`
       );
       setMentorships(res.data);
     };
@@ -44,7 +37,7 @@ const YourMentorshipPost = () => {
   const handleDeletePosts = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/mentorship/delete/${deletePostId}`,
+        `${backend_url}/api/v1/mentorship/delete/${deletePostId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Assuming token is stored in localStorage
@@ -132,30 +125,11 @@ const YourMentorshipPost = () => {
         </div>
       )}
 
-      <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(false)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. Are you sure you want to permanently
-              delete this file from our servers?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex justify-center items-center my-8">
-            <DialogClose asChild className="md:flex hidden mr-10">
-              <Button type="button" variant="secondary" className="px-4">
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button
-              onClick={handleDeletePosts}
-              className="mr-2 bg-red-600 hover:bg-red-400 text-white px-4"
-            >
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ModelForDelete
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        onDelete={handleDeletePosts}
+      />
     </section>
   );
 };

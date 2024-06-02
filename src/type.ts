@@ -37,13 +37,13 @@ export interface IUser {
     isCurrent: boolean;
     experienceDescription?: string;
     hasExperience: boolean;
-  };
-  educationalBackground?: {
+  }[];
+  educations?: {
     school?: string;
     degree?: string;
     field?: string;
     educationDescription?: string;
-  };
+  }[];
   certification?: string;
   rate?: number;
   mentoringFee?: number;
