@@ -19,7 +19,7 @@ const EmailVerificationTemplate = () => {
 
   const user: IUser = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
-  const _id = data?._id;
+  const _id = data ? data._id : user._id;
   useEffect(() => {
     const fetchUser = async () => {
       const res = await axios.get(`${backend_url}/api/v1/users/get/${_id}`);

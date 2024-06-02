@@ -8,26 +8,26 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
+import { backend_url } from "../constant";
 
 const DetailPageOfMentor = () => {
   const [mentors, setMentors] = useState<IUser[]>([]);
   const router = useRouter();
   const user = useSelector((state: RootState) => state.users.user);
-  const id = user?._id;
+  const data = useSelector((state: RootState) => state.users.data);
+  const id = user ? user?._id : data?._id;
 
   useEffect(() => {
     const fetchmentors = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/v1/users/mentor/match/${id}`
+          `${backend_url}/api/v1/users/mentor/match/${id}`
         );
 
         if (res.status === 200) {
-          console.log("Response data:", res.data); // Log the response data
           if (Array.isArray(res.data.mentors)) {
             setMentors(res.data.mentors);
           } else {
-            console.error("Expected an array for mentors");
             setMentors([]); // Set to an empty array if not the expected structure
           }
         }
