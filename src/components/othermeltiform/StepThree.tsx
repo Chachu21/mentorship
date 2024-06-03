@@ -13,6 +13,11 @@ import {
 const StepThree: React.FC = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
+  const user = useSelector((state: RootState) => state.users.user);
+  const userrole = useSelector(
+    (state: RootState) => state.users.roleBeforLogin
+  );
+  const role = user ? user?.role : userrole;
   const [professionalRole, setProfessionalRole] = useState<string>(
     data.professionalRole || ""
   );
@@ -48,8 +53,9 @@ const StepThree: React.FC = () => {
             Now, add a title to tell the world what you do.
           </h2>
           <p className="text-sm font-light">
-            it&apos;s the nice thing mentees see, make it count, stand out by
-            describing your expertise in your own words.
+            it&apos;s the nice thing{" "}
+            {role === "mentor" ? "mentees" : "mentees and mentors"} see, make it
+            count, stand out by describing your expertise in your own words.
           </p>
         </div>
       </div>

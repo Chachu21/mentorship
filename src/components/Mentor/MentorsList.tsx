@@ -54,7 +54,7 @@ const DetailPageOfMentor = () => {
               onClick={() => {
                 handleClicked(mentor._id);
               }}
-              className="w-full flex flex-col space-y-4 md:max-w-[340px] lg:max-w-[400px] px-5 py-5"
+              className="w-full flex flex-col space-y-4 md:max-w-7xl px-5 py-5"
             >
               <div className="flex justify-between items-center md:px-4 px-1">
                 <div className="flex flex-col space-y-1">

@@ -1,10 +1,10 @@
-import OtherMentors from "@/components/MentorDashbord/OtherMentors";
+import Chat from "@/components/MentorDashbord/messageChat/Chat";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <OtherMentors />
+      <Chat />
     </div>
   );
 };

@@ -16,7 +16,8 @@ const CheckProfile = () => {
   const profile = useSelector((state: RootState) => state.form.data);
   const user = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
-  const user_id = data?._id;
+  const user_id = data ? data?._id : user?._id;
+  const role = data ? data?.role : user?.role;
   const handleSubmit = async () => {
     const id = user?._id ? user?._id : user_id;
     const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
@@ -50,9 +51,8 @@ const CheckProfile = () => {
       </h2>
       <Card className="flex flex-col space-y-5 p-8 max-w-4xl">
         <CardTitle className="text-xl pl-5">
-          Looking Good{" "}
+          Looking Good
           <span className="text-gray-500 text-2xl">
-            {" "}
             {user.fullName.split(" ")[0]}
           </span>
         </CardTitle>
@@ -147,44 +147,52 @@ const CheckProfile = () => {
               </div>
             </CardContent>
           </Card>
-          <Card className="p-8">
-            <CardContent>
-              <p className="flex space-x-2 justify-between">
-                <span className="text-lg font-semibold">Work Experience</span>
-                {/* <Edit className="text-cc" /> */}
-              </p>
-              <div>
-                {profile.experiences && profile.experiences.length > 0 ? (
-                  profile.experiences.map((experience: any, index: number) => (
-                    <div key={index}>
-                      <p>
-                        <span className="font-semibold pr-3">Title :</span>
-                        {experience.title}
-                      </p>
-                      <p>
-                        <span className="font-semibold pr-3">Company :</span>{" "}
-                        {experience.company}
-                      </p>
-                      <p>
-                        <span className="font-semibold pr-3">IsWorking :</span>
-                        {experience.isCurrent
-                          ? "currently working"
-                          : "i already stopped working"}
-                      </p>
-                      <p>
-                        <span className="font-semibold pr-3">
-                          Title Description :
-                        </span>
-                        {experience.experienceDescription}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No work experience added.</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          {role === "mentor" && (
+            <Card className="p-8">
+              <CardContent>
+                <p className="flex space-x-2 justify-between">
+                  <span className="text-lg font-semibold">Work Experience</span>
+                  {/* <Edit className="text-cc" /> */}
+                </p>
+                <div>
+                  {profile.experiences && profile.experiences.length > 0 ? (
+                    profile.experiences.map(
+                      (experience: any, index: number) => (
+                        <div key={index}>
+                          <p>
+                            <span className="font-semibold pr-3">Title :</span>
+                            {experience.title}
+                          </p>
+                          <p>
+                            <span className="font-semibold pr-3">
+                              Company :
+                            </span>{" "}
+                            {experience.company}
+                          </p>
+                          <p>
+                            <span className="font-semibold pr-3">
+                              IsWorking :
+                            </span>
+                            {experience.isCurrent
+                              ? "currently working"
+                              : "i already stopped working"}
+                          </p>
+                          <p>
+                            <span className="font-semibold pr-3">
+                              Title Description :
+                            </span>
+                            {experience.experienceDescription}
+                          </p>
+                        </div>
+                      )
+                    )
+                  ) : (
+                    <p>No work experience added.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
         <div className="flex flex-col space-y-2 order-2">
           <Card className="p-8 space-y-5">

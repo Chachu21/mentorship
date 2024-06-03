@@ -88,7 +88,8 @@ const Register = () => {
         toast.success(response.data.message);
         if (response.status == 201) {
           dispatch(setData(response.data.user));
-          navigate.push("/auth/verify-email");
+          // navigate.push("/auth/verify-email");
+          navigate.push("/auth/signup-detail");
         }
         // navigate.push("/auth/signup-detail");
       } catch (error) {
