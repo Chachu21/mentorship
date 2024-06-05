@@ -20,6 +20,7 @@ const CheckProfile = () => {
   const role = data ? data?.role : user?.role;
   const handleSubmit = async () => {
     const id = user?._id ? user?._id : user_id;
+    console.log(profile.professionalRole);
     const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
       updates: {
         level: profile.level,
@@ -35,12 +36,14 @@ const CheckProfile = () => {
         languages: profile.languages,
         experiences: profile.experiences,
         educations: profile.educations,
-        professionalRole: profile.professionalRoles,
+        professionalRole: profile.professionalRole,
         goal: profile.goal,
+        service: profile.goal,
       },
     });
+
     if (res.status === 200) {
-      router.push("/mentordashboard");
+      router.push("/auth/login");
     }
   };
 
@@ -52,7 +55,7 @@ const CheckProfile = () => {
       <Card className="flex flex-col space-y-5 p-8 max-w-4xl">
         <CardTitle className="text-xl pl-5">
           Looking Good
-          <span className="text-gray-500 text-2xl">
+          <span className="text-gray-500 text-2xl pl-4">
             {user.fullName.split(" ")[0]}
           </span>
         </CardTitle>
@@ -80,7 +83,7 @@ const CheckProfile = () => {
                 )}
 
                 <div className="flex flex-col space-y-1">
-                  <p className="text-gray-500">{user.fullName}</p>
+                  <p className="text-gray-500 text-3xl">{user.fullName}</p>
                   <div className="flex items-center space-x-3">
                     <div>
                       <svg
@@ -135,14 +138,21 @@ const CheckProfile = () => {
               <h3 className="text-lg font-semibold">Education Details</h3>
               <div className="flex space-y-3 flex-col ">
                 {profile.educations.map((education: any) => (
-                  <CardContent key={education.school} className="flex flex-col">
-                    <p className="text-gray-600">School: {education.school}</p>
-                    <p className="text-gray-600">Degree:{education.degree}</p>
-                    <p className="text-gray-600">Field:{education.field}</p>
-                    <p>
-                      Education Description: {education.educationDescription}
+                  <div key={education.school} className="flex flex-col">
+                    <p className="text-gray-600">
+                      <strong>School</strong>: {education.school}
                     </p>
-                  </CardContent>
+                    <p className="text-gray-600">
+                      <strong>Degree</strong>:{education.degree}
+                    </p>
+                    <p className="text-gray-600">
+                      <strong>Field</strong>:{education.field}
+                    </p>
+                    <p>
+                      <strong>Education Description</strong>:{" "}
+                      {education.educationDescription}
+                    </p>
+                  </div>
                 ))}
               </div>
             </CardContent>

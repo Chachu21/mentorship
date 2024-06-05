@@ -7,7 +7,6 @@ import StepFour from "./StepFour";
 import StepFive from "./StepFive";
 import StepSix from "./StepSix";
 import StepSeven from "./StepSeven";
-// import StepEight from "./StepEight";
 import StepNine from "./StepNine";
 import StepTen from "./StepTen";
 import CheckProfile from "./CheckProfile";

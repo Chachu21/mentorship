@@ -16,22 +16,34 @@ const MentoringPost = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const [newMentorship, setNewMentorship] = useState<mentorshipType>({
-    skill: "",
+    skills: [],
     description: "",
     goal: "",
     benefit: "",
     service: "Free",
     amount: 0,
     duration: "",
+    title: "",
   });
   const user = useSelector((state: RootState) => state.users.user);
   const token = user?.token;
+
+  const handleSkillChange = (value: string) => {
+    const skillArray = value.split(",").map((skill) => skill.trim());
+    setNewMentorship({ ...newMentorship, skills: skillArray });
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setNewMentorship({ ...newMentorship, [name]: value });
+
+    // Check if the field being changed is the skill field
+    if (name === "skills") {
+      handleSkillChange(value);
+    } else {
+      setNewMentorship({ ...newMentorship, [name]: value });
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -67,13 +79,14 @@ const MentoringPost = () => {
 
       // Reset form
       setNewMentorship({
-        skill: "",
+        skills: [],
         description: "",
         goal: "",
         benefit: "",
         service: "Free",
         amount: 0,
         duration: "",
+        title: "",
       });
       setIsDialogOpen(false);
       window.location.reload();
@@ -96,11 +109,26 @@ const MentoringPost = () => {
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="block text-sm font-medium">Skill</Label>
+                <Label htmlFor="title" className="block text-sm font-medium">
+                  Title
+                </Label>
                 <Input
                   type="text"
-                  name="skill"
-                  value={newMentorship.skill}
+                  name="title"
+                  value={newMentorship.title}
+                  onChange={handleChange}
+                  className="block w-full border-gray-300 rounded-md shadow-sm"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="skills" className="block text-sm font-medium">
+                  Skill
+                </Label>
+                <Input
+                  type="text"
+                  name="skills"
+                  value={newMentorship.skills}
                   onChange={handleChange}
                   className="block w-full border-gray-300 rounded-md shadow-sm"
                   required

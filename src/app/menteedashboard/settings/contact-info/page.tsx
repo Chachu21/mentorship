@@ -32,6 +32,7 @@ const Contact = () => {
     fetchUserData();
   }, [id]);
 
+  console.log(userData);
   const handleDeleteAccount = async () => {
     try {
       await axios.delete(
@@ -53,7 +54,6 @@ const Contact = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(userData);
     try {
       const res = await axios.put(
         `http://localhost:5000/api/v1/users/update/${id}`,

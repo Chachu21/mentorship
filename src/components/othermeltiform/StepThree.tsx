@@ -10,7 +10,7 @@ import {
   nextStep,
 } from "../../redux/features/formReducer";
 
-const StepThree: React.FC = () => {
+const StepThree = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
   const user = useSelector((state: RootState) => state.users.user);

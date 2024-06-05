@@ -8,7 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { setData } from "@/redux/features/userSlice";
+import { setData, setRoleBeforeLogin } from "@/redux/features/userSlice";
 import { Button } from "../ui/button";
 import { backend_url } from "../constant";
 // Define password rules regex
@@ -51,6 +51,7 @@ const Register = () => {
   const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
   const role = useSelector((state: RootState) => state.users.roleBeforLogin);
+
   // useFormik hook for form handling
   const {
     values,
@@ -88,16 +89,14 @@ const Register = () => {
         toast.success(response.data.message);
         if (response.status == 201) {
           dispatch(setData(response.data.user));
-          // navigate.push("/auth/verify-email");
-          navigate.push("/auth/signup-detail");
+          navigate.push("/auth/verify-email");
         }
-        // navigate.push("/auth/signup-detail");
       } catch (error) {
         const axiosError = error as AxiosError<{ error: string }>;
-        if (axiosError.response?.status === 400) {
+        if (axiosError.response?.status === 504) {
           toast.error(axiosError.response.data.error);
         }
-        if (!(axiosError.response?.status === 400)) {
+        if (!(axiosError.response?.status === 504)) {
           setTimeout(() => {
             actions.resetForm();
             actions.setSubmitting(false);
@@ -106,6 +105,10 @@ const Register = () => {
       }
     },
   });
+
+  const handlerolechage = (role: string) => {
+    dispatch(setRoleBeforeLogin(role));
+  };
 
   return (
     <section className="">
@@ -123,11 +126,11 @@ const Register = () => {
             className="bg-white shadow-sm rounded text-[#1F284F] px-0 md:px-8 md:my-10 pb-2  space-y-5"
           >
             <h2 className="text-2xl font-semibold pt-5 mb-6 text-center text-[#1F284F] ">
-              Create Account as{" "}
+              Create Account as
               {role == "mentor" ? (
-                <span className="text-cc">Mentor</span>
+                <span className="text-cc pl-2">Mentor</span>
               ) : (
-                <span className="text-cc">Mentee</span>
+                <span className="text-cc pl-2">Mentee</span>
               )}
             </h2>
             <div className="mb-4">
@@ -238,23 +241,25 @@ const Register = () => {
               )}
             </div>
             <div className="mb-4 flex items-center">
-              <input
-                type="checkbox"
-                id="agreeTerms"
-                checked={values.agreeTerms}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`mr-2  ${
-                  errors.agreeTerms && touched.agreeTerms
-                    ? "border-red-500"
-                    : ""
-                }`}
-              />
+              <div>
+                <input
+                  type="checkbox"
+                  id="agreeTerms"
+                  checked={values.agreeTerms}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`mr-2 w-4 h-4  ${
+                    errors.agreeTerms && touched.agreeTerms
+                      ? "border-red-500"
+                      : ""
+                  }`}
+                />
+              </div>
               <label
                 htmlFor="agreeTerms"
                 className="text-gray-700 text-sm font-semibold"
               >
-                Yes, I understand and agree to the Equb Terms of Service,
+                Yes, I understand and agree to the mentoring Terms of Service,
                 including the{" "}
                 <span className="text-blue-800 cursor-pointer">
                   <Link href={"#"}>User Agreement</Link>
@@ -295,24 +300,24 @@ const Register = () => {
               <div>
                 {role === "mentor" && (
                   <div className="flex items-center space-x-3 text-sm">
-                    <Link href="/">Find Mentor?</Link>
-                    <Link
-                      href="/auth/signup?role=mentee"
+                    <p>Find Mentor?</p>
+                    <div
+                      onClick={() => handlerolechage("mentee")}
                       className="text-[#14A800]"
                     >
                       Apply as Mentee
-                    </Link>
+                    </div>
                   </div>
                 )}
                 {role === "mentee" && (
                   <div className="flex items-center space-x-3 text-sm">
                     <p>Find Mentee?</p>
-                    <Link
-                      href="/auth/signup?role=mentor"
+                    <div
+                      onClick={() => handlerolechage("mentor")}
                       className="text-[#14A800]"
                     >
                       Apply as Mentor
-                    </Link>
+                    </div>
                   </div>
                 )}
               </div>

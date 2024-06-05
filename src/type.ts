@@ -77,12 +77,14 @@ export interface formData {
   zipCode: string;
 }
 export interface mentorshipType {
-  skill: string;
+  title: string;
+  skills: string[];
   description: string;
   goal: string;
   benefit: string;
   service: string;
   amount: number;
   duration: string;
+  createdAt?: Date;
   _id?: string;
 }

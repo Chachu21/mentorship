@@ -1,13 +1,20 @@
 "use client";
-import { RootState } from "@/redux/store";
+import { setRoleBeforeLogin } from "@/redux/features/userSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const AuthHeader = () => {
   const pathname = usePathname();
+  const dispatch = useDispatch<AppDispatch>();
   const role = useSelector((state: RootState) => state.users.roleBeforLogin);
+  const handlerolechage = (role: string) => {
+    dispatch(setRoleBeforeLogin(role));
+    console.log(role);
+  };
+
   return (
     <header className="max-w-[1336px] container mx-auto z-50 bg-white py-2 fixed top-0 left-1/2 transform -translate-x-1/2 ">
       <div className="flex justify-between items-center">
@@ -20,23 +27,23 @@ const AuthHeader = () => {
               {role === "mentor" && (
                 <div className="flex items-center space-x-3 text-sm">
                   <Link href="/">Find Mentor?</Link>
-                  <Link
-                    href="/auth/signup?role=mentee"
-                    className="text-[#14A800]"
+                  <div
+                    onClick={() => handlerolechage("mentee")}
+                    className="text-[#14A800] cursor-pointer"
                   >
                     Apply as Mentee
-                  </Link>
+                  </div>
                 </div>
               )}
               {role === "mentee" && (
                 <div className="flex items-center space-x-3 text-sm">
                   <p>Find Mentee?</p>
-                  <Link
-                    href="/auth/signup?role=mentor"
-                    className="text-[#14A800]"
+                  <div
+                    onClick={() => handlerolechage("mentor")}
+                    className="text-[#14A800] cursor-pointer"
                   >
                     Apply as Mentor
-                  </Link>
+                  </div>
                 </div>
               )}
             </div>

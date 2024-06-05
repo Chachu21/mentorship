@@ -25,7 +25,7 @@ export default function RootLayout({
       >
         <Redux_Provider>
           <MenteeNavBar />
-          <main className="mt-16">{children}</main>
+          <main className="mt-20">{children}</main>
           <ToastContainer />
           <Footer />
         </Redux_Provider>

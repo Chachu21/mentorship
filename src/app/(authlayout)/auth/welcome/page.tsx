@@ -15,9 +15,10 @@ const Welcome = () => {
     router.push("/auth/signup-detail");
   };
   return (
-    <section className="flex flex-col space-y-5 mt-16 md:mt-16 min-h-screen justify-center">
-      <div className="text-2xl">
-        Hey {fullName} 👋, ready for next step of your profile
+    <section className="flex flex-col space-y-5 mt-16 md:nt-0 h-screen justify-center">
+      <div className="text-2xl leading-10">
+        Hey <span className="font-semibold">{fullName} </span>👋, <br />
+        ready for next step of your profile
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-20 gap-5 items-center">
         <div className="flex flex-col space-y-4 ">
@@ -39,7 +40,7 @@ const Welcome = () => {
         </div>
         <div className="mt-4">
           <Card className="flex flex-col items-center space-y-5 w-full md:w-[500px] p-4">
-            <div className="flex rounded-full w-20 h-20 object-contain">
+            <div className="flex object-contain">
               <Image
                 src="/assets/hero.jpg"
                 alt="profile"
@@ -56,11 +57,11 @@ const Welcome = () => {
                 <span> 5.0</span>
               </p>
               <p>
-                <span>$60/month, $100/3month</span>
+                <span>$100/3month</span>
               </p>
               <p className="flex space-x-2 items-center">
                 <LucideUsers2 color="green" />
-                <span> 134 mentee</span>
+                <span> 134 mentees</span>
               </p>
             </div>
             <div>

@@ -14,7 +14,7 @@ const OtherMentors = () => {
             Browse Exprets
           </Link>
         </div>
-        <DetailPageOfMentor />
+        <DetailPageOfMentor url={`menteedashboard`} />
       </div>
     </div>
   );
