@@ -8,22 +8,23 @@ import { CheckCircle, CircleXIcon, Star } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 interface mentorProps {
-  mentor_id: string;
+  mentorship_id: string;
 }
 
-const MentorDetailPage = ({ mentor_id }: mentorProps) => {
+const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
   const [userData, setUserData] = useState<IUser | null>(null);
   const [expandedMentorId, setExpandedMentorId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const res = await axios.get(
-        `http://localhost:5000/api/v1/users/get/${mentor_id}`
+        `http://localhost:5000/api/v1/mentorship/get/${mentorship_id}`
       );
+      console.log(res.data.user);
       setUserData(res.data.user);
     };
     fetchUserData();
-  }, [mentor_id]);
+  }, [mentorship_id]);
 
   const toggleExpanded = (mentorId: string | undefined) => {
     if (!mentorId) {
@@ -33,7 +34,6 @@ const MentorDetailPage = ({ mentor_id }: mentorProps) => {
   };
   const isTruncated = (text: string | undefined, maxLines: number) => {
     const maxLength = maxLines * 100;
-    // Adjust this based on the average number of characters per line
     if (!text) {
       return false;
     }

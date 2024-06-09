@@ -134,7 +134,7 @@ const Home = () => {
           </TabsTrigger>
         </TabsList>
         <Separator className="h-1" />
-        <p className="text-gray-500 text-sm py-3 md:container">
+        <p className="text-gray-500  py-3 md:container">
           Browse mentorship opportunities aligned with your experience, tailored
           to mentess’s preferences, sorted by relevance
         </p>

@@ -19,7 +19,6 @@ const MentoringPost = () => {
     skills: [],
     description: "",
     goal: "",
-    benefit: "",
     service: "Free",
     amount: 0,
     duration: "",
@@ -82,7 +81,6 @@ const MentoringPost = () => {
         skills: [],
         description: "",
         goal: "",
-        benefit: "",
         service: "Free",
         amount: 0,
         duration: "",
@@ -149,16 +147,6 @@ const MentoringPost = () => {
                 <Textarea
                   name="goal"
                   value={newMentorship.goal}
-                  onChange={handleChange}
-                  className="block w-full border-gray-300 rounded-md shadow-sm"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="block text-sm font-medium">Benefit</Label>
-                <Textarea
-                  name="benefit"
-                  value={newMentorship.benefit}
                   onChange={handleChange}
                   className="block w-full border-gray-300 rounded-md shadow-sm"
                   required
