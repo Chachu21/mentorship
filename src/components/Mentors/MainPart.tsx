@@ -44,7 +44,7 @@ const MainPart = () => {
             </div>
           </div>
           <div className="flex flex-1 flex-col space-y-5">
-            <DetailPageOfMentor />
+            <DetailPageOfMentor url="" />
           </div>
         </div>
       </div>
