@@ -6,7 +6,7 @@ const page = () => {
   return (
     <main className="flex flex-col md:mt-32 mt-16 space-y-4">
       <Skill />
-      <DetailPageOfMentor />
+      <DetailPageOfMentor url="" />
       <div className="flex flex-col space-y-8 justify-center items-center md:mx-auto md:container px-0 md:px-64 py-20 ">
         <h2 className="text-2xl text-[#14A800]">What Is A PHP Mentor?</h2>
         <p className="text-[16px] leading-8">
