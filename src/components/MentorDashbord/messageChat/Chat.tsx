@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SendHorizontal } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import CreateGroupChat from "./CreateGroupChat";
 import io from "socket.io-client";
 const socket = io(`${backend_url}`);
 
@@ -97,6 +98,11 @@ const Chat = () => {
   );
   const [newMessage, setNewMessage] = useState<string>("");
 
+  const [showCreateGroupChat, setShowCreateGroupChat] = useState(false);
+
+  const handleOpenModal = () => setShowCreateGroupChat(true);
+  const handleCloseModal = () => setShowCreateGroupChat(false);
+
   useEffect(() => {
     if (selectedContact !== null) {
       const selectedPerson = contacts.find(
@@ -177,8 +183,15 @@ const Chat = () => {
             <h2 className="text-gray-700 text-xl">Mentorship Chatting</h2>
           </div>
           <div className="flex justify-end items-center">
-            <Button>create group chat</Button>
+            <Button onClick={handleOpenModal}>create group chat</Button>
           </div>
+          {showCreateGroupChat && (
+            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+              <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+                <CreateGroupChat handleCloseModal={handleCloseModal} />
+              </div>
+            </div>
+          )}
           <Tabs defaultValue="private" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="private">Private</TabsTrigger>
