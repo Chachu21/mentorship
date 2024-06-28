@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={`${inter.className} h-full flex flex-col relative`}>
         <Redux_Provider>
           <MenteeNavBar />
-          <main className="mt-20 flex-grow container mx-auto max-w-[1336px] ">
+          <main className="mt-20 flex-grow container mx-auto max-w-screen-2xl ">
             {children}
           </main>
           <ToastContainer />

@@ -25,12 +25,12 @@ export default function AuthLayout({
           <ReduxProvider>
             <AuthHeader />
             <Suspense fallback={<Loading />}>
-              <main className="flex-grow container mx-auto max-w-[1336px]">
+              <main className="flex-grow container mx-auto max-w-screen-2xl">
                 {children}
               </main>
             </Suspense>
             <ToastContainer />
-            <footer className="bg-gray-900 container mx-auto max-w-[1336px] text-center text-white py-16">
+            <footer className="bg-gray-900 container mx-auto max-w-screen-2xl text-center text-white py-16">
               <div className="">
                 &copy; {year} Mentorship &reg; plc. all rights reserved.
               </div>

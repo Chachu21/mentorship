@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} container mx-auto max-w-[1336px] relative`}
+        className={`${inter.className} container mx-auto max-w-screen-2xl relative`}
       >
         <Redux_Provider>
           <NavBar />

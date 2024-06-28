@@ -97,7 +97,7 @@ const MenteeNavBar = () => {
   };
   const isOnline = true;
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div
