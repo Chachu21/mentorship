@@ -103,8 +103,8 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                 </div>
                 <CardContent className="flex space-x-4 text-xl">
                   <p>
-                    service:{" "}
-                    <span className="text-[#14A800] pl-2">
+                    Service:{" "}
+                    <span className="text-[#14A800] pl-2 bg-gray-200 rounded-sm w-fit px-3">
                       {mentor.service}
                     </span>
                   </p>

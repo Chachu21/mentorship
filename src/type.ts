@@ -87,4 +87,5 @@ export interface mentorshipType {
   createdAt?: Date;
   _id?: string;
   createdBy?: IUser | string;
+  mentees?: string[];
 }

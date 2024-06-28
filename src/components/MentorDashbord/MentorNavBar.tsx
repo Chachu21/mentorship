@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -118,8 +119,21 @@ const MentorNavBar = () => {
                 >
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentee
+                      Mentoring
                     </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul
+                        onClick={toggleMobileMenu}
+                        className="w-[150px] flex flex-col p-2 justify-start items-start"
+                      >
+                        <ListItem href="/mentordashboard/proposals">
+                          Proposals
+                        </ListItem>
+                        <ListItem href="/mentordashboard/contracts">
+                          All contracts
+                        </ListItem>
+                      </ul>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link
