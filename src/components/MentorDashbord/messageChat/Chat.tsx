@@ -3,9 +3,12 @@ import { backend_url } from "@/components/constant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { closeProfile } from "@/redux/features/userSlice";
+import { AppDispatch } from "@/redux/store";
 import { SendHorizontal } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import io from "socket.io-client";
 const socket = io(`${backend_url}`);
 
@@ -89,6 +92,7 @@ const Chat = () => {
   const [contacts, setContacts] = useState<Person[]>(Persons);
   const [selectedContact, setSelectedContact] = useState<number | null>(null);
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
   const selectedPerson = Persons.find(
     (person) => person.id === selectedContact
   );
@@ -155,7 +159,10 @@ const Chat = () => {
   };
 
   return (
-    <section className="flex h-[calc(100vh-64px)]">
+    <section
+      onClick={() => dispatch(closeProfile())}
+      className="flex h-[calc(100vh-64px)]"
+    >
       {/* for desktop */}
       <section className="hiddden md:flex">
         <aside className="md:w-1/3 hidden md:flex md:flex-col space-y-5 p-4">

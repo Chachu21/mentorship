@@ -48,10 +48,10 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    menuBar: (state) => {
+    Profile: (state) => {
       state.isClicked = !state.isClicked;
     },
-    closeMenuBar: (state) => {
+    closeProfile: (state) => {
       state.isClicked = false;
     },
     loginSuccess: (state, action: PayloadAction<UserType>) => {
@@ -76,10 +76,10 @@ const userSlice = createSlice({
 });
 
 export const {
-  menuBar,
+  Profile,
   loginSuccess,
   logoutSuccess,
-  closeMenuBar,
+  closeProfile,
   setRoleBeforeLogin,
   setData,
 } = userSlice.actions;

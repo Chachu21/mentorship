@@ -19,13 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.className} container mx-auto max-w-[1336px] relative`}
-      >
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} h-full flex flex-col relative`}>
         <Redux_Provider>
           <MenteeNavBar />
-          <main className="mt-20">{children}</main>
+          <main className="mt-20 flex-grow container mx-auto max-w-[1336px] ">
+            {children}
+          </main>
           <ToastContainer />
           <Footer />
         </Redux_Provider>

@@ -5,13 +5,15 @@ import { backend_url } from "@/components/constant";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RootState } from "@/redux/store";
+import { closeProfile } from "@/redux/features/userSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import { IUser, mentorshipType } from "@/type";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Home = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [searchResult, setSearchResult] = useState<IUser[]>([]);
   const [mentors, setMentors] = useState<IUser[]>([]);
   const [mentorships, setMentorships] = useState<mentorshipType[]>();
@@ -94,7 +96,10 @@ const Home = () => {
   };
 
   return (
-    <section className="flex flex-col space-y-8">
+    <section
+      onClick={() => dispatch(closeProfile())}
+      className="flex flex-col space-y-8"
+    >
       <div className="relative">
         <svg
           className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500"
