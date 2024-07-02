@@ -20,7 +20,7 @@ const CheckProfile = () => {
   const role = data ? data?.role : user?.role;
   const handleSubmit = async () => {
     const id = user?._id ? user?._id : user_id;
-    console.log(profile.professionalRole);
+   
     const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
       updates: {
         level: profile.level,
@@ -39,6 +39,7 @@ const CheckProfile = () => {
         professionalRole: profile.professionalRole,
         goal: profile.goal,
         service: profile.goal,
+        category: profile.category,
       },
     });
 

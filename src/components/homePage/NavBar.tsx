@@ -85,42 +85,21 @@ const NavBar = () => {
                     screenWidth < 473 ? "flex-col md:flex-row" : "flex-row"
                   }`}
                 >
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentor
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul
-                        onClick={toggleMobileMenu}
-                        className="flex justify-evenly p-6 w-full"
+                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                    <Link href="/mentors" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
                       >
-                        <ListItem href="/">Free</ListItem>
-                        <ListItem href="/">Paid</ListItem>
-                        <ListItem href="/mentors">all</ListItem>
-                      </ul>
-                    </NavigationMenuContent>
+                        <span className="hover:text-[#14A800] ">
+                          Find Mentors
+                        </span>
+                      </NavigationMenuLink>
+                    </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
                       Find Mentee
                     </NavigationMenuTrigger>
-                    {/* <NavigationMenuContent>
-                      <ul
-                        onClick={toggleMobileMenu}
-                        className="grid w-[375px] gap-3 p-4 md:w-[500px] lg:grid-cols-2 lg:w-[600px] "
-                      >
-                        {components.map((component) => (
-                          <ListItem
-                            key={component.title}
-                            title={component.title}
-                            href={component.href}
-                            className="hover:text-[#14A800]"
-                          >
-                            {component.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent> */}
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link href="/why-mentorship" legacyBehavior passHref>

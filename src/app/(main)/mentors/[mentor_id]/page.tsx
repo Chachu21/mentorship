@@ -1,7 +1,7 @@
 "use client";
 import FAQ from "@/components/Mentor/FAQ";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { IUser, mentorshipType } from "@/type";
 import axios, { AxiosError } from "axios";
 import { CheckCircle, CircleXIcon, Star } from "lucide-react";
@@ -13,66 +13,28 @@ import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-interface mentorProps {
-  mentorship_id?: string;
-}
-
-const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
-  const [mentorship, setMentorships] = useState<mentorshipType | null>(null);
+const MentorDetailPage = ({ params }: { params: { mentor_id: string } }) => {
   const [userData, setUserData] = useState<IUser | null>(null);
   const [expandedMentorId, setExpandedMentorId] = useState<string | null>(null);
-  const user = useSelector((state: RootState) => state.users.data);
-  const data = useSelector((state: RootState) => state.users.user);
-  const id = user?._id ? user?._id : data?._id;
-  const token = data?.token;
+  const islogin = useSelector((state: RootState) => state.users.isLogin);
+
   const router = useRouter();
-  // console.log(token);
   useEffect(() => {
     const fetchUserData = async () => {
       const res = await axios.get(
-        `${backend_url}/api/v1/mentorship/get/${mentorship_id}`
-      );
-      setMentorships(res.data);
-    };
-    fetchUserData();
-  }, [mentorship_id]);
-  const mentor_id = mentorship?.createdBy;
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const res = await axios.get(
-        `${backend_url}/api/v1/users/get/${mentor_id}`
+        `${backend_url}/api/v1/users/get/${params.mentor_id}`
       );
       setUserData(res.data.user);
     };
-    if (mentor_id != null) {
+    if (params.mentor_id != null) {
       fetchUserData();
     }
-  }, [mentor_id]);
+  }, [params.mentor_id]);
 
   //for applying mentoring
   const handleApplying = async () => {
-    try {
-      const res = await axios.post(
-        `${backend_url}/api/v1/mentorship/apply/${mentorship_id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Assuming token is stored in localStorage
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (res.status === 200 && res.statusText === "OK") {
-        toast.success(res.data.message);
-        router.push("/menteedashboard");
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<{ error: string }>;
-      if (axiosError.response?.status === 400) {
-        toast.warning(axiosError.response.data.error);
-      } else {
-        toast.error("An unexpected error occurred. Please try again.");
-      }
+    if (!islogin) {
+      router.push("/auth/login");
     }
   };
 
@@ -164,6 +126,18 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
               </button>
             )}
           </div>
+          <CardContent>
+            <div className="flex space-x-3">
+              {userData?.skills?.map((skill, index) => (
+                <span
+                  key={index}
+                  className="bg-gray-200 rounded-xl py-1 px-6 flex justify-center items-center w-fit pl-3"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </CardContent>
           <div className="flex space-x-16 items-center">
             <div>
               <p>

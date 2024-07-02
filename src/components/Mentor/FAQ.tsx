@@ -1,7 +1,8 @@
 "use client";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-//interfaces for typscript type checks
+import { categories } from "../constants/categories";
+import { isEmptyArray } from "formik";
 interface FAQProps {
   question: string;
   answer: string;
@@ -42,36 +43,17 @@ const FAQs: React.FC<{ faqs: FAQProps[] }> = ({ faqs }) => {
   );
 };
 
-// Example usage:
-const FAQ: React.FC = () => {
-  const faqs: FAQProps[] = [
-    {
-      question:
-        "What is the initial step to finding the right mentor for your development and IT goals and understanding the associated mentorship costs?",
-      answer:
-        "One of the initial steps in mentorship is identifying the specific skills you require for your growth journey. Mentorship platforms like Upwork match you with experienced mentors who possess a diverse range of expertise in development and IT, ready to guide you in achieving your goals.",
-    },
-    {
-      question:
-        "Why should I use Mentorship to find mentors for development and IT guidance?",
-      answer:
-        "Mentorship offers you the flexibility you need to find the right guidance for your development and IT journey.",
-    },
-    {
-      question: "What are the benefits of participating in an EQUB?",
-      answer:
-        "Description of the advantages of EQUB membership, such as access to interest-free loans, financial assistance, and community support.",
-    },
-
-    // Add more FAQs as needed
-  ];
+const FAQ = () => {
+  const pathname = usePathname()
+   const category = categories.find(cat => cat.href.pathname === pathname);
+  const faqs: FAQProps[] = category?.faqs ? category.faqs : [];
 
   return (
     <section className="flex md:flex-row flex-col justify-between">
       <div className="flex flex-col py-5 md:py-20 w-full order-1 md:order-2 flex-1">
-        <h2 className="text-2xl font-semibold  my-8 text-[#1F284F]">
+       { !isEmptyArray(faqs) && <h2 className="text-2xl font-semibold  my-8 text-[#1F284F]">
           Frequently Asked Questions
-        </h2>
+        </h2>}
         <FAQs faqs={faqs} />
       </div>
     </section>

@@ -1,13 +1,19 @@
 import React from "react";
 import Hero_Part from "../ReusedComponent/Hero_Part";
+interface mentorHeroProps {
+  title: string;
+  subTitle: string;
+  buttonText: string;
+  image: string;
+}
 
-const MentoHero = () => {
+const MentoHero = ({ title, subTitle, buttonText, image }:mentorHeroProps) => {
   return (
     <Hero_Part
-      title="Mentors in Development and IT to Support Your Growth"
-      subTitle="Connect with experienced mentors to accelerate your development journey, overcome obstacles, and foster personal growth."
-      buttonText=" Get started"
-      image="/assets/it.avif"
+      title={title}
+      subTitle={subTitle}
+      buttonText={buttonText}
+      image={image}
     />
   );
 };

@@ -25,7 +25,6 @@ export interface IUser {
   resetPasswordExpires?: Date;
   languages?: string[];
   skills?: string[];
-  profess?: string;
   role?: string;
   bio?: string;
   goal?: string;
@@ -51,6 +50,7 @@ export interface IUser {
   isVerified?: boolean;
   verificationCode?: string;
   verificationCodeExpires?: Date;
+  category?:string;
 }
 
 export interface formData {
@@ -75,6 +75,7 @@ export interface formData {
   city: string;
   state: string;
   zipCode: string;
+  category:string;
 }
 export interface mentorshipType {
   title: string;
