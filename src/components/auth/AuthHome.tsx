@@ -75,9 +75,9 @@ const AuthHome = () => {
         <Link
           href={{
             pathname: "/auth/signup",
-            query: { role: selectedRole },
+            // query: { role: selectedRole },
           }}
-          as={`/auth/signup?role=${selectedRole}`}
+          // as={`/auth/signup?role=${selectedRole}`}
         >
           <Button
             className={`rounded-lg text-lg mt-10 ${

@@ -6,6 +6,11 @@ import { backend_url } from "../../constant";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 
+interface Mentee {
+  _id: string;
+  name: string;
+}
+
 interface CreateGroupChatProps {
   handleCloseModal: () => void;
 }
@@ -13,7 +18,7 @@ interface CreateGroupChatProps {
 const CreateGroupChat: React.FC<CreateGroupChatProps> = ({
   handleCloseModal,
 }) => {
-  const [mentees, setMentees] = useState([]);
+  const [mentees, setMentees] = useState<Mentee[]>([]);
   const [selectedMentees, setSelectedMentees] = useState<string[]>([]);
   const [groupName, setGroupName] = useState<string>("");
   const user = useSelector((state: RootState) => state.users.user);
@@ -48,6 +53,7 @@ const CreateGroupChat: React.FC<CreateGroupChatProps> = ({
       const response = await axios.post(`${backend_url}/api/v1/chats/group`, {
         users: selectedMentees,
         name: groupName,
+        groupAdmin: id,
       });
       console.log("Group chat created:", response.data);
       handleCloseModal();
@@ -91,9 +97,9 @@ const CreateGroupChat: React.FC<CreateGroupChatProps> = ({
             value={selectedMentees}
             onChange={handleMenteesChange}
           >
-            {mentees.map((mentee, index) => (
-              <option key={index} value={mentee}>
-                {mentee}
+            {mentees.map((mentee) => (
+              <option key={mentee._id} value={mentee._id}>
+                {mentee.name}
               </option>
             ))}
           </select>

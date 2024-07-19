@@ -6,33 +6,7 @@ import { Card } from "../ui/card";
 import YourMentorshipPost from "./YourMentorshipPost";
 import OtherMentors from "./OtherMentors";
 import MentoringPost from "./MentoringPost";
-
-const guidelinesData = [
-  {
-    id: 1,
-    headers: "Guide tour",
-    title: "",
-    description:
-      "Use your workspace to manage draft job posts, action items, and completed work.",
-    footer: "",
-    className: "bg-blue-600 text-white text-xl",
-  },
-  {
-    id: 2,
-    headers: "Create post ",
-    title: "Create mentorship post",
-    description: "create a new mentorship post and  get mentees proposal",
-    footer: "post new mentorship",
-  },
-  {
-    id: 3,
-    headers: "Quik tip",
-    title: "Get payment",
-    description:
-      "once post paid mentorship and the mentees apply for that mentorship and you can get payment from mentee when mentee approve your work",
-    footer: "learn more",
-  },
-];
+import { guidelinesData } from "../constant";
 
 const Home = () => {
   const [guidelines, setGuidelines] = useState(guidelinesData);

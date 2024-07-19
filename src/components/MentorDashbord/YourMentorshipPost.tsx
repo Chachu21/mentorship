@@ -67,7 +67,7 @@ const YourMentorshipPost = () => {
             className="w-full md:max-w-[340px] lg:max-w-[400px] px-5 py-5"
           >
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{mentorship.skill}</h2>
+              <h2 className="text-xl font-semibold">{mentorship.title}</h2>
               <button
                 className="hover:text-red-700"
                 onClick={() => {
@@ -99,10 +99,6 @@ const YourMentorshipPost = () => {
               <strong>Goal:</strong>{" "}
               <p className="line-clamp-3">{mentorship.goal}</p>
             </div>
-            <div className="text-gray-600">
-              <strong>Benefit:</strong>{" "}
-              <p className="line-clamp-3">{mentorship.benefit}</p>
-            </div>
             <p className="text-gray-600">
               <strong>Service:</strong> {mentorship.service}
             </p>
@@ -111,9 +107,25 @@ const YourMentorshipPost = () => {
                 <strong>Amount:</strong> {mentorship.amount}
               </p>
             )}
-            <p className="text-gray-600">
-              <strong>Duration:</strong> {mentorship.duration}
-            </p>
+
+            <div className="flex space-x-3 flex-wrap space-y-3">
+              {mentorship.skills.length > 0 &&
+                mentorship.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="w-fit px-4 py-1 bg-gray-300 rounded-xl"
+                  >
+                    {skill}
+                  </span>
+                ))}
+            </div>
+
+            <div className="flex justify-end items-center">
+              <p className="text-gray-600">
+                <strong className="text-cc">Duration:</strong>{" "}
+                <span className="font-bold">{mentorship.duration}</span>
+              </p>
+            </div>
           </Card>
         ))}
       </div>

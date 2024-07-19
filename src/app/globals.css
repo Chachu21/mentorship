@@ -71,7 +71,8 @@
   @apply appearance-none w-6 h-6 items-center border-2 border-gray-300 rounded-full;
 }
 
-.input-radio:checked {
+.input-radio:checked,
+.input-checked:checked {
   @apply bg-[#14A800];
 }
 

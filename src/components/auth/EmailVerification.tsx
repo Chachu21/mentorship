@@ -8,9 +8,7 @@ import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { toast } from "react-toastify";
 import { backend_url } from "@/components/constant";
-const api = process.env.BACKEND_URL;
 const EmailVerificationTemplate = () => {
-  console.log(api);
   const router = useRouter();
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [error, setError] = useState<string>("");
@@ -19,7 +17,8 @@ const EmailVerificationTemplate = () => {
 
   const user: IUser = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
-  const _id = data?._id;
+  const _id = data ? data?._id : user?._id;
+  // const role = data ? data?.role : user?.role;
   useEffect(() => {
     const fetchUser = async () => {
       const res = await axios.get(`${backend_url}/api/v1/users/get/${_id}`);

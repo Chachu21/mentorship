@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 
-const StepSeven: React.FC = () => {
+const StepSeven = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
 

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import * as yup from "yup";
 import logins from "../../../public/assets/logins.jpg";
 import { toast } from "react-toastify";
-// Correct import
 import Image from "next/image";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
@@ -55,6 +54,7 @@ const Login = () => {
           // Secure option if transmitting over HTTPS
         );
         dispatch(loginSuccess(userData));
+        toast.success("successfully logged in");
       }
       if (userData.role === "admin") {
         navigate.push("/admin");
@@ -100,15 +100,14 @@ const Login = () => {
             JSON.stringify({ isLogin: true, role: userData.role }),
             {
               expires: 1,
-            } // Expires in 1 day
-            // Secure option if transmitting over HTTPS
+            }
           );
-          toast.success(response.data.message);
         }
 
         if (userData && userData.role) {
           // Handle role-based navigation
           if (userData.isVerified) {
+            toast.success(response.data.message);
             switch (userData.role) {
               case "admin":
                 navigate.push("/admin");
@@ -175,7 +174,7 @@ const Login = () => {
       </div>
       <div className="order-2 md:order-2 w-full bg-gray-50 dark:bg-gray-900 dark:text-white overflow-hidden">
         {error && (
-          <div className="text-red-500 text-center font-semibold text-xl">
+          <div className="text-2xl font-semibold pt-5 mb-6 text-center text-red-500 mt-6">
             {error}
           </div>
         )}

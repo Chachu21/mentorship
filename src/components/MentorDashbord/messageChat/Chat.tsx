@@ -8,6 +8,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import CreateGroupChat from "./CreateGroupChat";
 import io from "socket.io-client";
+import axios from "axios";
 const socket = io(`${backend_url}`);
 
 const Persons = [
@@ -100,6 +101,8 @@ const Chat = () => {
 
   const [showCreateGroupChat, setShowCreateGroupChat] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   const handleOpenModal = () => setShowCreateGroupChat(true);
   const handleCloseModal = () => setShowCreateGroupChat(false);
 
@@ -160,6 +163,23 @@ const Chat = () => {
     }
   };
 
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (query.trim()) {
+      try {
+        const response = await axios.get(`${backend_url}/api/v1/users/`, {
+          params: { query },
+        });
+        setContacts(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    } else {
+      setContacts(Persons);
+    }
+  };
+
   return (
     <section className="flex h-[calc(100vh-64px)]">
       {/* for desktop */}
@@ -192,57 +212,48 @@ const Chat = () => {
               </div>
             </div>
           )}
+          <form className="max-w-md mx-auto">
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search "
+                value={searchQuery}
+                onChange={handleSearch}
+                required
+              />
+            </div>
+          </form>
           <Tabs defaultValue="private" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="private">Private</TabsTrigger>
-              <TabsTrigger value="groups">groups</TabsTrigger>
             </TabsList>
 
             <TabsContent value="private">
-              <div className="overflow-y-auto">
-                {contacts.map((person) => (
-                  <div
-                    onClick={() => selectContact(person.id)}
-                    key={person.id}
-                    className={
-                      "flex items-center space-x-2 p-2 hover:bg-gray-200 cursor-pointer " +
-                      (person.id === selectedContact ? "bg-blue-300 px-2" : "")
-                    }
-                  >
-                    <Image
-                      src={person.avatar}
-                      alt={person.name}
-                      className="w-12 h-12 rounded-full"
-                      width={48}
-                      height={48}
-                    />
-                    <div className="flex flex-col flex-grow">
-                      <div className="flex justify-between">
-                        <h3 className="text-gray-700 text-sm">{person.name}</h3>
-                        <span className="text-gray-500 text-sm">
-                          {person.message.length > 0 &&
-                            person.message[person.message.length - 1].time}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="text-gray-500 flex-grow text-sm overflow-hidden line-clamp-1">
-                          {person.message.length > 0
-                            ? person.message[person.message.length - 1].text
-                            : ""}
-                        </div>
-
-                        {person.unreadMessages > 0 && (
-                          <div className="w-8 p-2 text-center rounded-full bg-slate-400 ml-auto">
-                            <span className="">{person.unreadMessages}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="groups">
               <div className="overflow-y-auto">
                 {contacts.map((person) => (
                   <div
