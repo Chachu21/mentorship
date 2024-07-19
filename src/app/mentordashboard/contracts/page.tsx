@@ -10,12 +10,13 @@ import { CheckCheck } from "lucide-react";
 
 interface Contract {
   _id: string;
-  mentee: { _id: string };
-  mentor: string;
-  termsAccepted: boolean;
+  mentee_id: string;
+  mentor_id: string;
+  isAgree: boolean;
+  isApproved: boolean;
 }
 
-const Contracts: React.FC = () => {
+const Contracts = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -29,7 +30,7 @@ const Contracts: React.FC = () => {
     const fetchContracts = async () => {
       try {
         const response = await axios.get(
-          `${backend_url}/api/v1/mentorship/contracts`,
+          `${backend_url}/api/v1/contract/mentor`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -55,7 +56,7 @@ const Contracts: React.FC = () => {
 
     try {
       await axios.delete(
-        `${backend_url}/api/v1/mentorship/agreement/delete/${deleteContractId}`,
+        `${backend_url}/api/v1/contract/delete/${deleteContractId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,14 +94,14 @@ const Contracts: React.FC = () => {
               <ul>
                 {role === "mentee" && (
                   <li>
-                    <p>Mentor: {contract.mentor}</p>
-                    <p>Terms Accepted: {contract.termsAccepted.toString()}</p>
+                    <p>Mentor: {contract.mentor_id}</p>
+                    <p>Terms Accepted: {contract.isAgree.toString()}</p>
                   </li>
                 )}
                 {role === "mentor" && (
                   <li>
-                    <p>Mentee: {contract.mentee._id}</p>
-                    {contract.termsAccepted.toString() === "true" && (
+                    <p>Mentee: {contract.mentee_id}</p>
+                    {contract.isAgree.toString() === "true" && (
                       <p className="text-gray-500 text-lg flex">
                         <span className="text-cc  pr-2">
                           <CheckCheck />
@@ -113,7 +114,9 @@ const Contracts: React.FC = () => {
                 )}
               </ul>
               <div className="flex flex-col space-y-2">
-                <span className="text-cc">Active</span>
+                <span className="text-cc  capitalize">
+                  {contract.isApproved ? "active" : "panding"}
+                </span>
                 <button
                   className="hover:text-red-700"
                   onClick={() => {

@@ -50,7 +50,8 @@ export interface IUser {
   isVerified?: boolean;
   verificationCode?: string;
   verificationCodeExpires?: Date;
-  category?:string;
+  category?: string;
+  remainingBalance?: number;
 }
 
 export interface formData {
@@ -75,7 +76,7 @@ export interface formData {
   city: string;
   state: string;
   zipCode: string;
-  category:string;
+  category: string;
 }
 export interface mentorshipType {
   title: string;
@@ -89,4 +90,20 @@ export interface mentorshipType {
   _id?: string;
   createdBy?: IUser | string;
   mentees?: string[];
+  YourPayment?: number;
+}
+export interface proposalType {
+  _id: string;
+  title: string;
+  description: string;
+  author: string;
+  mentorship_id: string;
+  mentor: string;
+  status: string;
+  createdAt?: Date;
+}
+
+export interface contractTypes {
+  mentorship_id: string;
+  mentor_id: string;
 }

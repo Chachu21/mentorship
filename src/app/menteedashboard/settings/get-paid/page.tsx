@@ -22,6 +22,7 @@ import axios from "axios";
 import { IUser } from "@/type";
 import ModelForDelete from "@/components/ReusedComponent/ModelForDelete";
 import { CheckCircle } from "lucide-react";
+import Pay from "@/components/payment/Pay";
 
 interface BankDetails {
   bank_name: string;
@@ -30,6 +31,8 @@ interface BankDetails {
 }
 
 const Paid = () => {
+  const [showModal, setShowModal] = useState(false);
+
   const [showForm, setShowForm] = useState(false); // State to control form visibility
   const [isEditing, setIsEditing] = useState(false); // State to check if editing
   const [showDeleteDialog, setShowDeleteDialog] = useState(false); // State to control delete dialog visibility
@@ -106,6 +109,10 @@ const Paid = () => {
       console.log("error on catch", error);
     }
   };
+
+  const handlePayment = () => {
+    setShowModal(true);
+  };
   return (
     <div className="md:px-8">
       <div className="space-y-8">
@@ -124,6 +131,13 @@ const Paid = () => {
             >
               Get Paid Now
             </Button>{" "}
+            <Button
+              variant={"default"}
+              className="ml-8 capitalize cursor-pointer"
+              onClick={handlePayment}
+            >
+              pay
+            </Button>
             {/* Show form on button click */}
           </CardFooter>
         </Card>
@@ -227,6 +241,13 @@ const Paid = () => {
           isOpen={showDeleteDialog}
           onClose={() => setShowDeleteDialog(false)}
           onDelete={handleDelete}
+        />
+
+        <Pay
+          isOpen={showModal}
+          onClose={() => {
+            setShowModal(false);
+          }}
         />
       </div>
     </div>

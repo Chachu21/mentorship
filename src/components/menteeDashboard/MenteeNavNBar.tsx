@@ -150,7 +150,7 @@ const MenteeNavBar = () => {
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link
-                      href="/menteedashboard/message"
+                      href="/menteedashboard/mentor"
                       legacyBehavior
                       passHref
                     >

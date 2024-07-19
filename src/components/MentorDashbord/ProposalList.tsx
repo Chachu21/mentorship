@@ -1,65 +1,119 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Proposal from "../ReusedComponent/Proposal";
-import { backend_url } from "../constant";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import { backend_url } from "@/components/constant";
+import { Card } from "@/components/ui/card";
 import { RootState } from "@/redux/store";
-import { mentorshipType } from "@/type";
+import { proposalType } from "@/type";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Button } from "../ui/button";
+import { toast } from "react-toastify";
 
-// Define a type to represent the mentee and mentorship ID pair
-type MenteeMentorshipPair = {
-  menteeId: string;
-  mentorshipId: string;
-};
+const Proposal = () => {
+  const [proposals, setProposals] = useState<proposalType[]>([]);
+  const [expandedMentorId, setExpandedMentorId] = useState<string | null>(null);
 
-const ProposalList = () => {
-  const [menteeMentorshipPairs, setMenteeMentorshipPairs] = useState<
-    MenteeMentorshipPair[]
-  >([]);
   const user = useSelector((state: RootState) => state.users.user);
-  const data = useSelector((state: RootState) => state.users.data);
+  const token = user?.token;
 
-  const id = user ? user?._id : data?._id;
-
-  // Fetch mentors' posts
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchProposal = async () => {
       try {
-        const res = await axios.get(
-          `${backend_url}/api/v1/mentorship/getbymentor/${id}`
-        );
-
-        // Map the response to get mentee IDs along with their mentorship IDs
-        const pairs = res.data.flatMap((mentorship: mentorshipType) =>
-          mentorship.mentees?.map((menteeId: string) => ({
-            menteeId,
-            mentorshipId: mentorship._id,
-          }))
-        );
-
-        setMenteeMentorshipPairs(pairs);
-        console.log("pair of mentee is and mentorshio id", pairs);
+        const res = await axios.get(`${backend_url}/api/v1/proposal/mentor`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProposals(res.data);
       } catch (error) {
-        console.error("Failed to fetch mentorships:", error);
+        console.error("Error fetching proposals", error);
       }
     };
 
-    if (id) {
-      fetchPosts();
+    if (token) {
+      fetchProposal();
     }
-  }, [id]);
+  }, [token]);
 
+  const toggleExpanded = (mentorId: string | undefined) => {
+    if (!mentorId) return;
+    setExpandedMentorId(expandedMentorId === mentorId ? null : mentorId);
+  };
+
+  const isTruncated = (text: string, maxLength: number) => {
+    return text.length > maxLength;
+  };
+
+  const mentoring = async (mentorship_id: string, author: string) => {
+    try {
+      const resp = await axios.post(
+        `${backend_url}/api/v1/contract/create`,
+        {
+          mentorship_id,
+          mentee_id: author,
+          isAgree: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(resp.data);
+      if (resp.status === 201) {
+        toast.success("you are accept mentoring");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <section className="flex flex-col space-y-4">
-      <h1>Proposal List</h1>
-      {menteeMentorshipPairs.map(({ menteeId, mentorshipId }) => (
-        <section key={menteeId}>
-          <Proposal mentee_id={menteeId} mentorshipId={mentorshipId} />
-        </section>
-      ))}
-    </section>
+    <div>
+      <h1>Your Proposals</h1>
+      <Card className="p-3">
+        {proposals.length > 0 &&
+          proposals.map((proposal) => {
+            const combinedText = `${proposal.description}`;
+            const isCurrentlyExpanded = expandedMentorId === proposal._id;
+            const truncatedText = isCurrentlyExpanded
+              ? combinedText
+              : `${combinedText.slice(0, 400)} ...`;
+
+            return (
+              <div key={proposal._id} className="flex flex-col space-y-2">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl font-bold underline text-gray-600 cursor-pointer">
+                    {proposal.title}
+                  </h3>
+                  <Button
+                    onClick={() => {
+                      mentoring(proposal.mentorship_id, proposal.author);
+                    }}
+                    className="capitalize"
+                  >
+                    mentoring
+                  </Button>
+                </div>
+                <p>{truncatedText}</p>
+                {isTruncated(combinedText, 400) && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleExpanded(proposal._id);
+                    }}
+                    className="text-cc underline hover:underline mt-2 flex justify-start items-start"
+                  >
+                    {isCurrentlyExpanded ? "Show Less" : "Show More"}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+      </Card>
+    </div>
   );
 };
 
-export default ProposalList;
+export default Proposal;

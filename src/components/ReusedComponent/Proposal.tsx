@@ -14,15 +14,17 @@ import { toast } from "react-toastify";
 interface userId {
   mentee_id: string;
   mentorshipId: string;
+  title: string;
+  description: string;
 }
 
-const Proposal = ({ mentee_id, mentorshipId }: userId) => {
+const Proposal = ({ mentee_id, mentorshipId, title, description }: userId) => {
   const router = useRouter();
   const [expandedmenteeId, setExpandedmenteeId] = useState<string | null>(null);
   const [mentee, setMentee] = useState<IUser | null>(null);
   const user = useSelector((state: RootState) => state.users.user);
   const token = user?.token;
-  console.log("mentorship id: " + mentorshipId, mentee_id);
+  // console.log("mentorship id: " + mentorshipId, mentee_id);
   useEffect(() => {
     const fetchmentee = async () => {
       try {
@@ -60,13 +62,14 @@ const Proposal = ({ mentee_id, mentorshipId }: userId) => {
     }
     return text.length > maxLength;
   };
-  const handleAgreement = async (id: string) => {
+  const handleAgreement = async () => {
     try {
       const res = await axios.post(
-        `${backend_url}/api/v1/mentorship/agreement/create/${id}`,
+        `${backend_url}/api/v1/contract/create`,
         {
-          termsAccepted: true,
-          mentee: mentee_id,
+          isAgree: true,
+          mentee_id: mentee_id,
+          mentorship_id: mentorshipId,
         },
         {
           headers: {
@@ -118,7 +121,7 @@ const Proposal = ({ mentee_id, mentorshipId }: userId) => {
                       {mentee?.professionalRole}
                     </p>
                   </div>
-                  <div className="flex space-x-2 py-4">
+                  <div className="flex space-x-2 pt-1 pb-3">
                     <div>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -141,28 +144,31 @@ const Proposal = ({ mentee_id, mentorshipId }: userId) => {
                       </svg>
                     </div>
                     <p className="text-gray-500">
-                      {mentee?.location?.state}/{mentee?.location?.region}/
-                      {mentee?.location?.city}
+                      {mentee?.location?.region}/{mentee?.location?.city}
                     </p>
                   </div>
                 </CardTitle>
               </div>
               <div className="md:flex hidden cursor-pointer">
-                <Button onClick={() => handleAgreement(mentorshipId)}>
-                  Mentoring
-                </Button>
+                <Button onClick={handleAgreement}>Mentoring</Button>
               </div>
             </div>
             <div className="flex flex-col space-y-3">
               <CardContent>
+                <div className="flex text-gray-900 text-xl capitalize py-3">
+                  <span className="font-bold underline-offset-0">
+                    proposal for :{" "}
+                  </span>
+                  <p className="underline "> {title}</p>
+                </div>
                 <p
                   className={`line-clamp-3 ${
                     expandedmenteeId === mentee?._id ? "line-clamp-none" : ""
                   }`}
                 >
-                  {mentee?.bio}
+                  {description}
                 </p>
-                {isTruncated(mentee?.bio, 3) && (
+                {isTruncated(title, 3) && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -191,9 +197,7 @@ const Proposal = ({ mentee_id, mentorshipId }: userId) => {
             </div>
           </div>
           <div className="md:hidden flex justify-end cursor-pointer">
-            <Button onClick={() => handleAgreement(mentorshipId)}>
-              Mentoring
-            </Button>
+            <Button onClick={handleAgreement}>Mentoring</Button>
           </div>
         </div>
       </CardContent>

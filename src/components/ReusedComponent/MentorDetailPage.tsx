@@ -10,61 +10,82 @@ import React, { useEffect, useState } from "react";
 import { backend_url } from "@/components/constant";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import ProposalModal from "../menteeDashboard/proposalModal";
+import PaymentModal from "./PaymentModel";
+import Pay from "../payment/Pay";
 
-interface mentorProps {
+interface MentorProps {
   mentorship_id?: string;
 }
 
-const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
+const MentorDetailPage = ({ mentorship_id }: MentorProps) => {
   const [mentorship, setMentorships] = useState<mentorshipType | null>(null);
   const [userData, setUserData] = useState<IUser | null>(null);
   const [expandedMentorId, setExpandedMentorId] = useState<string | null>(null);
   const user = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
-  const id = user?._id ? user?._id : data?._id;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  // const id = user?._id ? user?._id : data?._id;
   const token = data?.token;
-  const router = useRouter();
-  // console.log(token);
+
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await axios.get(
-        `${backend_url}/api/v1/mentorship/get/${mentorship_id}`
-      );
-      setMentorships(res.data);
+      try {
+        const res = await axios.get(
+          `${backend_url}/api/v1/mentorship/get/${mentorship_id}`
+        );
+        setMentorships(res.data);
+      } catch (error) {
+        toast.error("Failed to fetch mentorship data.");
+      }
     };
     fetchUserData();
   }, [mentorship_id]);
+
   const mentor_id = mentorship?.createdBy;
+
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await axios.get(
-        `${backend_url}/api/v1/users/get/${mentor_id}`
-      );
-      setUserData(res.data.user);
+      try {
+        const res = await axios.get(
+          `${backend_url}/api/v1/users/get/${mentor_id}`
+        );
+        setUserData(res.data.user);
+      } catch (error) {
+        toast.error("Failed to fetch user data.");
+      }
     };
     if (mentor_id != null) {
       fetchUserData();
     }
   }, [mentor_id]);
 
-  //for applying mentoring
   const handleApplying = async () => {
+    if (
+      user.remainingBalance === undefined ||
+      (mentorship && user.remainingBalance < mentorship.amount)
+    ) {
+      setIsPaymentModalOpen(true);
+      return;
+    }
     try {
       const res = await axios.post(
         `${backend_url}/api/v1/mentorship/apply/${mentorship_id}`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Assuming token is stored in localStorage
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
-      if (res.status === 200 && res.statusText === "OK") {
-        toast.success(res.data.message);
-        router.push("/menteedashboard");
+      if (res.status === 201) {
+        setIsDialogOpen(false);
+        toast.success("Successfully applied for mentorship.");
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
@@ -76,18 +97,36 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
     }
   };
 
+  const handlePayment = () => {
+    // router.push(`/menteedashboard/payment?mentorship_id=${mentorship_id}`);
+    setIsPaymentModalOpen(false);
+    setShowModal(true);
+  };
+
   const toggleExpanded = (mentorId: string | undefined) => {
     if (!mentorId) {
       return;
     }
     setExpandedMentorId(expandedMentorId === mentorId ? null : mentorId);
   };
+
   const isTruncated = (text: string | undefined, maxLines: number) => {
     const maxLength = maxLines * 100;
     if (!text) {
       return false;
     }
     return text.length > maxLength;
+  };
+
+  const handleOpenProposalModal = () => {
+    if (
+      user.remainingBalance === undefined ||
+      (mentorship && user.remainingBalance < mentorship.amount)
+    ) {
+      setIsPaymentModalOpen(true);
+      return;
+    }
+    setIsDialogOpen(true);
   };
 
   return (
@@ -155,7 +194,7 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
             </p>
             {isTruncated(userData?.bio, 3) && (
               <button
-                onClick={(e) => {
+                onClick={() => {
                   toggleExpanded(userData?._id);
                 }}
                 className="text-cc underline hover:underline mt-2"
@@ -168,21 +207,18 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
             <div>
               <p>
                 {userData?.is_approved ? (
-                  <span className="flex space-x-2">
-                    <CheckCircle className="text-cc" /> approved
+                  <span className="flex space-x-3">
+                    <CheckCircle className="text-cc" />
+                    <span> Verified</span>
                   </span>
                 ) : (
                   <span className="flex items-center">
                     <CircleXIcon className="text-gray-500 pr-3" size={28} />
-                    no yet approved
+                    not yet Verified
                   </span>
                 )}
               </p>
             </div>
-            <p>
-              service:{" "}
-              <span className="text-[#14A800] pl-2">{userData?.service}</span>
-            </p>
           </div>
           <p className="flex space-x-3 pl-4">
             <Star className="text-cc" />
@@ -191,160 +227,12 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
             <Star className="text-cc" />
             <Star className="text-cc" />
             <span>
-              {userData?.rate} ({325} review)
+              {userData?.rate} ({325} reviews)
             </span>
           </p>
-          {/* <div className="flex md:flex-row flex-col space-x-3 space-y-3">
-            <div className="">rating details</div>
-
-            <div className="flex items-center mb-2">
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-yellow-300 me-1"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <svg
-                className="w-4 h-4 text-gray-300 me-1 dark:text-gray-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 22 20"
-              >
-                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-              </svg>
-              <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                4.95
-              </p>
-              <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                out of
-              </p>
-              <p className="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-                5
-              </p>
-            </div>
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-              1,745 global ratings
-            </p>
-            <div className="flex items-center mt-4">
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                5 star
-              </a>
-              <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-5 bg-yellow-300 rounded"
-                  style={{ width: "70%" }}
-                ></div>
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                70%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                4 star
-              </a>
-              <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-5 bg-yellow-300 rounded"
-                  style={{ width: "17%" }}
-                ></div>
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                17%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                3 star
-              </a>
-              <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-5 bg-yellow-300 rounded"
-                  style={{ width: "8%" }}
-                ></div>
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                8%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                2 star
-              </a>
-              <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-5 bg-yellow-300 rounded"
-                  style={{ width: "4%" }}
-                ></div>
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                4%
-              </span>
-            </div>
-            <div className="flex items-center mt-4">
-              <a
-                href="#"
-                className="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                1 star
-              </a>
-              <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-                <div
-                  className="h-5 bg-yellow-300 rounded"
-                  style={{ width: "1%" }}
-                ></div>
-              </div>
-              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                1%
-              </span>
-            </div>
-          </div> */}
           <div className="flex flex-col space-y-5 py-3">
             <span className="text-green-600 underline">
-              review about mentor given by mentee
+              Review about mentor given by mentee
             </span>
             <div className="flex flex-col space-y-3">
               <div className="flex items-center space-x-3">
@@ -359,11 +247,11 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
                   <h1 className="text-sm ">Mentee Name</h1>
                   <p className="flex space-x-3 items-center">
                     <Star size={18} />
-                    <span> 5, may 7, 2024</span>
+                    <span> 5, May 7 , 2024</span>
                   </p>
                 </div>
               </div>
-              <p>next js</p>
+              <p>Next.js</p>
               <p>Good and fast work. Easy communication.</p>
             </div>
           </div>
@@ -375,33 +263,33 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between items-center ">
                   <p className="flex space-x-3">
-                    <input type="radio" /> <span>1_Month</span>
+                    <input type="radio" /> <span>1 Month</span>
                   </p>
                   <span>$0</span>
                 </div>
                 <div className="flex justify-between items-center ">
                   <p className="flex space-x-3">
-                    <input type="radio" /> <span>3_month</span>
+                    <input type="radio" /> <span>3 Months</span>
                   </p>
                   <span>$30</span>
                 </div>
                 <div className="flex justify-between items-center ">
                   <p className="flex space-x-3">
-                    <input type="radio" /> <span>6_month</span>
+                    <input type="radio" /> <span>6 Months</span>
                   </p>
                   <span>$50</span>
                 </div>
               </div>
               <div className="flex justify-end items-center p-4">
-                <Button onClick={handleApplying} className="text-lg">
-                  Apply For Menoring
+                <Button onClick={handleOpenProposalModal} className="text-lg">
+                  Apply For Mentoring
                 </Button>
               </div>
             </Card>
           ) : (
             <div className="flex justify-end items-center p-4">
-              <Button onClick={handleApplying} className="text-lg">
-                Apply For Menoring
+              <Button onClick={handleOpenProposalModal} className="text-lg">
+                Apply For Mentoring
               </Button>
             </div>
           )}
@@ -410,6 +298,29 @@ const MentorDetailPage = ({ mentorship_id }: mentorProps) => {
           </div>
         </div>
       </div>
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onPay={handlePayment}
+      />
+      <div>
+        {mentorship && mentorship._id && (
+          <Pay
+            isOpen={showModal}
+            onClose={() => {
+              setShowModal(false);
+            }}
+            mentorship_id={mentorship._id}
+            amount={mentorship.amount}
+          />
+        )}
+      </div>
+      <ProposalModal
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={() => setIsDialogOpen(false)}
+        mentorship_id={mentorship_id}
+        handleApply={handleApplying}
+      />
     </main>
   );
 };

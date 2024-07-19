@@ -107,8 +107,7 @@ const MainPart = () => {
               mentors={searchQuery ? searchResult : mentors}
             />
           </div>
-          <div>
-          </div>
+          <div></div>
         </div>
       </div>
     </div>

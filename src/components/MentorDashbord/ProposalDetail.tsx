@@ -17,18 +17,18 @@ const ProposalDetail = ({ mentee_id, mentorship_id }: mentee_idProps) => {
   const user = useSelector((state: RootState) => state.users.user);
   const _id = user?._id;
   const token = user?.token;
-  console.log("mentorship_id: " + mentorship_id);
   const handleBack = () => {
     window.history.back();
   };
 
-  const handleAgreement = async (id: string) => {
+  const handleAgreement = async () => {
     try {
       const res = await axios.post(
-        `${backend_url}/api/v1/mentorship/agreement/create/${id}`,
+        `${backend_url}/api/v1/contract/create`,
         {
-          termsAccepted: true,
-          mentee: mentee_id,
+          isAgree: true,
+          mentee_id: mentee_id,
+          mentorship_id: mentorship_id,
         },
         {
           headers: {
@@ -72,9 +72,7 @@ const ProposalDetail = ({ mentee_id, mentorship_id }: mentee_idProps) => {
             />
           </svg>
         </button>
-        <Button onClick={() => handleAgreement(mentorship_id)}>
-          Mentoring
-        </Button>
+        <Button onClick={handleAgreement}>Mentoring</Button>
       </div>
       <div className="flex-grow">
         <MenteeDetail />
