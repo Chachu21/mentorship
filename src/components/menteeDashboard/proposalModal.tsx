@@ -153,7 +153,7 @@ const ProposalModal = ({
                 <div className="flex justify-between items-center">
                   {mentorship?.createdBy !== null && (
                     <>
-                      {mentorship?.createdBy?.is_approved ? (
+                      {/* {mentorship?.createdBy?.is_approved ? (
                         <div className="flex space-x-2 items-center">
                           <CircleCheckBig className="text-cc" />
                           <span className="text-cc">account is verified</span>
@@ -165,14 +165,14 @@ const ProposalModal = ({
                             account not verifed
                           </span>
                         </div>
-                      )}
+                      )} */}
                       <div>
                         <p className="text-gray-600">
                           <strong className="text-cc">Service:</strong>{" "}
                           {mentorship?.service} ({mentorship?.amount} Birr)
                         </p>
                       </div>
-                      {mentorship?.createdBy?.location && (
+                      {/* {mentorship?.createdBy?.location && (
                         <div className="flex space-x-3 items-center">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +199,7 @@ const ProposalModal = ({
                             {mentorship?.createdBy?.location.city}
                           </p>
                         </div>
-                      )}
+                      )} */}
                     </>
                   )}
                 </div>
