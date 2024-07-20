@@ -5,6 +5,7 @@ import Footer from "@/components/homePage/Footer";
 import Redux_Provider from "../Redux_Provider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MentorNavBar from "@/components/MentorDashbord/MentorNavBar";
 import MenteeNavBar from "@/components/menteeDashboard/MenteeNavNBar";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,8 @@ export default function RootLayout({
         className={`${inter.className} container mx-auto max-w-[1336px] relative`}
       >
         <Redux_Provider>
+          <MentorNavBar />
+          <main>{children}</main>
           <MenteeNavBar />
           <main className="mt-20">{children}</main>
           <ToastContainer />
