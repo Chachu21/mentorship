@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { backend_url } from "@/components/constant";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-// import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ProposalModal from "../menteeDashboard/proposalModal";
 import PaymentModal from "./PaymentModel";
@@ -29,11 +28,12 @@ const MentorDetailPage = ({ mentorship_id }: MentorProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  // const id = user?._id ? user?._id : data?._id;
+  const [menteeData, setMenteeData] = useState<IUser | null>(null); // Ensure initial state is null
+  const id = user?._id || data?._id;
   const token = data?.token;
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchMentorshipData = async () => {
       try {
         const res = await axios.get(
           `${backend_url}/api/v1/mentorship/get/${mentorship_id}`
@@ -43,10 +43,26 @@ const MentorDetailPage = ({ mentorship_id }: MentorProps) => {
         toast.error("Failed to fetch mentorship data.");
       }
     };
-    fetchUserData();
+    if (mentorship_id) {
+      fetchMentorshipData();
+    }
   }, [mentorship_id]);
 
   const mentor_id = mentorship?.createdBy;
+
+  useEffect(() => {
+    const fetchMenteeData = async () => {
+      try {
+        const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
+        setMenteeData(res.data.user);
+      } catch (error) {
+        toast.error("Failed to fetch user data.");
+      }
+    };
+    if (id) {
+      fetchMenteeData();
+    }
+  }, [id]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -59,19 +75,20 @@ const MentorDetailPage = ({ mentorship_id }: MentorProps) => {
         toast.error("Failed to fetch user data.");
       }
     };
-    if (mentor_id != null) {
+    if (mentor_id) {
       fetchUserData();
     }
   }, [mentor_id]);
 
   const handleApplying = async () => {
     if (
-      user.remainingBalance === undefined ||
-      (mentorship && user.remainingBalance < mentorship.amount)
+      menteeData?.remainingBalance === undefined ||
+      (mentorship && menteeData.remainingBalance < mentorship.amount)
     ) {
       setIsPaymentModalOpen(true);
       return;
     }
+
     try {
       const res = await axios.post(
         `${backend_url}/api/v1/mentorship/apply/${mentorship_id}`,
@@ -98,30 +115,25 @@ const MentorDetailPage = ({ mentorship_id }: MentorProps) => {
   };
 
   const handlePayment = () => {
-    // router.push(`/menteedashboard/payment?mentorship_id=${mentorship_id}`);
     setIsPaymentModalOpen(false);
     setShowModal(true);
   };
 
   const toggleExpanded = (mentorId: string | undefined) => {
-    if (!mentorId) {
-      return;
-    }
+    if (!mentorId) return;
     setExpandedMentorId(expandedMentorId === mentorId ? null : mentorId);
   };
 
   const isTruncated = (text: string | undefined, maxLines: number) => {
     const maxLength = maxLines * 100;
-    if (!text) {
-      return false;
-    }
+    if (!text) return false;
     return text.length > maxLength;
   };
 
   const handleOpenProposalModal = () => {
     if (
-      user.remainingBalance === undefined ||
-      (mentorship && user.remainingBalance < mentorship.amount)
+      menteeData?.remainingBalance === undefined ||
+      (mentorship && menteeData.remainingBalance < mentorship.amount)
     ) {
       setIsPaymentModalOpen(true);
       return;

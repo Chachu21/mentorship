@@ -83,6 +83,7 @@ const Pay = ({ isOpen, onClose, mentorship_id, amount }: ModalProps) => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
+      console.log(form.currency);
       const res = await axios.post(
         `${backend_url}/api/v1/payment/accept-payment`,
         {
