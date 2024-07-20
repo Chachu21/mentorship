@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -89,7 +90,7 @@ const MentorNavBar = () => {
   };
   const isOnline = true;
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div className="flex mr-5 items-center lg:space-x-0 space-x-3">
@@ -118,8 +119,21 @@ const MentorNavBar = () => {
                 >
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentee
+                      Mentoring
                     </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul
+                        onClick={toggleMobileMenu}
+                        className="w-[150px] flex flex-col p-2 justify-start items-start"
+                      >
+                        <ListItem href="/mentordashboard/proposals">
+                          Proposals
+                        </ListItem>
+                        <ListItem href="/mentordashboard/contracts">
+                          All contracts
+                        </ListItem>
+                      </ul>
+                    </NavigationMenuContent>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link

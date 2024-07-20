@@ -2,32 +2,36 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader } from "@/components/ui/card";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { closeProfile } from "@/redux/features/userSlice";
 
 const SidebarLinks = [
   {
     id: 1,
     name: "Contact Info",
-    link: "/mentordashboard/settings",
+    link: "/menteedashboard/settings",
   },
   {
     id: 2,
     name: "Get Paid",
-    link: "/mentordashboard/settings/get-paid",
+    link: "/menteedashboard/settings/get-paid",
   },
   {
     id: 3,
     name: "Profile Setting",
-    link: "/mentordashboard/profile-setting",
+    link: "/menteedashboard/profile-setting",
   },
   {
     id: 4,
     name: "Password and Security",
-    link: "/mentordashboard/settings/password-and-security",
+    link: "/menteedashboard/settings/password-and-security",
   },
 ];
 
 const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   const handleSidebarItemClick = (link: string) => {
@@ -36,7 +40,10 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row min-h-screen">
+    <div
+      onClick={() => dispatch(closeProfile())}
+      className="flex flex-col sm:flex-row min-h-screen"
+    >
       <div
         className={`${
           isSidebarVisible ? "block" : "hidden"

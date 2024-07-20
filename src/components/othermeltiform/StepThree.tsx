@@ -10,6 +10,18 @@ import {
   nextStep,
 } from "../../redux/features/formReducer";
 
+const categories = [
+  "Development & IT",
+  "Design & Creativity Art",
+  "Health & Fitness",
+  "Lifestyle",
+  "Health & Fitness",
+  "Lifestyle",
+  "Social & Business",
+  "Marketing & Finances",
+  // Add more categories as needed
+];
+
 const StepThree = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
@@ -21,14 +33,15 @@ const StepThree = () => {
   const [professionalRole, setProfessionalRole] = useState<string>(
     data.professionalRole || ""
   );
+  const [category, setCategory] = useState<string>(data.category || "");
 
   const handlePrev = () => {
     dispatch(prevStep());
   };
 
   const handleNext = () => {
-    if (professionalRole.trim()) {
-      dispatch(setFormData({ professionalRole }));
+    if (professionalRole.trim() && category) {
+      dispatch(setFormData({ professionalRole, category }));
       dispatch(nextStep());
     }
   };
@@ -66,16 +79,33 @@ const StepThree = () => {
           id="professionalrole"
           value={professionalRole}
           onChange={(e) => setProfessionalRole(e.target.value)}
-          placeholder="Software Engineer / finance managment"
+          placeholder="Software Engineer / finance management"
         />
       </div>
+      <div className="grid w-full max-w-sm items-center gap-5">
+        <Label htmlFor="category">Category</Label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="bg-white border border-gray-200 outline-none"
+        >
+          <option value="">Select a category</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="flex justify-end space-x-10">
         <Button variant={"outline"} className="px-10" onClick={handlePrev}>
           Back
         </Button>
         <Button
           onClick={handleNext}
-          disabled={!professionalRole.trim()}
+          disabled={!professionalRole.trim() || !category}
           className="px-10 w-fit flex justify-end"
         >
           Next

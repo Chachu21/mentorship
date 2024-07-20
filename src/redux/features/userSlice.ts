@@ -14,6 +14,7 @@ interface UserState {
   user: UserType | null; // Update to single user instead of array of users
   isClicked: boolean;
   isLogin: boolean;
+  isMenu: boolean;
   roleBeforLogin: string;
   data: IUser;
 }
@@ -32,6 +33,7 @@ const initialState: UserState = {
   user: getUserData(), // Initialize with user data fetched from localStorage
   isLogin: false,
   isClicked: false,
+  isMenu: false,
   roleBeforLogin: "",
   data: {
     fullName: "",
@@ -48,11 +50,17 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    menuBar: (state) => {
+    Profile: (state) => {
       state.isClicked = !state.isClicked;
     },
-    closeMenuBar: (state) => {
+    closeProfile: (state) => {
       state.isClicked = false;
+    },
+    menuBar: (state) => {
+      state.isMenu = !state.isMenu;
+    },
+    closeMenuBar: (state) => {
+      state.isMenu = false;
     },
     loginSuccess: (state, action: PayloadAction<UserType>) => {
       state.user = action.payload;
@@ -76,11 +84,13 @@ const userSlice = createSlice({
 });
 
 export const {
-  menuBar,
+  Profile,
   loginSuccess,
   logoutSuccess,
-  closeMenuBar,
+  closeProfile,
   setRoleBeforeLogin,
   setData,
+  menuBar,
+  closeMenuBar,
 } = userSlice.actions;
 export default userSlice.reducer;

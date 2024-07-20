@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
@@ -17,7 +18,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Settings, Power, Circle } from "lucide-react";
-import { logoutSuccess } from "@/redux/features/userSlice";
+import {
+  Profile,
+  closeProfile,
+  logoutSuccess,
+} from "@/redux/features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import axios from "axios";
@@ -30,11 +35,11 @@ const MenteeNavBar = () => {
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
-  const [showCard, setShowCard] = useState(false);
   const [userdata, setUserdata] = useState<IUser>();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.users.user);
+  const showCard = useSelector((state: RootState) => state.users.isClicked);
   const id = user?._id;
   useEffect(() => {
     // This code runs only on the client side
@@ -87,12 +92,18 @@ const MenteeNavBar = () => {
       console.error("Logout error:", error);
     }
   };
+  const handleProfile = () => {
+    dispatch(Profile());
+  };
   const isOnline = true;
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
-          <div className="flex mr-5 items-center lg:space-x-0 space-x-3">
+          <div
+            onClick={() => dispatch(closeProfile())}
+            className="flex mr-5 items-center lg:space-x-0 space-x-3"
+          >
             <div className="lg:hidden">
               <button
                 className="flex justify-center items-center"
@@ -108,7 +119,10 @@ const MenteeNavBar = () => {
               </h1>
             </Link>
           </div>
-          <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
+          <div
+            onClick={() => dispatch(closeProfile())}
+            className={isOpenMobile ? "flex" : " hidden lg:flex"}
+          >
             <ul className="flex container font-normal bg-white dark:bg-gray-900 dark:text-white absolute lg:relative flex-col lg:flex-row lg:space-x-5 w-full shadow lg:shadow-none text-center top-[45px] left-0 lg:top-0 lg:flex">
               <NavigationMenu className="z-50">
                 <NavigationMenuList
@@ -118,8 +132,36 @@ const MenteeNavBar = () => {
                 >
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentor
+                      Mentoring
                     </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul
+                        onClick={toggleMobileMenu}
+                        className="w-[150px] flex flex-col p-2 justify-start items-start"
+                      >
+                        <ListItem href="/menteedashboard/proposals">
+                          Proposals
+                        </ListItem>
+                        <ListItem href="/menteedashboard/contracts">
+                          All contracts
+                        </ListItem>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                    <Link
+                      href="/menteedashboard/mentor"
+                      legacyBehavior
+                      passHref
+                    >
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <span className="hover:text-[#14A800] ">
+                          Find Mentor
+                        </span>
+                      </NavigationMenuLink>
+                    </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link
@@ -176,6 +218,7 @@ const MenteeNavBar = () => {
             </button>
           )}
           <div
+            onClick={() => dispatch(closeProfile())}
             className={
               showMobileSearch
                 ? "flex absolute top-[49px] w-full left-1/2 transform -translate-x-1/2 md:right-0 md:-translate-x-0 bg-white z-50"
@@ -245,10 +288,7 @@ const MenteeNavBar = () => {
             </div>
           </div>
           <div className="relative">
-            <div
-              className="cursor-pointer"
-              onClick={() => setShowCard(!showCard)}
-            >
+            <div className="cursor-pointer" onClick={handleProfile}>
               <Image
                 src={
                   userdata ? userdata.profileImage.url : "/assets/profile.jpeg"
@@ -288,10 +328,7 @@ const MenteeNavBar = () => {
                     <span>availbilty</span>
                   </div>
 
-                  <div
-                    className="flex space-x-2"
-                    onClick={() => setShowCard(!showCard)}
-                  >
+                  <div className="flex space-x-2" onClick={handleProfile}>
                     <Button
                       variant="outline"
                       onClick={() => router.push("/menteedashboard/settings")}

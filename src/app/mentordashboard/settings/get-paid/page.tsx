@@ -44,7 +44,7 @@ const Paid = () => {
   });
   const user_id = data?._id;
   const id = user?._id ? user?._id : user_id;
-  const price = 0.0;
+  const price = userData?.remainingBalance;
 
   useEffect(() => {
     const fetchUserData = async () => {

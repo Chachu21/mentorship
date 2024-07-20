@@ -55,7 +55,7 @@ const NavBar = () => {
     setIsOpen(false);
   };
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div className="flex mr-5 items-center lg:space-x-0 space-x-3">
@@ -85,42 +85,21 @@ const NavBar = () => {
                     screenWidth < 473 ? "flex-col md:flex-row" : "flex-row"
                   }`}
                 >
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentor
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul
-                        onClick={toggleMobileMenu}
-                        className="flex justify-evenly p-6 w-full"
+                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                    <Link href="/mentors" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
                       >
-                        <ListItem href="/">Free</ListItem>
-                        <ListItem href="/">Paid</ListItem>
-                        <ListItem href="/mentors">all</ListItem>
-                      </ul>
-                    </NavigationMenuContent>
+                        <span className="hover:text-[#14A800] ">
+                          Find Mentors
+                        </span>
+                      </NavigationMenuLink>
+                    </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger className="hover:text-[#14A800]">
                       Find Mentee
                     </NavigationMenuTrigger>
-                    {/* <NavigationMenuContent>
-                      <ul
-                        onClick={toggleMobileMenu}
-                        className="grid w-[375px] gap-3 p-4 md:w-[500px] lg:grid-cols-2 lg:w-[600px] "
-                      >
-                        {components.map((component) => (
-                          <ListItem
-                            key={component.title}
-                            title={component.title}
-                            href={component.href}
-                            className="hover:text-[#14A800]"
-                          >
-                            {component.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent> */}
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link href="/why-mentorship" legacyBehavior passHref>

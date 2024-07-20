@@ -93,3 +93,346 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .field:not(:last-child) {
+    @apply mb-3;
+  }
+
+  .field.spaced:not(:last-child) {
+    @apply mb-6;
+  }
+
+  .field-body .field .field {
+    @apply mb-0;
+  }
+
+  .field.addons {
+    @apply flex justify-start;
+  }
+
+  .field.addons .control.expanded {
+    @apply flex-grow flex-shrink;
+  }
+
+  .field.addons .control:first-child:not(:only-child) .input,
+  .field.addons .control:first-child:not(:only-child) .select select {
+    @apply rounded-r-none border-r-0;
+  }
+
+  .field.addons .control:last-child:not(:only-child) .input,
+  .field.addons .control:last-child:not(:only-child) .select select {
+    @apply rounded-l-none border-l-0;
+  }
+
+  .field.grouped {
+    @apply flex justify-start;
+  }
+
+  .field.grouped > .control:not(:last-child) {
+    @apply mr-3;
+  }
+
+  .field.grouped.multiline {
+    @apply flex-wrap;
+  }
+
+  .label {
+    @apply block font-bold mb-2;
+  }
+
+  .control {
+    @apply relative;
+  }
+
+  .control.icons-left,
+  .control.icons-right {
+    @apply relative;
+  }
+
+  .input,
+  .textarea,
+  .select select,
+  .file-cta,
+  .file-name {
+    @apply px-3 py-2 border border-gray-400 rounded;
+  }
+
+  .input,
+  .select select,
+  .file-cta,
+  .file-name {
+    @apply h-10;
+  }
+
+  .input,
+  .textarea,
+  .select select {
+    @apply w-full max-w-full focus:border-gray-100 focus:ring focus:outline-none bg-white;
+  }
+
+  .input[readonly] {
+    @apply pointer-events-none bg-gray-100;
+  }
+
+  .textarea {
+    @apply h-24;
+  }
+
+  .control.icons-left .icon,
+  .control.icons-right .icon {
+    @apply absolute top-0 z-10 w-10 h-10;
+  }
+
+  .control.icons-left .input,
+  .control.icons-left .select select {
+    @apply pl-10;
+  }
+
+  .control.icons-left .icon.left {
+    @apply left-0;
+  }
+
+  .control.icons-right .input,
+  .control.icons-right .select select {
+    @apply pr-10;
+  }
+
+  .control.icons-right .icon.right {
+    @apply right-0;
+  }
+
+  .help {
+    @apply block text-xs text-gray-500 mt-1;
+  }
+
+  .file {
+    @apply flex items-stretch justify-start relative;
+  }
+
+  .upload {
+    @apply inline-flex;
+  }
+
+  .upload input[type="file"] {
+    @apply absolute top-0 left-0 w-full h-full opacity-0 outline-none cursor-pointer -z-10;
+  }
+}
+.button {
+  @apply inline-flex bg-white text-black border-gray-50 border cursor-pointer justify-center px-4 py-2 text-center
+    whitespace-nowrap rounded
+    hover:border-gray-500
+    focus:outline-none;
+}
+
+.button.addon-right {
+  @apply rounded-r-none;
+}
+
+.button.addon-left {
+  @apply rounded-l-none;
+}
+
+.button.small {
+  @apply text-xs p-1;
+}
+
+.button.small.textual {
+  @apply px-3;
+}
+
+.button.active {
+  @apply border-gray-300 hover:border-gray-500;
+}
+
+.button.green {
+  @apply bg-green-500 border-green-500 text-white hover:bg-green-600;
+}
+
+.button.red {
+  @apply bg-red-500 border-red-500 text-white hover:bg-red-600;
+}
+
+.button.blue {
+  @apply bg-blue-500 border-blue-500 text-white hover:bg-blue-600;
+}
+
+.button.light {
+  @apply bg-gray-100 border-gray-100 hover:bg-gray-200;
+}
+
+.buttons {
+  @apply flex items-center flex-wrap justify-start;
+}
+
+.buttons.nowrap {
+  @apply flex-nowrap;
+}
+
+.buttons.right {
+  @apply justify-end;
+}
+
+.buttons .button {
+  @apply mx-1;
+}
+.card {
+  @apply bg-white border border-gray-100 rounded;
+}
+
+/* .card.has-table .card-content {
+  @apply p-0;
+} */
+
+.card-content {
+  @apply p-6;
+}
+
+.card-content hr {
+  @apply my-6 -mx-6;
+}
+
+.card.empty .card-content {
+  @apply text-center py-12 text-gray-500;
+}
+
+.card-header {
+  @apply flex items-stretch border-b border-gray-100;
+}
+
+.card-header-title,
+.card-header-icon {
+  @apply flex items-center py-3 px-4;
+}
+
+.card-header-title {
+  @apply flex-grow font-bold;
+}
+
+.card-header-icon {
+  @apply justify-center;
+}
+@layer components {
+  .field:not(:last-child) {
+    @apply mb-3;
+  }
+
+  .field.spaced:not(:last-child) {
+    @apply mb-6;
+  }
+
+  .field-body .field .field {
+    @apply mb-0;
+  }
+
+  .field.addons {
+    @apply flex justify-start;
+  }
+
+  .field.addons .control.expanded {
+    @apply flex-grow flex-shrink;
+  }
+
+  .field.addons .control:first-child:not(:only-child) .input,
+  .field.addons .control:first-child:not(:only-child) .select select {
+    @apply rounded-r-none border-r-0;
+  }
+
+  .field.addons .control:last-child:not(:only-child) .input,
+  .field.addons .control:last-child:not(:only-child) .select select {
+    @apply rounded-l-none border-l-0;
+  }
+
+  .field.grouped {
+    @apply flex justify-start;
+  }
+
+  .field.grouped > .control:not(:last-child) {
+    @apply mr-3;
+  }
+
+  .field.grouped.multiline {
+    @apply flex-wrap;
+  }
+
+  .label {
+    @apply block font-bold mb-2;
+  }
+
+  .control {
+    @apply relative;
+  }
+
+  .control.icons-left,
+  .control.icons-right {
+    @apply relative;
+  }
+
+  .input,
+  .textarea,
+  .select select,
+  .file-cta,
+  .file-name {
+    @apply px-3 py-2 border border-gray-400 rounded;
+  }
+
+  .input,
+  .select select,
+  .file-cta,
+  .file-name {
+    @apply h-10;
+  }
+
+  .input,
+  .textarea,
+  .select select {
+    @apply w-full max-w-full focus:border-gray-100 focus:ring focus:outline-none bg-white;
+  }
+
+  .input[readonly] {
+    @apply pointer-events-none bg-gray-100;
+  }
+
+  .textarea {
+    @apply h-24;
+  }
+
+  .control.icons-left .icon,
+  .control.icons-right .icon {
+    @apply absolute top-0 z-10 w-10 h-10;
+  }
+
+  .control.icons-left .input,
+  .control.icons-left .select select {
+    @apply pl-10;
+  }
+
+  .control.icons-left .icon.left {
+    @apply left-0;
+  }
+
+  .control.icons-right .input,
+  .control.icons-right .select select {
+    @apply pr-10;
+  }
+
+  .control.icons-right .icon.right {
+    @apply right-0;
+  }
+
+  .help {
+    @apply block text-xs text-gray-500 mt-1;
+  }
+
+  .file {
+    @apply flex items-stretch justify-start relative;
+  }
+
+  .upload {
+    @apply inline-flex;
+  }
+
+  .upload input[type="file"] {
+    @apply absolute top-0 left-0 w-full h-full opacity-0 outline-none cursor-pointer -z-10;
+  }
+}

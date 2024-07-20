@@ -1,20 +1,21 @@
 "use client";
-import DetailPageOfMentor from "@/components/Mentor/MentorsList";
 import ReuseMentorship from "@/components/ReusedComponent/ReuseMentorship";
 import { backend_url } from "@/components/constant";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RootState } from "@/redux/store";
+import { closeProfile } from "@/redux/features/userSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import { IUser, mentorshipType } from "@/type";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-const Home = () => {
-  const [searchResult, setSearchResult] = useState<IUser[]>([]);
-  const [mentors, setMentors] = useState<IUser[]>([]);
-  const [mentorships, setMentorships] = useState<mentorshipType[]>();
+const Home: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [mentorships, setMentorships] = useState<mentorshipType[]>([]);
+  const [searchResult, setSearchResult] = useState<mentorshipType[]>([]);
+  const [recently, setResently] = useState<mentorshipType[]>();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.users.user);
@@ -22,43 +23,46 @@ const Home = () => {
   const id = user ? user?._id : data?._id;
 
   useEffect(() => {
-    const fetchmentors = async () => {
+    const fetchMentorships = async () => {
       try {
         const res = await axios.get(
-          `${backend_url}/api/v1/users/mentor/match/${id}`
+          `${backend_url}/api/v1/mentorship/best/match/${id}`
         );
-
-        if (res.status === 200) {
-          if (Array.isArray(res.data.mentors)) {
-            setMentors(res.data.mentors);
-          } else {
-            setMentors([]); // Set to an empty array if not the expected structure
-          }
-        }
+        setMentorships(res.data);
       } catch (error) {
-        console.error("Error fetching mentors:", error);
-        setMentors([]); // Set to an empty array in case of error
+        console.error("Error fetching mentorships:", error);
       }
     };
 
-    if (id) {
-      fetchmentors();
-    }
+    fetchMentorships();
   }, [id]);
 
   useEffect(() => {
-    const fetchMentors = async () => {
+    const fetchMentorships = async () => {
+      try {
+        const res = await axios.get(`${backend_url}/api/v1/mentorship/`);
+        console.log(res.data);
+        setResently(res.data);
+      } catch (error) {
+        console.error("Error fetching mentorships:", error);
+      }
+    };
+
+    fetchMentorships();
+  }, [id]);
+  useEffect(() => {
+    const searchMentorships = async () => {
       if (isSearching) {
         try {
           const res = await axios.get(
-            `${backend_url}/api/v1/users/search/mentors`,
+            `${backend_url}/api/v1/mentorship/search`,
             {
               params: { query: searchQuery },
             }
           );
           setSearchResult(res.data);
         } catch (error) {
-          console.error("Error fetching mentors:", error);
+          console.error("Error searching mentorships:", error);
         } finally {
           setIsSearching(false);
         }
@@ -66,25 +70,14 @@ const Home = () => {
     };
 
     if (searchQuery !== "") {
-      fetchMentors();
+      searchMentorships();
     } else {
-      setSearchResult([]);
+      setSearchResult([]); // Clear search results when search query is empty
     }
   }, [isSearching, searchQuery]);
 
-  useEffect(() => {
-    const fetchMentorships = async () => {
-      const res = await axios.get(
-        `${backend_url}/api/v1/mentorship/best/match/${id}`
-      );
-      console.log(res.data);
-      setMentorships(res.data);
-    };
-    fetchMentorships();
-  }, [id]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value); // Update search query state with input value
+    setSearchQuery(e.target.value);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -93,8 +86,13 @@ const Home = () => {
     }
   };
 
+  const displayedMentorships = searchQuery ? searchResult : mentorships;
+
   return (
-    <section className="flex flex-col space-y-8">
+    <section
+      onClick={() => dispatch(closeProfile())}
+      className="flex flex-col space-y-8"
+    >
       <div className="relative">
         <svg
           className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500"
@@ -109,7 +107,7 @@ const Home = () => {
         </svg>
         <Input
           type="text"
-          placeholder="Search Mentors"
+          placeholder="Search Mentorships"
           className="pl-10 pr-3 border border-gray-300 hover:bg-gray-200 h-10 sm:w-[580px] w-full rounded-2xl outline-none"
           value={searchQuery}
           onChange={handleInputChange}
@@ -122,13 +120,13 @@ const Home = () => {
         <TabsList className="bg-white">
           <TabsTrigger
             value="Best Match"
-            className="text-[16px] data-[state=active]:text-cc"
+            className="text-[16px] data-[state=active]:text-cc cursor-pointer"
           >
             Best Match
           </TabsTrigger>
           <TabsTrigger
             value="Most Recently"
-            className="text-[16px] data-[state=active]:text-cc"
+            className="text-[16px] data-[state=active]:text-cc cursor-pointer"
           >
             Most Recently
           </TabsTrigger>
@@ -140,13 +138,13 @@ const Home = () => {
         </p>
         <Separator className="" />
         <TabsContent value="Best Match">
-          <DetailPageOfMentor
-            url={`menteedashboard`}
-            mentors={searchQuery ? searchResult : mentors}
+          <ReuseMentorship
+            url="menteedashboard"
+            mentorships={displayedMentorships}
           />
         </TabsContent>
         <TabsContent value="Most Recently">
-          <ReuseMentorship url="menteedashboard" mentorships={mentorships} />
+          <ReuseMentorship url="menteedashboard" mentorships={recently} />
         </TabsContent>
       </Tabs>
     </section>

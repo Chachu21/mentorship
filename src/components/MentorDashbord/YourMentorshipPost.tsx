@@ -100,11 +100,12 @@ const YourMentorshipPost = () => {
               <p className="line-clamp-3">{mentorship.goal}</p>
             </div>
             <p className="text-gray-600">
-              <strong>Service:</strong> {mentorship.service}
+              <strong className="text-cc">Service:</strong> {mentorship.service}
             </p>
             {mentorship.service !== "Free" && (
               <p className="text-gray-600">
-                <strong>Amount:</strong> {mentorship.amount}
+                <strong>Amount:</strong>{" "}
+                <span className="font-bold text-gray-900">{mentorship.amount} Birr</span>
               </p>
             )}
 
@@ -120,11 +121,20 @@ const YourMentorshipPost = () => {
                 ))}
             </div>
 
-            <div className="flex justify-end items-center">
-              <p className="text-gray-600">
-                <strong className="text-cc">Duration:</strong>{" "}
-                <span className="font-bold">{mentorship.duration}</span>
-              </p>
+            <div className="flex justify-between items-center py-3">
+              <div className="flex space-x-2">
+                <p className="text-cc font-bold">payment </p>
+                <p className="text-gray-900 font-bold">
+                  {mentorship.YourPayment} Birr
+                </p>
+              </div>
+
+              <div>
+                <p className="text-gray-600">
+                  <strong className="text-cc">Duration:</strong>{" "}
+                  <span className="font-bold">{mentorship.duration}</span>
+                </p>
+              </div>
             </div>
           </Card>
         ))}

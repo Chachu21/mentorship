@@ -50,15 +50,17 @@ const MentoringPost = () => {
 
     // Calculate platform service fee
     let platformFee = 0;
+    let YourPayment = 0;
     if (newMentorship.service !== "Free") {
       const price = newMentorship.amount;
       platformFee = (price * 5) / 100;
+      YourPayment = newMentorship.amount - platformFee;
     }
 
     // Include platform fee in the mentorship data
     const mentorshipData = {
       ...newMentorship,
-      platformFee,
+      YourPayment,
     };
 
     try {
@@ -75,19 +77,20 @@ const MentoringPost = () => {
         }
       );
       // Add new mentorship to the list
-
-      // Reset form
-      setNewMentorship({
-        skills: [],
-        description: "",
-        goal: "",
-        service: "Free",
-        amount: 0,
-        duration: "",
-        title: "",
-      });
-      setIsDialogOpen(false);
-      window.location.reload();
+      if (res.status === 201) {
+        // Reset form
+        setNewMentorship({
+          skills: [],
+          description: "",
+          goal: "",
+          service: "Free",
+          amount: 0,
+          duration: "",
+          title: "",
+        });
+        setIsDialogOpen(false);
+        window.location.reload();
+      }
     } catch (error) {
       console.error("There was an error creating the mentorship:", error);
     }

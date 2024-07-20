@@ -36,7 +36,7 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
     return text.length > maxLength;
   };
   return (
-    <div className="md:container md:mx-auto w-full md:max-w-7xl py-4">
+    <div className="md:container md:mx-auto w-full md:max-w-7xl py-4 space-y-12">
       {mentors.length !== 0 ? (
         mentors.map((mentor) => (
           <div key={mentor._id} className="">
@@ -45,7 +45,7 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                 onClick={() => {
                   handleClicked(mentor._id);
                 }}
-                className="w-full flex flex-col space-y-4 md:max-w-5xl px-5 py-5"
+                className="w-full flex flex-col space-y-4 md:max-w-5xl px-5 py-5 hover:bg-gray-100 cursor-pointer"
               >
                 <div className="flex md:flex-row flex-col space-y-3 md:space-y-0 md:justify-start justify-center md:items-start items-center space-x-0 md:space-x-4 md:px-4 px-1">
                   <div className=" border-2 border-cc rounded-full h-[120px] w-[120px] object-fill">
@@ -103,8 +103,8 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                 </div>
                 <CardContent className="flex space-x-4 text-xl">
                   <p>
-                    service:{" "}
-                    <span className="text-[#14A800] pl-2">
+                    Service:{" "}
+                    <span className="text-[#14A800] pl-2 bg-gray-200 rounded-sm w-fit px-3">
                       {mentor.service}
                     </span>
                   </p>

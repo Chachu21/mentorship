@@ -51,7 +51,7 @@ const ReuseMentorship = ({ url, mentorships = [] }: reusePros) => {
           return (
             <Card
               key={index}
-              className="w-full hover:bg-gray-100 py-4"
+              className="w-full hover:bg-gray-100 py-4 cursorp"
               onClick={() => handleClicked(mentorship._id)}
             >
               <CardContent className="flex flex-col space-y-4">
@@ -66,7 +66,7 @@ const ReuseMentorship = ({ url, mentorships = [] }: reusePros) => {
                 </div>
                 <div>
                   <h3 className="text-cc font-semibold text-2xl underline italic ">
-                    {mentorship.title}
+                    {mentorship.title} <span className="text-gray-700">({mentorship.duration})</span>
                   </h3>
                 </div>
                 <div className="flex flex-col space-y-2">
@@ -102,16 +102,22 @@ const ReuseMentorship = ({ url, mentorships = [] }: reusePros) => {
                         {mentorship.createdBy.is_approved ? (
                           <div className="flex space-x-2 items-center">
                             <CircleCheckBig className="text-cc" />
-                            <span className="text-cc">account is approved</span>
+                            <span className="text-cc">account is verified</span>
                           </div>
                         ) : (
                           <div className="flex space-x-2 items-center">
                             <CircleXIcon className="text-cc" />
                             <span className="text-gray-400">
-                              account not approved
+                              account not verifed
                             </span>
                           </div>
                         )}
+                        <div>
+                          <p className="text-gray-600">
+                            <strong className="text-cc">Service:</strong>{" "}
+                            {mentorship.service} ({mentorship.amount} Birr)
+                          </p>
+                        </div>
                         {mentorship.createdBy.location && (
                           <div className="flex space-x-3 items-center">
                             <svg
