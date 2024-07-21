@@ -46,7 +46,7 @@ const Proposal = () => {
   return (
     <div>
       <h1>Your Proposals</h1>
-      <Card className="p-3">
+      <Card className="p-3 mt-5">
         {proposals.length > 0 &&
           proposals.map((proposal) => {
             const combinedText = `${proposal.description}`;
@@ -56,22 +56,24 @@ const Proposal = () => {
               : `${combinedText.slice(0, 400)} ...`;
 
             return (
-              <div key={proposal._id} className="flex flex-col space-y-2">
-                <h3 className="text-xl font-bold underline text-gray-600 cursor-pointer">
-                  {proposal.title}
-                </h3>
-                <p>{truncatedText}</p>
-                {isTruncated(combinedText, 400) && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleExpanded(proposal._id);
-                    }}
-                    className="text-cc underline hover:underline mt-2 flex justify-start items-start"
-                  >
-                    {isCurrentlyExpanded ? "Show Less" : "Show More"}
-                  </button>
-                )}
+              <div key={proposal._id} className="flex flex-col space-y-4">
+                <Card className="p-5 mt-3">
+                  <h3 className="text-xl font-bold underline text-gray-600 cursor-pointer">
+                    {proposal.title}
+                  </h3>
+                  <p>{truncatedText}</p>
+                  {isTruncated(combinedText, 400) && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleExpanded(proposal._id);
+                      }}
+                      className="text-cc underline hover:underline mt-2 flex justify-start items-start"
+                    >
+                      {isCurrentlyExpanded ? "Show Less" : "Show More"}
+                    </button>
+                  )}
+                </Card>
               </div>
             );
           })}

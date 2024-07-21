@@ -4,24 +4,40 @@ import axios from "axios";
 import { backend_url } from "@/components/constant";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import RatingModel from "@/components/ReusedComponent/RatingModel";
 
 interface Contract {
   _id: string;
-  mentee_id: string;
-  mentor_id: string;
+  mentee_id: {
+    _id: string;
+    fullName: string;
+  };
+  mentor_id: {
+    _id: string;
+    fullName: string;
+  };
+  status: string; // Fixed type from `String` to `string`
   isAgree: boolean;
   isApproved: boolean;
+  mentorship_id: {
+    _id: string;
+    title: string;
+    value: number; // Assuming this field exists
+  } | null;
 }
 
 const Contracts = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
-  const [loading, setLoading] = useState(true);
-  // const [updateContractId, setUpdateContractId] = useState<string | null>(null);
-
+  const [loading, setLoading] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedContractId, setSelectedContractId] = useState<string | null>(
+    null
+  );
+  const [selectedMentor, setSelectedMentor] = useState<string | null>(null);
   const user = useSelector((state: RootState) => state.users.user);
   const token = user?.token;
   const role = user?.role;
@@ -38,6 +54,7 @@ const Contracts = () => {
             },
           }
         );
+        console.log(response.data);
         setContracts(response.data);
       } catch (error) {
         console.error("Error fetching contracts:", error);
@@ -64,11 +81,48 @@ const Contracts = () => {
         }
       );
       if (response.status === 200) {
-        toast.success("you accept the contract");
+        toast.success("You accepted the contract");
+        setContracts((prevContracts) =>
+          prevContracts.map((contract) =>
+            contract._id === contractId
+              ? { ...contract, isApproved: true }
+              : contract
+          )
+        );
       }
-      window.location.reload();
     } catch (error) {
       console.error("Error updating contract:", error);
+    }
+  };
+
+  const handleApprovePayment = (contractId: string, mentorId: string) => {
+    setSelectedContractId(contractId);
+    setSelectedMentor(mentorId);
+    setShowModal(true);
+  };
+
+  const handleApprovePaymentConfirmation = async (contractId: string) => {
+    try {
+      const response = await axios.put(
+        `${backend_url}/api/v1/contract/update/${contractId}`,
+        { paid: "Yes" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("You approved the payment");
+        setShowModal(false);
+        setSelectedContractId(null);
+        setSelectedMentor(null);
+        // Optionally refresh the contracts list
+      }
+    } catch (error) {
+      console.error("Error approving payment:", error);
     }
   };
 
@@ -86,40 +140,63 @@ const Contracts = () => {
           {contracts.map((contract) => (
             <Card
               key={contract._id}
-              className="my-4 py-3 px-2 flex justify-between"
+              className="my-4 py-3 px-2 flex flex-col space-y-2"
             >
-              <ul>
-                {role === "mentee" && (
-                  <li>
-                    <p>Mentor: {contract.mentor_id}</p>
-                    <p>Terms Accepted: {contract.isAgree.toString()}</p>
-                  </li>
-                )}
-                {role === "mentor" && (
-                  <li>
-                    <p>Mentee: {contract.mentee_id}</p>
-                    {contract.isAgree && (
-                      <p className="text-gray-500 text-lg flex">
-                        <span className="text-cc pr-2">
-                          <CheckCheck />
-                        </span>
-                        The user has agreed upon the rules and regulations of
-                        mentoring.
-                      </p>
-                    )}
-                  </li>
-                )}
-              </ul>
-              <div className="flex flex-col space-y-2">
-                <span className="text-cc capitalize">
-                  {contract.isApproved ? "active" : "pending"}
-                </span>
-                {!contract.isApproved && (
-                  <Button onClick={() => handleUpdateContract(contract._id)}>
-                    Approve Contract
-                  </Button>
-                )}
+              <CardTitle className="underline text-cc">
+                {contract.mentorship_id?.title || "No title available"}
+              </CardTitle>
+              <div className="flex justify-between">
+                <ul>
+                  {role === "mentee" && (
+                    <li>
+                      <p>Mentor: {contract.mentor_id.fullName}</p>
+                      <p>Terms Accepted: {contract.isAgree.toString()}</p>
+                    </li>
+                  )}
+                  {role === "mentor" && (
+                    <li>
+                      <p>Mentee: {contract.mentee_id.fullName}</p>
+                      {contract.isAgree && (
+                        <p className="text-gray-500 text-lg flex">
+                          <span className="text-cc pr-2">
+                            <CheckCheck />
+                          </span>
+                          The user has agreed upon the rules and regulations of
+                          mentoring.
+                        </p>
+                      )}
+                    </li>
+                  )}
+                </ul>
+                <div className="flex flex-col space-y-2">
+                  <span className="text-cc capitalize">{contract.status}</span>
+                  {!contract.isApproved && (
+                    <Button onClick={() => handleUpdateContract(contract._id)}>
+                      Approve Contract
+                    </Button>
+                  )}
+                  {contract.isApproved && contract.status === "active" && (
+                    <Button
+                      onClick={() =>
+                        handleApprovePayment(
+                          contract._id,
+                          contract.mentor_id._id
+                        )
+                      }
+                    >
+                      Approve Payment
+                    </Button>
+                  )}
+                </div>
               </div>
+              <RatingModel
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                approve={() =>
+                  handleApprovePaymentConfirmation(selectedContractId!)
+                }
+                mentor={selectedMentor!}
+              />
             </Card>
           ))}
         </div>
