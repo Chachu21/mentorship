@@ -24,8 +24,34 @@ ChartJS.register(
   Legend
 );
 
+interface SkillSet {
+  [key: string]: number;
+}
+
+interface User {
+  _id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  location?: {
+    state?: string;
+    city?: string;
+    region?: string;
+    zipCode?: number;
+  };
+  skills: string[];
+  role: string;
+}
+
+interface DashboardData {
+  mentors: number;
+  mentees: number;
+  menteeSkills: SkillSet;
+  mentorSkills: SkillSet;
+}
+
 const AdminDashboard = () => {
-  const [data, setData] = useState({
+  const [data, setData] = useState<DashboardData>({
     mentors: 0,
     mentees: 0,
     menteeSkills: {},
@@ -40,13 +66,13 @@ const AdminDashboard = () => {
           axios.get(`${backend_url}/api/v1/users/getAllMentors`),
         ]);
 
-        const mentees = resMentees.data;
-        const mentors = resMentors.data;
+        const mentees: User[] = resMentees.data;
+        const mentors: User[] = resMentors.data;
 
         // Aggregate skills
-        const aggregateSkills = (users: any[]) => {
-          return users.reduce((acc, user) => {
-            user.skill.forEach((skill: string | number) => {
+        const aggregateSkills = (users: User[]): SkillSet => {
+          return users.reduce((acc: SkillSet, user: User) => {
+            user.skills.forEach((skill: string) => {
               acc[skill] = (acc[skill] || 0) + 1;
             });
             return acc;
@@ -70,13 +96,16 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  const calculatePercentages = (skills: { [s: string]: unknown; } | ArrayLike<unknown>) => {
+  const calculatePercentages = (skills: SkillSet) => {
     const labels = Object.keys(skills);
     const values = Object.values(skills);
     const total = values.reduce((acc, val) => acc + val, 0);
     return {
-      labels,
-      data: values.map((value) => (value / total) * 100),
+      labels: labels.length > 0 ? labels : ["No Skills"],
+      data:
+        values.length > 0
+          ? values.map((value) => (value / total) * 100)
+          : [100],
     };
   };
 
@@ -99,7 +128,7 @@ const AdminDashboard = () => {
     ],
   };
 
-  const doughnutData = (percentages) => ({
+  const doughnutData = (percentages: { labels: string[]; data: number[] }) => ({
     labels: percentages.labels,
     datasets: [
       {
@@ -127,7 +156,7 @@ const AdminDashboard = () => {
   });
 
   const barOptions = {
-    indexAxis: "x",
+    indexAxis: "x" as const,
     elements: {
       bar: {
         borderWidth: 1,

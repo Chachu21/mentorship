@@ -102,7 +102,7 @@ const MentorDetailPage = ({ params }: { params: { mentor_id: string } }) => {
           </div>
           <CardContent>
             <div className="flex space-x-3">
-              {userData?.skills?.map((skill, index) => (
+              {userData?.skill?.map((skill, index) => (
                 <span
                   key={index}
                   className="bg-gray-200 rounded-xl py-1 px-6 flex justify-center items-center w-fit pl-3"

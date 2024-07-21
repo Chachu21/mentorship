@@ -1,4 +1,6 @@
 export interface IUser {
+  city: string;
+  address: string;
   _id: string;
   fullName: string;
   phoneNumber: string;
@@ -25,7 +27,7 @@ export interface IUser {
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   languages?: string[];
-  skill?: string[];
+  skills?: string[];
   role?: string;
   bio?: string;
   goal?: string;

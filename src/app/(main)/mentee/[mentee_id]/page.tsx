@@ -179,14 +179,7 @@ const MenteeDetailPage = ({ params }: { params: { mentee_id: string } }) => {
                   ))}
                 </div>
               </div>
-              {/* <div className="flex items-center pb-3 space-x-4">
-                <span className="font-semibold text-gray-700 w-2/3">
-                  Preferred Experience Level:
-                </span>
-                <span className="text-gray-900">
-                  {userData?.preferedExperianceLevel}
-                </span>
-              </div> */}
+          
             </div>
           </div>
         </div>
