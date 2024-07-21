@@ -15,7 +15,7 @@ const Hero_Part = ({ title, subTitle, buttonText, image }: HeroProps) => {
         <div className="items-center md:flex">
           <div className="w-full md:w-1/2">
             <div className="md:max-w-md space-y-8">
-              <h1 className="text-3xl  font-bold text-[#14A800] dark:text-white md:text-4xl leading-8">
+              <h1 className="text-3xl  font-bold text-cc dark:text-white md:text-4xl leading-8">
                 {title}
               </h1>
               <p className="mt-3 text-[18px] font-medium text-gray-800 dark:text-gray-400">

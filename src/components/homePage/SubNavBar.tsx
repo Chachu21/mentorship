@@ -19,7 +19,7 @@ const SubNavBar = () => {
             <Link
               key={category.id}
               href={category.href.pathname}
-              className={`hover:text-[#14A800] hover:underline ${
+              className={`hover:text-cc hover:underline ${
                 isActive ? "text-cc underline font-bold" : "text-gray-500"
               }`}
             >

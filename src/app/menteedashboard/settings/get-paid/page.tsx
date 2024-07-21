@@ -23,6 +23,7 @@ import { IUser } from "@/type";
 import ModelForDelete from "@/components/ReusedComponent/ModelForDelete";
 import { CheckCircle } from "lucide-react";
 import Pay from "@/components/payment/Pay";
+import PayOutModel from "@/components/ReusedComponent/PayOutModel";
 
 interface BankDetails {
   bank_name: string;
@@ -32,10 +33,10 @@ interface BankDetails {
 
 const Paid = () => {
   const [showModal, setShowModal] = useState(false);
-
   const [showForm, setShowForm] = useState(false); // State to control form visibility
   const [isEditing, setIsEditing] = useState(false); // State to check if editing
   const [showDeleteDialog, setShowDeleteDialog] = useState(false); // State to control delete dialog visibility
+  const [showPayOutModel, setShowPayOutModel] = useState(false); // State to control payout modal visibility
   const user = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -45,17 +46,21 @@ const Paid = () => {
     account_holder_name: "",
     account_no: "",
   });
+
   const user_id = data?._id;
   const id = user?._id ? user?._id : user_id;
-  //todo: check
   const price = userData?.remainingBalance;
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/api/v1/users/get/${id}`
-      );
-      setUserData(res.data.user);
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/v1/users/get/${id}`
+        );
+        setUserData(res.data.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
     };
     fetchUserData();
   }, [id]);
@@ -72,24 +77,24 @@ const Paid = () => {
     e.preventDefault();
     try {
       await axios.put(`http://localhost:5000/api/v1/users/update/${id}`, {
-        updates: { bank_account: bankDetails },
+        updates: { bank_account: [bankDetails] }, // Wrap bankDetails in an array
       });
       setShowForm(false); // Close the dialog after form submission
       setIsEditing(false); // Reset editing state
-      // Optionally refresh the user data
-      setUserData((prev) =>
-        prev ? { ...prev, bank_account: bankDetails } : prev
+      setUserData(
+        (prev) => (prev ? { ...prev, bank_account: [bankDetails] } : prev) // Wrap bankDetails in an array
       );
     } catch (error) {
-      console.log("error on catch", error);
+      console.error("Error updating bank details:", error);
     }
   };
 
   const handleEditClick = () => {
     setBankDetails({
-      bank_name: userData?.bank_account?.bank_name || "",
-      account_holder_name: userData?.bank_account?.account_holder_name || "",
-      account_no: userData?.bank_account?.account_no || "",
+      bank_name: userData?.bank_account?.[0]?.bank_name || "", // Access first element if array
+      account_holder_name:
+        userData?.bank_account?.[0]?.account_holder_name || "", // Access first element if array
+      account_no: userData?.bank_account?.[0]?.account_no || "", // Access first element if array
     });
     setIsEditing(true);
     setShowForm(true);
@@ -97,23 +102,34 @@ const Paid = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: { bank_account: null } }
-      );
-      console.log(res.data);
+      await axios.put(`http://localhost:5000/api/v1/users/update/${id}`, {
+        updates: { bank_account: [] }, // Set to empty array if that's the expected type
+      });
       setShowDeleteDialog(false); // Close the delete dialog
-      setUserData((prev) =>
-        prev ? { ...prev, bank_account: undefined } : prev
-      ); // Clear bank account data
+      setUserData(
+        (prev) => (prev ? { ...prev, bank_account: [] } : prev) // Set to empty array
+      );
     } catch (error) {
-      console.log("error on catch", error);
+      console.error("Error deleting bank account:", error);
     }
   };
 
   const handlePayment = () => {
     setShowModal(true);
   };
+
+  const approvePayment = async () => {
+    try {
+      await axios.post(`http://localhost:5000/api/v1/payments/approve`, {
+        userId: id,
+        amount: price,
+      });
+      setShowPayOutModel(false); // Close the payout modal
+    } catch (error) {
+      console.error("Error approving payment:", error);
+    }
+  };
+
   return (
     <div className="md:px-8">
       <div className="space-y-8">
@@ -127,7 +143,7 @@ const Paid = () => {
           <CardFooter>
             <Button
               variant={price === 0.0 ? "outline" : "default"}
-              disabled={price === 0.0 ? true : false}
+              disabled={price === 0.0}
               className="cursor-pointer"
             >
               Get Paid Now
@@ -137,9 +153,8 @@ const Paid = () => {
               className="ml-8 capitalize cursor-pointer"
               onClick={handlePayment}
             >
-              pay
+              Pay
             </Button>
-            {/* Show form on button click */}
           </CardFooter>
         </Card>
         <Card className="space-y-8">
@@ -155,16 +170,16 @@ const Paid = () => {
             </div>
           </CardHeader>
           <CardContent>
-            {userData?.bank_account ? (
-              <div className="flex md:flex-row flex-col space-y-5 md:justify-between  items-center">
+            {userData?.bank_account?.length ? (
+              <div className="flex md:flex-row flex-col space-y-5 md:justify-between items-center">
                 <p className="flex w-full flex-wrap space-x-2">
                   <CheckCircle className="text-cc" />
                   <span className="text-gray-500 capitalize">
-                    {userData.bank_account.bank_name}
+                    {userData.bank_account[0].bank_name}
                   </span>{" "}
                   with account number{" "}
                   <span className="text-gray-500">
-                    {userData.bank_account.account_no}
+                    {userData.bank_account[0].account_no}
                   </span>
                 </p>
                 <div className="flex space-x-8">
@@ -173,7 +188,7 @@ const Paid = () => {
                     className="text-cc"
                     onClick={handleEditClick}
                   >
-                    edit
+                    Edit
                   </Button>
                   <Button
                     variant={"outline"}
@@ -244,11 +259,11 @@ const Paid = () => {
           onDelete={handleDelete}
         />
 
-        <Pay
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(false);
-          }}
+        <Pay isOpen={showModal} onClose={() => setShowModal(false)} />
+        <PayOutModel
+          isOpen={showPayOutModel}
+          onClose={() => setShowPayOutModel(false)}
+          approve={approvePayment}
         />
       </div>
     </div>

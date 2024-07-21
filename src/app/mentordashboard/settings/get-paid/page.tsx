@@ -22,6 +22,7 @@ import axios from "axios";
 import { IUser } from "@/type";
 import ModelForDelete from "@/components/ReusedComponent/ModelForDelete";
 import { CheckCircle } from "lucide-react";
+import PayOutModel from "@/components/ReusedComponent/PayOutModel";
 
 interface BankDetails {
   bank_name: string;
@@ -33,6 +34,7 @@ const Paid = () => {
   const [showForm, setShowForm] = useState(false); // State to control form visibility
   const [isEditing, setIsEditing] = useState(false); // State to check if editing
   const [showDeleteDialog, setShowDeleteDialog] = useState(false); // State to control delete dialog visibility
+  const [showPayOutModel, setShowPayOutModel] = useState(false); // State to control payout dialog visibility
   const user = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -52,7 +54,9 @@ const Paid = () => {
         `http://localhost:5000/api/v1/users/get/${id}`
       );
       setUserData(res.data.user);
+      console.log(res.data);
     };
+
     fetchUserData();
   }, [id]);
 
@@ -68,13 +72,13 @@ const Paid = () => {
     e.preventDefault();
     try {
       await axios.put(`http://localhost:5000/api/v1/users/update/${id}`, {
-        updates: { bank_account: bankDetails },
+        updates: { bank_account: [bankDetails] },
       });
       setShowForm(false); // Close the dialog after form submission
       setIsEditing(false); // Reset editing state
       // Optionally refresh the user data
       setUserData((prev) =>
-        prev ? { ...prev, bank_account: bankDetails } : prev
+        prev ? { ...prev, bank_account: [bankDetails] } : prev
       );
     } catch (error) {
       console.log("error on catch", error);
@@ -82,11 +86,13 @@ const Paid = () => {
   };
 
   const handleEditClick = () => {
-    setBankDetails({
-      bank_name: userData?.bank_account?.bank_name || "",
-      account_holder_name: userData?.bank_account?.account_holder_name || "",
-      account_no: userData?.bank_account?.account_no || "",
-    });
+    if (userData?.bank_account && userData.bank_account.length > 0) {
+      setBankDetails({
+        bank_name: userData.bank_account[0]?.bank_name || "",
+        account_holder_name: userData.bank_account[0].account_holder_name || "",
+        account_no: userData.bank_account[0].account_no || "",
+      });
+    }
     setIsEditing(true);
     setShowForm(true);
   };
@@ -95,17 +101,20 @@ const Paid = () => {
     try {
       const res = await axios.put(
         `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: { bank_account: null } }
+        { updates: { bank_account: [] } }
       );
       console.log(res.data);
       setShowDeleteDialog(false); // Close the delete dialog
-      setUserData((prev) =>
-        prev ? { ...prev, bank_account: undefined } : prev
-      ); // Clear bank account data
+      setUserData((prev) => (prev ? { ...prev, bank_account: [] } : prev)); // Clear bank account data
     } catch (error) {
       console.log("error on catch", error);
     }
   };
+
+  const approvePayment = () => {
+    console.log("Payment approved");
+  };
+
   return (
     <div className="md:px-8">
       <div className="space-y-8">
@@ -121,10 +130,10 @@ const Paid = () => {
               variant={price === 0.0 ? "outline" : "default"}
               disabled={price === 0.0 ? true : false}
               className="cursor-pointer"
+              onClick={() => setShowPayOutModel(true)}
             >
               Get Paid Now
-            </Button>{" "}
-            {/* Show form on button click */}
+            </Button>
           </CardFooter>
         </Card>
         <Card className="space-y-8">
@@ -140,35 +149,40 @@ const Paid = () => {
             </div>
           </CardHeader>
           <CardContent>
-            {userData?.bank_account ? (
-              <div className="flex md:flex-row flex-col space-y-5 md:justify-between  items-center">
-                <p className="flex w-full flex-wrap space-x-2">
-                  <CheckCircle className="text-cc" />
-                  <span className="text-gray-500 capitalize">
-                    {userData.bank_account.bank_name}
-                  </span>{" "}
-                  with account number{" "}
-                  <span className="text-gray-500">
-                    {userData.bank_account.account_no}
-                  </span>
-                </p>
-                <div className="flex space-x-8">
-                  <Button
-                    variant={"outline"}
-                    className="text-cc"
-                    onClick={handleEditClick}
-                  >
-                    edit
-                  </Button>
-                  <Button
-                    variant={"outline"}
-                    className="text-red-700 bg-white"
-                    onClick={() => setShowDeleteDialog(true)}
-                  >
-                    Remove
-                  </Button>
+            {userData?.bank_account && userData.bank_account.length > 0 ? (
+              userData?.bank_account.map((bankAccount, index) => (
+                <div
+                  key={index}
+                  className="flex md:flex-row flex-col space-y-5 md:justify-between items-center"
+                >
+                  <p className="flex w-full flex-wrap space-x-2">
+                    <CheckCircle className="text-cc" />
+                    <span className="text-gray-500 capitalize">
+                      {bankAccount.bank_name}
+                    </span>{" "}
+                    with account number{" "}
+                    <span className="text-gray-500">
+                      {bankAccount.account_no}
+                    </span>
+                  </p>
+                  <div className="flex space-x-8">
+                    <Button
+                      variant={"outline"}
+                      className="text-cc"
+                      onClick={handleEditClick}
+                    >
+                      edit
+                    </Button>
+                    <Button
+                      variant={"outline"}
+                      className="text-red-700 bg-white"
+                      onClick={() => setShowDeleteDialog(true)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              ))
             ) : (
               <p>No withdrawal methods available.</p>
             )}
@@ -227,6 +241,11 @@ const Paid = () => {
           isOpen={showDeleteDialog}
           onClose={() => setShowDeleteDialog(false)}
           onDelete={handleDelete}
+        />
+        <PayOutModel
+          isOpen={showPayOutModel}
+          onClose={() => setShowPayOutModel(false)}
+          approve={approvePayment}
         />
       </div>
     </div>

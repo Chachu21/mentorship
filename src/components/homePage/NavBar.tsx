@@ -1,29 +1,36 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-// import Image from "next/image";
 import { Button } from "../ui/button";
 import SubNavBar from "./SubNavBar";
 import { Menu, Search, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { IUser } from "@/type";
+import { backend_url } from "../constant";
+import axios from "axios";
 
 const NavBar = () => {
+  const [mentors, setMentors] = useState<IUser[]>([]);
+  const [metees, setMentee] = useState<IUser[]>([]);
+  const [searchResult, setSearchResult] = useState<IUser[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-  const [screenWidth, setScreenWidth] = useState(0);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const [screenWidth, setScreenWidth] = useState(0);
+  const router = useRouter();
   useEffect(() => {
     // This code runs only on the client side
     setScreenWidth(window.innerWidth);
@@ -38,6 +45,41 @@ const NavBar = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  useEffect(() => {
+    const fetchMentor = async () => {
+      const res = await axios.get(`${backend_url}/api/v1/users/getallmentors`);
+      if (res.status === 200) {
+        setMentors(res.data);
+      }
+    };
+    fetchMentor();
+  }, []);
+
+  useEffect(() => {
+    const fetchMentors = async () => {
+      if (isSearching) {
+        try {
+          const res = await axios.get(
+            `${backend_url}/api/v1/users/search/mentors`,
+            {
+              params: { query: searchQuery },
+            }
+          );
+          setSearchResult(res.data);
+        } catch (error) {
+          console.error("Error fetching mentors:", error);
+        } finally {
+          setIsSearching(false);
+        }
+      }
+    };
+
+    if (searchQuery !== "") {
+      fetchMentors();
+    } else {
+      setSearchResult([]);
+    }
+  }, [isSearching, searchQuery]);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -54,6 +96,27 @@ const NavBar = () => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+
+  const handleSearch = async () => {
+    // TODO: implement search functionality
+    if (selectedOption === "mentor") {
+      router.push("/mentors");
+    }
+    if (selectedOption === "mentee") {
+      router.push("/mentees");
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value); // Update search query state with input value
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setIsSearching(true);
+    }
+  };
+
   return (
     <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
@@ -69,9 +132,7 @@ const NavBar = () => {
               </button>
             </div>
             <Link href="/" className="font-pacifico">
-              <h1 className="lg:text-2xl text-xl  text-[#14A800]">
-                Mentorship
-              </h1>
+              <h1 className="lg:text-2xl text-xl  text-cc">Mentorship</h1>
             </Link>
           </div>
           <div className={isOpenMobile ? "flex" : " hidden lg:flex"}>
@@ -90,14 +151,12 @@ const NavBar = () => {
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
-                        <span className="hover:text-[#14A800] ">
-                          Find Mentors
-                        </span>
+                        <span className="hover:text-cc ">Find Mentors</span>
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="hover:text-[#14A800]">
+                    <NavigationMenuTrigger className="hover:text-cc">
                       Find Mentee
                     </NavigationMenuTrigger>
                   </NavigationMenuItem>
@@ -106,9 +165,7 @@ const NavBar = () => {
                       <NavigationMenuLink
                         className={navigationMenuTriggerStyle()}
                       >
-                        <span className="hover:text-[#14A800] ">
-                          Why Mentorship
-                        </span>
+                        <span className="hover:text-cc ">Why Mentorship</span>
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -148,6 +205,9 @@ const NavBar = () => {
                   />
                 </svg>
                 <input
+                  onChange={handleInputChange}
+                  value={searchQuery}
+                  onKeyDown={handleKeyDown}
                   type="text"
                   placeholder="Search"
                   className="pl-10 pr-3 hover:bg-gray-200 h-10 lg:w-[280px] sm:w-[250px] w-[200px]  rounded-2xl outline-none"

@@ -22,7 +22,7 @@ const config = {
         pacifico: ["Pacifico", "cursive"],
       },
       colors: {
-        cc: "#14A800",
+        cc: "#139379",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

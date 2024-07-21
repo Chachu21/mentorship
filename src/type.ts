@@ -1,3 +1,9 @@
+export interface BankDetails {
+  bank_name?: string;
+  account_holder_name?: string;
+  account_no?: string;
+}
+
 export interface IUser {
   _id: string;
   fullName: string;
@@ -10,11 +16,7 @@ export interface IUser {
     region?: string;
     zipCode?: number;
   };
-  bank_account?: {
-    bank_name?: string;
-    account_holder_name?: string;
-    account_no?: string;
-  };
+  bank_account?: BankDetails[]; // Array of BankDetails, can be undefined
   level?: string;
   profileImage: {
     public_id: string;
