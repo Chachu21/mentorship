@@ -154,7 +154,6 @@ const AdminDashboard = () => {
       },
     ],
   });
-
   const barOptions = {
     indexAxis: "x" as const,
     elements: {
@@ -169,13 +168,15 @@ const AdminDashboard = () => {
           stepSize: 1,
         },
         grid: {
-          drawBorder: false,
+          display: true, // Ensure grid is displayed
+          color: "rgba(0,0,0,0.1)", // Use color instead of borderColor
         },
       },
       y: {
         beginAtZero: true,
         grid: {
-          drawBorder: false,
+          display: true, // Ensure grid is displayed
+          color: "rgba(0,0,0,0.1)", // Use color instead of borderColor
         },
       },
     },
@@ -197,7 +198,7 @@ const AdminDashboard = () => {
     plugins: {
       legend: {
         display: true,
-        position: "bottom",
+        position: "bottom" as const, // Ensure position is one of the valid types
       },
       title: {
         display: true,
