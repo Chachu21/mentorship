@@ -9,8 +9,6 @@ export interface IUser {
   fullName: string;
   phoneNumber: string;
   email: string;
-  interests?: string;
-  preferedExperianceLevel: string;
   location?: {
     state?: string;
     city?: string;
@@ -32,7 +30,6 @@ export interface IUser {
   bio?: string;
   goal?: string;
   professionalRole?: string;
-  currentJob?: string;
   experiences?: {
     title?: string;
     company?: string;
@@ -46,9 +43,7 @@ export interface IUser {
     field?: string;
     educationDescription?: string;
   }[];
-  certification?: string;
   rate?: number;
-  mentoringFee?: number;
   service?: string;
   isVerified?: boolean;
   verificationCode?: string;
@@ -105,11 +100,6 @@ export interface proposalType {
   mentor: string;
   status: string;
   createdAt?: Date;
-}
-
-export interface contractTypes {
-  mentorship_id: string;
-  mentor_id: string;
 }
 
 export interface reviewTypes {
