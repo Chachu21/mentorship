@@ -7,7 +7,6 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Button } from "../ui/button";
@@ -20,7 +19,7 @@ import axios from "axios";
 
 const NavBar = () => {
   const [mentors, setMentors] = useState<IUser[]>([]);
-  const [metees, setMentee] = useState<IUser[]>([]);
+  const [mentees, setMentees] = useState<IUser[]>([]);
   const [searchResult, setSearchResult] = useState<IUser[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
@@ -31,6 +30,7 @@ const NavBar = () => {
 
   const [screenWidth, setScreenWidth] = useState(0);
   const router = useRouter();
+
   useEffect(() => {
     // This code runs only on the client side
     setScreenWidth(window.innerWidth);
@@ -45,18 +45,19 @@ const NavBar = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   useEffect(() => {
-    const fetchMentor = async () => {
+    const fetchMentors = async () => {
       const res = await axios.get(`${backend_url}/api/v1/users/getallmentors`);
       if (res.status === 200) {
         setMentors(res.data);
       }
     };
-    fetchMentor();
+    fetchMentors();
   }, []);
 
   useEffect(() => {
-    const fetchMentors = async () => {
+    const fetchMentorsOrMentees = async () => {
       if (isSearching) {
         try {
           const res = await axios.get(
@@ -75,18 +76,21 @@ const NavBar = () => {
     };
 
     if (searchQuery !== "") {
-      fetchMentors();
+      fetchMentorsOrMentees();
     } else {
       setSearchResult([]);
     }
   }, [isSearching, searchQuery]);
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
   const toggleMobileSearchInput = () => {
     setShowMobileSearch(!showMobileSearch);
     setIsOpenMobile(false);
   };
+
   const toggleMobileMenu = () => {
     setIsOpenMobile(!isOpenMobile);
     setShowMobileSearch(false);
@@ -97,16 +101,6 @@ const NavBar = () => {
     setIsOpen(false);
   };
 
-  const handleSearch = async () => {
-    // TODO: implement search functionality
-    if (selectedOption === "mentor") {
-      router.push("/mentors");
-    }
-    if (selectedOption === "mentee") {
-      router.push("/mentees");
-    }
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value); // Update search query state with input value
   };
@@ -114,11 +108,20 @@ const NavBar = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setIsSearching(true);
+      redirectToSearchResults();
+    }
+  };
+
+  const redirectToSearchResults = () => {
+    if (selectedOption === "mentor") {
+      router.push(`/mentors?search=${searchQuery}`);
+    } else if (selectedOption === "mentee") {
+      router.push(`/mentee?search=${searchQuery}`);
     }
   };
 
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div className="flex mr-5 items-center lg:space-x-0 space-x-3">
@@ -155,10 +158,14 @@ const NavBar = () => {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="hover:text-cc">
-                      Find Mentee
-                    </NavigationMenuTrigger>
+                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                    <Link href="/mentee" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <span className="hover:text-cc">Find Mentees</span>
+                      </NavigationMenuLink>
+                    </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link href="/why-mentorship" legacyBehavior passHref>
@@ -217,9 +224,9 @@ const NavBar = () => {
                 <div className="relative">
                   <button
                     onClick={toggleDropdown}
-                    className="flex justify-center group items-center px-5 w-fit hover:bg-gray-200 h-10 rounded-2xl outline-none"
+                    className="flex justify-center capitalize group items-center px-5 w-fit hover:bg-gray-200 h-10 rounded-2xl outline-none"
                   >
-                    {selectedOption || "Mentor"}
+                    {selectedOption || "mentor"}
                     <svg
                       className="ml-2 h-8 w-5 fill-current text-gray-600 group-hover:text-gray-900"
                       xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +244,7 @@ const NavBar = () => {
                         >
                           <span>Mentor</span>
                           <p className="text-sm text-gray-500">
-                            get a mentor for guidance and consultation
+                            Get a mentor for guidance and consultation
                           </p>
                         </li>
                         <li
@@ -246,7 +253,7 @@ const NavBar = () => {
                         >
                           <span>Mentee</span>
                           <p className="text-sm text-gray-500">
-                            look mentess profile
+                            Look for mentee&apos;s profiles
                           </p>
                         </li>
                       </ul>
@@ -277,29 +284,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-lg p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
-ListItem.displayName = "ListItem";

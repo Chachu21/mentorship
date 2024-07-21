@@ -1,30 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import DetailPageOfMentor from "../Mentor/MentorsList";
 import { IUser } from "@/type";
 import axios from "axios";
 import { backend_url } from "../constant";
 import { Input } from "../ui/input";
-import MentorDetailPage from "../ReusedComponent/MentorDetailPage";
+import DetailPageOfMentee from "./DetailPageOfMentee";
 
 const MainPart = () => {
-  const [mentors, setMentors] = useState<IUser[]>([]);
+  const [mentees, setMentees] = useState<IUser[]>([]);
   const [searchResult, setSearchResult] = useState<IUser[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchMentor = async () => {
-      const res = await axios.get(`${backend_url}/api/v1/users/getallmentors`);
+    const fetchMentee = async () => {
+      const res = await axios.get(`${backend_url}/api/v1/users/getAllMentees`);
       if (res.status === 200) {
-        setMentors(res.data);
+        setMentees(res.data);
       }
     };
-    fetchMentor();
+    fetchMentee();
   }, []);
 
   useEffect(() => {
-    const fetchMentors = async () => {
+    const fetchMentees = async () => {
       if (isSearching) {
         try {
           const res = await axios.get(
@@ -43,7 +42,7 @@ const MainPart = () => {
     };
 
     if (searchQuery !== "") {
-      fetchMentors();
+      fetchMentees();
     } else {
       setSearchResult([]);
     }
@@ -73,7 +72,7 @@ const MainPart = () => {
         </svg>
         <Input
           type="text"
-          placeholder="Search Mentors"
+          placeholder="Search Mentees"
           className="pl-10 pr-3 border border-gray-300 hover:bg-gray-200 h-10 sm:w-[580px] w-full rounded-2xl outline-none"
           value={searchQuery}
           onChange={handleInputChange}
@@ -81,7 +80,7 @@ const MainPart = () => {
         />
       </div>
       <div className="flex flex-col space-y-4">
-        <h1 className="text-lg font-semibold">List Of Mentors(Experts) </h1>
+        <h1 className="text-lg font-semibold">Expertises categories</h1>
         <div className="flex flex-col">
           {/* <div className="md:w-[14%] md:flex hidden flex-col space-y-4">
             <div className="flex space-x-3 items-center">
@@ -102,9 +101,9 @@ const MainPart = () => {
             </div>
           </div> */}
           <div className="flex flex-1 flex-col space-y-5">
-            <DetailPageOfMentor
-              url="mentors"
-              mentors={searchQuery ? searchResult : mentors}
+            <DetailPageOfMentee
+              url="mentee"
+              Mentees={searchQuery ? searchResult : mentees}
             />
           </div>
           <div></div>

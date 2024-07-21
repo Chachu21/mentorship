@@ -13,7 +13,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Button } from "../ui/button";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
@@ -27,7 +27,7 @@ import { backend_url } from "../constant";
 
 const MentorNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  // const [selectedOption, setSelectedOption] = useState("");
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
@@ -76,10 +76,10 @@ const MentorNavBar = () => {
     setShowMobileSearch(false);
   };
 
-  const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
+  // const handleOptionClick = (option: string) => {
+  //   setSelectedOption(option);
+  //   setIsOpen(false);
+  // };
   const handleLogout = () => {
     try {
       dispatch(logoutSuccess());
@@ -90,7 +90,7 @@ const MentorNavBar = () => {
   };
   const isOnline = true;
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-[] container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div className="flex mr-5 items-center lg:space-x-0 space-x-3">
@@ -180,7 +180,7 @@ const MentorNavBar = () => {
           </div>
         </div>
         <div className="flex items-center md:space-x-16 space-x-5">
-          {!isOpenMobile && (
+          {/* {!isOpenMobile && (
             <button type="button" onClick={toggleMobileSearchInput}>
               <Search
                 className="flex lg:hidden text-gray-700 items-center"
@@ -257,7 +257,7 @@ const MentorNavBar = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="relative">
             <div
               className="cursor-pointer"

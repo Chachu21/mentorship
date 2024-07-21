@@ -31,7 +31,7 @@ import { backend_url } from "../constant";
 
 const MenteeNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  // const [selectedOption, setSelectedOption] = useState("");
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
@@ -68,22 +68,22 @@ const MenteeNavBar = () => {
 
     fetchUserData();
   }, [id]);
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-  const toggleMobileSearchInput = () => {
-    setShowMobileSearch(!showMobileSearch);
-    setIsOpenMobile(false);
-  };
+  // const toggleDropdown = () => {
+  //   setIsOpen(!isOpen);
+  // };
+  // const toggleMobileSearchInput = () => {
+  //   setShowMobileSearch(!showMobileSearch);
+  //   setIsOpenMobile(false);
+  // };
   const toggleMobileMenu = () => {
     setIsOpenMobile(!isOpenMobile);
     setShowMobileSearch(false);
   };
 
-  const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
+  // const handleOptionClick = (option: string) => {
+  //   setSelectedOption(option);
+  //   setIsOpen(false);
+  // };
   const handleLogout = () => {
     try {
       dispatch(logoutSuccess());
@@ -97,7 +97,7 @@ const MenteeNavBar = () => {
   };
   const isOnline = true;
   return (
-    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-screen-2xl container mx-auto z-40">
+    <header className="fixed top-0 left-1/2 transform -translate-x-1/2 max-w-[1336px] container mx-auto z-40">
       <nav className="flex justify-between items-center py-2 bg-white">
         <div className="flex justify-between items-center ">
           <div
@@ -208,7 +208,7 @@ const MenteeNavBar = () => {
           </div>
         </div>
         <div className="flex items-center md:space-x-16 space-x-5">
-          {!isOpenMobile && (
+          {/* {!isOpenMobile && (
             <button type="button" onClick={toggleMobileSearchInput}>
               <Search
                 className="flex lg:hidden text-gray-700 items-center"
@@ -286,7 +286,7 @@ const MenteeNavBar = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="relative">
             <div className="cursor-pointer" onClick={handleProfile}>
               <Image

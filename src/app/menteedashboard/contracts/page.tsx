@@ -151,6 +151,24 @@ const Contracts = () => {
                     <li>
                       <p>Mentor: {contract.mentor_id.fullName}</p>
                       <p>Terms Accepted: {contract.isAgree.toString()}</p>
+                      <p>
+                        The mentor shall provide guidance and support to the
+                        mentee in accordance with the agreed-upon mentorship
+                        plan. The mentee agrees to actively participate,
+                        complete assignments, and respect the mentor&apos;s time
+                        and expertise. Both parties commit to maintaining
+                        regular communication, providing feedback, and adhering
+                        to scheduled meetings. Confidentiality must be upheld,
+                        and any proprietary information shared during the
+                        mentorship shall remain protected. Upon approval of the
+                        mentorship application, the mentee shall make the
+                        required payment as specified in the mentorship
+                        agreement. Any disputes shall be resolved through
+                        amicable discussion. Both parties reserve the right to
+                        terminate the mentorship with appropriate notice,
+                        ensuring mutual respect and professionalism throughout
+                        the engagement.
+                      </p>
                     </li>
                   )}
                   {role === "mentor" && (
@@ -161,8 +179,22 @@ const Contracts = () => {
                           <span className="text-cc pr-2">
                             <CheckCheck />
                           </span>
-                          The user has agreed upon the rules and regulations of
-                          mentoring.
+                          The mentor shall provide guidance and support to the
+                          mentee in accordance with the agreed-upon mentorship
+                          plan. The mentee agrees to actively participate,
+                          complete assignments, and respect the mentor&apos;s
+                          time and expertise. Both parties commit to maintaining
+                          regular communication, providing feedback, and
+                          adhering to scheduled meetings. Confidentiality must
+                          be upheld, and any proprietary information shared
+                          during the mentorship shall remain protected. Upon
+                          approval of the mentorship application, the mentee
+                          shall make the required payment as specified in the
+                          mentorship agreement. Any disputes shall be resolved
+                          through amicable discussion. Both parties reserve the
+                          right to terminate the mentorship with appropriate
+                          notice, ensuring mutual respect and professionalism
+                          throughout the engagement.
                         </p>
                       )}
                     </li>

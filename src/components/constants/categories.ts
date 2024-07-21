@@ -19,26 +19,27 @@ export const categories = [
       },
     },
     faqs: [
-    {
-      question:
-        "What is the initial step to finding the right mentor for your development and IT goals and understanding the associated mentorship costs?",
-      answer:
-        "One of the initial steps in mentorship is identifying the specific skills you require for your growth journey. Mentorship platforms like Upwork match you with experienced mentors who possess a diverse range of expertise in development and IT, ready to guide you in achieving your goals.",
-    },
-    {
-      question:
-        "Why should I use Mentorship to find mentors for development and IT guidance?",
-      answer:
-        "Mentorship offers you the flexibility you need to find the right guidance for your development and IT journey.",
-    },
-    {
-      question: "What are the benefits of participating in an EQUB?",
-      answer:
-        "Description of the advantages of EQUB membership, such as access to interest-free loans, financial assistance, and community support.",
-    },
+      {
+        question:
+          "What is the initial step to finding the right mentor for your development and IT goals and understanding the associated mentorship costs?",
+        answer:
+          "One of the initial steps in mentorship is identifying the specific skills you require for your growth journey. Mentorship platforms like Upwork match you with experienced mentors who possess a diverse range of expertise in development and IT, ready to guide you in achieving your goals.",
+      },
+      {
+        question:
+          "Why should I use Mentorship to find mentors for development and IT guidance?",
+        answer:
+          "Mentorship offers you the flexibility you need to find the right guidance for your development and IT journey.",
+      },
+      {
+        question:
+          "What are the benefits of participating in a mentorship program?",
+        answer:
+          "Participating in a mentorship program offers numerous advantages, including personalized guidance and support from experienced mentors, opportunities for professional and personal growth, access to valuable industry insights and networking opportunities, and tailored advice to help achieve career goals and overcome challenges.",
+      },
 
-    // Add more FAQs as needed
-  ],
+      // Add more FAQs as needed
+    ],
   },
   {
     id: 2,
@@ -52,7 +53,8 @@ export const categories = [
           "Connect with experienced mentors to accelerate your development journey, overcome obstacles, and foster personal growth.",
         buttonText: "Get started",
         image: "/assets/it.avif",
-        slogan: "Inspiring mentors in Design and Creativity Art for your growth.",
+        slogan:
+          "Inspiring mentors in Design and Creativity Art for your growth.",
       },
     },
   },
@@ -116,7 +118,8 @@ export const categories = [
           "Connect with experienced mentors to accelerate your marketing and financial journey, overcome obstacles, and foster personal growth.",
         buttonText: "Get started",
         image: "/assets/marketing.jpg",
-        slogan: "Trusted mentors in Marketing and Finances to boost your skills.",
+        slogan:
+          "Trusted mentors in Marketing and Finances to boost your skills.",
       },
     },
   },

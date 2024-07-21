@@ -96,7 +96,7 @@ const MentoringPost = () => {
     }
   };
   return (
-    <div>
+    <div className="overflow-y-auto-auto">
       <div className="flex justify-end items-center">
         <Button className="space-x-3" onClick={() => setIsDialogOpen(true)}>
           <Plus size={24} />

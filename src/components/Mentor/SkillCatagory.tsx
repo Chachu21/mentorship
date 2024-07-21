@@ -99,14 +99,14 @@ const SkillCategory = ({ category, slogan }: SkillCategoryProps) => {
       </div>
 
       <div className="flex flex-col space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {Object.entries(skills)
             .slice(0, showMoreSkills ? undefined : 6)
             .map(([skill, count]) => (
               <Card
                 onClick={() => handleClicked(skill)}
                 key={skill}
-                className="w-[213px] md:w-[280px] rounded-2xl cursor-pointer"
+                className="w-full mb-4 sm:w-[280px] rounded-2xl cursor-pointer"
               >
                 <CardHeader>
                   <h2 className="text-lg font-semibold text-[#1F284F] capitalize">
@@ -205,7 +205,7 @@ const statistics = (
     id: 2,
     icon: (
       <div className="flex space-x-5 items-center">
-        <span className="text-lg font-bold">211k+ contracts</span>
+        <span className="text-lg font-bold">21k+ contracts</span>
       </div>
     ),
     title: `Involving ${category} work in the past year.`,

@@ -1,4 +1,5 @@
 import EmailVerificationTemplate from "@/components/auth/EmailVerification";
+import FeedbackForm from "@/components/homePage/FeedbackForm";
 import ForMentee from "@/components/homePage/ForMentee";
 import GroupMentor from "@/components/homePage/GroupMentor";
 import Hero from "@/components/homePage/Hero";
@@ -15,6 +16,7 @@ export default function Home() {
       <Cards />
       <ForMentee />
       <Service />
+      <FeedbackForm />
     </main>
   );
 }

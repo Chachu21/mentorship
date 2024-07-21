@@ -66,7 +66,10 @@ const ReuseMentorship = ({ url, mentorships = [] }: reusePros) => {
                 </div>
                 <div>
                   <h3 className="text-cc font-semibold text-2xl underline italic ">
-                    {mentorship.title} <span className="text-gray-700">({mentorship.duration})</span>
+                    {mentorship.title}{" "}
+                    <span className="text-gray-700">
+                      ({mentorship.duration})
+                    </span>
                   </h3>
                 </div>
                 <div className="flex flex-col space-y-2">
@@ -95,7 +98,7 @@ const ReuseMentorship = ({ url, mentorships = [] }: reusePros) => {
                     </span>
                   ))}
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex sm:flex-row flex-col sm:justify-between sm:items-center sm:space-y-0 space-y-3">
                   {typeof mentorship.createdBy === "object" &&
                     mentorship.createdBy !== null && (
                       <>

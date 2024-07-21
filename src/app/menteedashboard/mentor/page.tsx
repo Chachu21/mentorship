@@ -4,7 +4,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <main className="flex flex-col md:mt-32 mt-16 space-y-4">
+    <main className="flex flex-col  space-y-4">
       <MentorsHero />
       <MainPart />
     </main>

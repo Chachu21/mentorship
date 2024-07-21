@@ -10,6 +10,7 @@ export interface IUser {
   phoneNumber: string;
   email: string;
   interests?: string;
+  preferedExperianceLevel: string;
   location?: {
     state?: string;
     city?: string;
@@ -54,6 +55,7 @@ export interface IUser {
   verificationCodeExpires?: Date;
   category?: string;
   remainingBalance?: number;
+  no_review?: number;
 }
 
 export interface formData {
@@ -108,4 +110,20 @@ export interface proposalType {
 export interface contractTypes {
   mentorship_id: string;
   mentor_id: string;
+}
+
+export interface reviewTypes {
+  _id: string;
+  user: {
+    _id: string;
+    fullName: string;
+    profileImage: {
+      public_id: string;
+      url: string;
+    };
+  };
+  mentor: string;
+  rating: number;
+  comment: string;
+  createdAt?: Date;
 }

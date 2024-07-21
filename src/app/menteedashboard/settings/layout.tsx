@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Card, CardHeader } from "@/components/ui/card";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -31,12 +31,17 @@ const SidebarLinks = [
 
 const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
 
   const handleSidebarItemClick = (link: string) => {
     router.push(link);
     setIsSidebarVisible(false);
+  };
+
+  const isActiveLink = (link: string) => {
+    return pathname === link;
   };
 
   return (
@@ -55,7 +60,9 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
               <div
                 key={item.id}
                 onClick={() => handleSidebarItemClick(item.link)}
-                className="py-3 px-3 cursor-pointer"
+                className={`py-3 px-3 cursor-pointer ${
+                  isActiveLink(item.link) ? "text-cc underline" : ""
+                }`}
               >
                 <div>{item.name}</div>
               </div>

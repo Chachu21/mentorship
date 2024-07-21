@@ -145,6 +145,7 @@ const Paid = () => {
               variant={price === 0.0 ? "outline" : "default"}
               disabled={price === 0.0}
               className="cursor-pointer"
+             onClick={() => setShowPayOutModel(true)}
             >
               Get Paid Now
             </Button>{" "}

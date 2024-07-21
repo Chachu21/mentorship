@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { closeProfile } from "@/redux/features/userSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import { IUser, mentorshipType } from "@/type";
+import {  mentorshipType } from "@/type";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -134,7 +134,7 @@ const Home: React.FC = () => {
         <Separator className="h-1" />
         <p className="text-gray-500  py-3 md:container">
           Browse mentorship opportunities aligned with your experience, tailored
-          to mentess’s preferences, sorted by relevance
+          to mentees&apos;s preferences, sorted by relevance
         </p>
         <Separator className="" />
         <TabsContent value="Best Match">

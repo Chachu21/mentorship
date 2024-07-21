@@ -23,6 +23,12 @@ import { Textarea } from "@/components/ui/textarea";
 const Profile = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
   const [profileImage, setProfileImage] = useState<string>("");
+  const [newExperience, setNewExperience] = useState({
+    title: "",
+    company: "",
+    isCurrent: false,
+    experienceDescription: "",
+  });
   const [editSection, setEditSection] = useState<string | null>(null); // State to control which section to edit
   const user = useSelector((state: RootState) => state.users.data);
   const data = useSelector((state: RootState) => state.users.user);
@@ -127,7 +133,40 @@ const Profile = () => {
       [id]: value,
     }));
   };
-
+  const handleExperienceChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setNewExperience((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+  const handleAddExperience = async () => {
+    try {
+      const updatedExperiences = [
+        ...(userData?.experiences || []),
+        newExperience,
+      ];
+      const res = await axios.put(
+        `http://localhost:5000/api/v1/users/update/${id}`,
+        { updates: { ...userData, experiences: updatedExperiences } }
+      );
+      if (res.status === 200) {
+        setUserData(res.data.user);
+        setNewExperience({
+          title: "",
+          company: "",
+          isCurrent: false,
+          experienceDescription: "",
+        });
+        setEditSection(null);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error adding new experience:", error);
+    }
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -148,9 +187,9 @@ const Profile = () => {
   return (
     <main className="md:flex-row flex flex-col space-x-5 pt-3">
       <div className="flex flex-col md:flex-grow order-1">
-        <Card className="space-y-8 py-5">
+        <Card className="space-y-8 py-5 ">
           <CardContent className="space-y-8">
-            <div className="flex space-x-3 items-center px-4 py-12 border border-gray-300">
+            <div className="flex sm:flex-row flex-col md:space-x-3 items-center px-4 py-12 border border-gray-300">
               <div>
                 <div className="relative">
                   <div className="">
@@ -268,16 +307,17 @@ const Profile = () => {
                         <Plus />
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    {/* <div className="flex items-center space-x-2">
                       <div
                         className="rounded-full p-2 text-cc cursor-pointer border border-gray-400"
                         onClick={() => handleEditClick("experiences")}
                       >
                         <Edit2 />
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
+
                 <div>
                   {userData?.experiences ? (
                     userData?.experiences.map(
@@ -315,11 +355,50 @@ const Profile = () => {
                   )}
                 </div>
               </div>
+              <Separator className="my-12" />
+              <div>
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-semibold">Education Details</h3>
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className="rounded-full p-2 text-cc cursor-pointer border border-gray-400"
+                      onClick={() => handleEditClick("education")}
+                    >
+                      <Edit2 />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex space-y-3 flex-col items-start justify-start">
+                  {userData?.educations &&
+                    userData?.educations.map((education: any) => (
+                      <CardContent
+                        key={education.school}
+                        className="flex flex-col"
+                      >
+                        <p className="text-gray-800">
+                          <strong>School:</strong> {education.school}
+                        </p>
+                        <p className="text-gray-800">
+                          <strong>Degree:</strong>
+                          {education.degree}
+                        </p>
+                        <p className="text-gray-800">
+                          <strong>Field:</strong>
+                          {education.field}
+                        </p>
+                        <p className="text-gray-800">
+                          <strong>Education Description:</strong>{" "}
+                          {education.educationDescription}
+                        </p>
+                      </CardContent>
+                    ))}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
-      <div className="order-2">
+      <div className="order-2 ">
         <Card className="px-4 py-8">
           <CardContent>
             <div>
@@ -346,38 +425,6 @@ const Profile = () => {
               ) : (
                 <p>No skills added.</p>
               )}
-            </div>
-            <Separator className="my-12" />
-            <div>
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">Education Details</h3>
-                <div className="flex items-center space-x-2">
-                  <div
-                    className="rounded-full p-2 text-cc cursor-pointer border border-gray-400"
-                    onClick={() => handleEditClick("education")}
-                  >
-                    <Edit2 />
-                  </div>
-                </div>
-              </div>
-              <div className="flex space-y-3 flex-col ">
-                {userData?.educations &&
-                  userData?.educations.map((education: any) => (
-                    <CardContent
-                      key={education.school}
-                      className="flex flex-col"
-                    >
-                      <p className="text-gray-600">
-                        School: {education.school}
-                      </p>
-                      <p className="text-gray-600">Degree:{education.degree}</p>
-                      <p className="text-gray-600">Field:{education.field}</p>
-                      <p>
-                        Education Description: {education.educationDescription}
-                      </p>
-                    </CardContent>
-                  ))}
-              </div>
             </div>
             <Separator className="my-12" />
             <div>
@@ -437,70 +484,33 @@ const Profile = () => {
               </div>
             )}
             {editSection === "experiences" && (
-              <div className="space-y-2">
-                {/* Example for editing experiences, more inputs may be needed */}
-                {userData?.experiences?.map(
-                  (experience: any, index: number) => (
-                    <div key={index}>
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        id="title"
-                        value={experience.title || ""}
-                        onChange={handleChange}
-                      />
-                      <Label htmlFor="company">Company</Label>
-                      <Input
-                        id="company"
-                        value={experience.company || ""}
-                        onChange={handleChange}
-                      />
-                      <div>
-                        <Input
-                          id="isCurrentlWorking"
-                          checked={experience.isCurrent}
-                          type="check"
-                        />
-                        <p>is currently working in the organazation</p>
-                      </div>
-                      <Label htmlFor="experienceDescription">
-                        Experience Description
-                      </Label>
-                      <Textarea
-                        id="experienceDescription"
-                        value={experience.experienceDescription || ""}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  )
-                )}
-                {/* <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={userData?.experiences || ""}
-                  onChange={handleChange}
-                />
-                <Label htmlFor="company">Company</Label>
-                <Input
-                  id="company"
-                  value={userData?.company || ""}
-                  onChange={handleChange}
-                />
+              <div className="space-y-4">
                 <div>
+                  <Label htmlFor="title">Title</Label>
                   <Input
-                    id="isCurrentlWorking"
-                    checked={userData?}
-                    type="check"
+                    id="title"
+                    value={newExperience.title}
+                    onChange={handleExperienceChange}
                   />
-                  <p>is currently working in the organazation</p>
                 </div>
-                <Label htmlFor="experienceDescription">
-                  Experience Description
-                </Label>
-                <Textarea
-                  id="experienceDescription"
-                  value={userData?.experienceDescription || ""}
-                  onChange={handleChange}
-                /> */}
+                <div>
+                  <Label htmlFor="company">Company</Label>
+                  <Input
+                    id="company"
+                    value={newExperience.company}
+                    onChange={handleExperienceChange}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="experienceDescription">
+                    Experience Description
+                  </Label>
+                  <Textarea
+                    id="experienceDescription"
+                    value={newExperience.experienceDescription}
+                    onChange={handleExperienceChange}
+                  />
+                </div>
               </div>
             )}
             {editSection === "skills" && (

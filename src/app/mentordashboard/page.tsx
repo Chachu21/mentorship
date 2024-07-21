@@ -3,7 +3,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <main className="min-h-screen mt-32">
+    <main className="min-h-screen mt-20">
       <Home />
     </main>
   );

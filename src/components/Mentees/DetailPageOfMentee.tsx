@@ -9,16 +9,16 @@ import { useSelector } from "react-redux";
 import { Card, CardContent, CardTitle } from "../ui/card";
 interface DetailProps {
   url: string;
-  mentors?: IUser[];
+  Mentees?: IUser[];
 }
 
-const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
+const DetailPageOfMentee = ({ url, Mentees = [] }: DetailProps) => {
   // const [mentors, setMentors] = useState<IUser[]>([]);
   const [expandedMentorId, setExpandedMentorId] = useState<string | null>(null);
   const router = useRouter();
   const user = useSelector((state: RootState) => state.users.user);
   const data = useSelector((state: RootState) => state.users.data);
-  console.log(mentors);
+
   const id = user ? user?._id : data?._id;
   const handleClicked = (id: string) => {
     router.push(`/${url}/${id}`);
@@ -37,13 +37,13 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
   };
   return (
     <div className="md:container md:mx-auto w-full md:max-w-7xl py-4 space-y-12">
-      {mentors.length !== 0 ? (
-        mentors.map((mentor) => (
-          <div key={mentor._id} className="">
+      {Mentees.length !== 0 ? (
+        Mentees.map((mentee) => (
+          <div key={mentee._id} className="">
             <div className="flex ">
               <Card
                 onClick={() => {
-                  handleClicked(mentor._id);
+                  handleClicked(mentee._id);
                 }}
                 className="w-full flex flex-col space-y-4 md:max-w-5xl px-5 py-5 hover:bg-gray-100 cursor-pointer"
               >
@@ -51,11 +51,11 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                   <div className=" border-2 border-cc rounded-full h-[120px] w-[120px] object-fill">
                     <Image
                       src={
-                        mentor
-                          ? mentor.profileImage.url
+                        mentee
+                          ? mentee.profileImage.url
                           : "/assets/profile.jpeg"
                       }
-                      alt={mentor.fullName}
+                      alt={mentee.fullName}
                       width={120}
                       height={120}
                       className="rounded-full object-fill"
@@ -65,10 +65,10 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                     <CardTitle className="text-xl flex flex-col space-y-2">
                       <div>
                         <h3 className="text-3xl capitalize text-gray-700">
-                          {mentor.fullName}
+                          {mentee.fullName}
                         </h3>
                         <p className=" underline capitalize italic text-2xl text-cc">
-                          {mentor.professionalRole}
+                          {mentee.professionalRole}
                         </p>
                       </div>
                       <div className="flex space-x-2 py-4">
@@ -94,8 +94,8 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                           </svg>
                         </div>
                         <p className="text-gray-500">
-                          {mentor.location?.state}/{mentor.location?.region}/
-                          {mentor.location?.city}
+                          {mentee.location?.state}/{mentee.location?.region}/
+                          {mentee.location?.city}
                         </p>
                       </div>
                     </CardTitle>
@@ -109,62 +109,43 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
                     <Star className="text-green-600" />
                     <Star className="text-green-600" />
                     <span>
-                      {mentor.rate} ({mentor.no_review} review)
+                      {mentee.rate} ({mentee.no_review} review)
                     </span>
                   </p>
                 </CardContent>
                 <CardContent>
                   <p
                     className={`line-clamp-3 ${
-                      expandedMentorId === mentor._id ? "line-clamp-none" : ""
+                      expandedMentorId === mentee._id ? "line-clamp-none" : ""
                     }`}
                   >
-                    {mentor.bio}
+                    {mentee.bio}
                   </p>
-                  {isTruncated(mentor?.bio, 3) && (
+                  {isTruncated(mentee?.bio, 3) && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleExpanded(mentor._id);
+                        toggleExpanded(mentee._id);
                       }}
                       className="text-cc underline hover:underline mt-2"
                     >
-                      {expandedMentorId === mentor._id
+                      {expandedMentorId === mentee._id
                         ? "Show Less"
                         : "Show More"}
                     </button>
                   )}
                 </CardContent>
                 <CardContent className="flex flex-col space-y-5">
-                  <div className="flex flex-col space-y-2">
-                    <h3 className="underline">Skills</h3>
-                    <div className="flex space-x-2 flex-wrap space-y-2 ">
-                      {mentor.skills?.map((skill, index) => (
-                        <span
-                          key={index}
-                          className="bg-gray-200 rounded-xl py-1 px-3 flex justify-center items-center w-fit pl-2"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p>
-                      {mentor.is_approved ? (
-                        <span className="flex space-x-2">
-                          <CheckCircle className="text-cc mr-2" /> approved
-                        </span>
-                      ) : (
-                        <span className="flex items-center">
-                          <CircleXIcon
-                            className="text-gray-500 pr-3"
-                            size={28}
-                          />
-                          no yet approved
-                        </span>
-                      )}
-                    </p>
+                  <h3 className="underline">Skills</h3>
+                  <div className="flex space-x-2 flex-wrap space-y-2">
+                    {mentee.skills?.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-200 rounded-xl py-1 px-3 flex justify-center items-center w-fit pl-3"
+                      >
+                        {skill}
+                      </span>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -180,4 +161,4 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
   );
 };
 
-export default DetailPageOfMentor;
+export default DetailPageOfMentee;

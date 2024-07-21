@@ -105,20 +105,25 @@ const YourMentorshipPost = () => {
             {mentorship.service !== "Free" && (
               <p className="text-gray-600">
                 <strong>Amount:</strong>{" "}
-                <span className="font-bold text-gray-900">{mentorship.amount} Birr</span>
+                <span className="font-bold text-gray-900">
+                  {mentorship.amount} Birr
+                </span>
               </p>
             )}
 
-            <div className="flex space-x-3 flex-wrap space-y-3">
-              {mentorship.skills.length > 0 &&
-                mentorship.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="w-fit px-4 py-1 bg-gray-300 rounded-xl"
-                  >
-                    {skill}
-                  </span>
-                ))}
+            <div className="flex flex-col space-y-2">
+              <strong className="text-gray-600 underline">Skills</strong>
+              <div className="flex  space-x-3 flex-wrap space-y-3">
+                {mentorship.skills.length > 0 &&
+                  mentorship.skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="w-fit px-4 py-1 bg-gray-300 rounded-xl"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+              </div>
             </div>
 
             <div className="flex justify-between items-center py-3">
