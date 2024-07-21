@@ -97,9 +97,16 @@ const NavBar = () => {
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="hover:text-[#14A800]">
-                      Find Mentee
-                    </NavigationMenuTrigger>
+                    <Link href="/mentee" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        <span className="hover:text-[#14A800] ">
+                          Find Mentee
+                        </span>
+                      </NavigationMenuLink>
+                    </Link>
+                  
                   </NavigationMenuItem>
                   <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link href="/why-mentorship" legacyBehavior passHref>

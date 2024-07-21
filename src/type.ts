@@ -4,6 +4,7 @@ export interface IUser {
   phoneNumber: string;
   email: string;
   interests?: string;
+  preferedExperianceLevel: string;
   location?: {
     state?: string;
     city?: string;
@@ -24,7 +25,7 @@ export interface IUser {
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   languages?: string[];
-  skills?: string[];
+  skill?: string[];
   role?: string;
   bio?: string;
   goal?: string;
