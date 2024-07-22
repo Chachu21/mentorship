@@ -88,7 +88,7 @@ const StepFive: React.FC = () => {
         {educations.map((education: EducationType, index: number) => (
           <Card
             key={index}
-            className="w-full py-10 sm:w-[200px] md:w-[350px] cursor-pointer px-3 border-2 border-gray-300"
+            className="w-full py-10 sm:w-[250px] md:w-[350px] cursor-pointer px-3 border-2 border-gray-300"
           >
             <div className="flex flex-col space-y-2">
               <h3 className="text-lg font-semibold">Education</h3>
@@ -174,7 +174,7 @@ const StepFive: React.FC = () => {
         </Card>
       </div>
       <div className="flex flex-col justify-end space-y-8">
-        <div className="items-top flex space-x-2">
+        {/* <div className="items-top flex space-x-2">
           <Checkbox
             id="noEducation"
             checked={!hasEducation}
@@ -188,7 +188,7 @@ const StepFive: React.FC = () => {
           >
             No education to add? Check the box and keep going.
           </Label>
-        </div>
+        </div> */}
         <div className="flex justify-end space-x-10">
           <Button variant="outline" className="px-10" onClick={handlePrev}>
             Back

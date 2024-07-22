@@ -4,7 +4,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="min-h-screen flex md:justify-center  items-center">
       <MultiStepForm />
     </div>
   );

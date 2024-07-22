@@ -48,8 +48,9 @@ const StepSix: React.FC = () => {
   return (
     <div className="flex flex-col space-y-10">
       <div className="space-y-3">
-        <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
-          A few Quick Questions, tell us which languages you speak?
+        <h2 className="text-lg md:text-2xl font-semibold text-[#1F284F] max-w-2xl">
+          <span className="md:flex hidden">A few Quick Questions,</span> tell us
+          which languages you speak?
         </h2>
         <p className="max-w-4xl">
           Mentorship is Ethiopian-based, so the Amharic language is a must. Do
@@ -75,7 +76,7 @@ const StepSix: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-x-2 flex max-w-24">
+        <div className="grid grid-cols-1 gap-3 sm:gap-4 md:gap-40 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10">
           {languageList.map((lang: string, index: number) => (
             <div key={index} className="flex items-center space-x-3">
               <span className="bg-cc py-2 px-4 rounded-lg text-white">

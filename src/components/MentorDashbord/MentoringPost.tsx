@@ -137,7 +137,7 @@ const MentoringPost = () => {
               </div>
               <div className="space-y-2">
                 <Label className="block text-sm font-medium">Description</Label>
-                <Textarea
+                <Input
                   name="description"
                   value={newMentorship.description}
                   onChange={handleChange}
@@ -147,7 +147,7 @@ const MentoringPost = () => {
               </div>
               <div className="space-y-2">
                 <Label className="block text-sm font-medium">Goal</Label>
-                <Textarea
+                <Input
                   name="goal"
                   value={newMentorship.goal}
                   onChange={handleChange}

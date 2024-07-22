@@ -15,7 +15,7 @@ const MultiStepForm = () => {
   const currentStep = useSelector((state: RootState) => state.form.currentStep);
   const userRole = useSelector(
     (state: RootState) => state.users.roleBeforLogin
-  ); // Assuming role is stored in state.user.role
+  );
   console.log(userRole);
   const renderStep = () => {
     if (userRole === "mentee") {
@@ -65,7 +65,7 @@ const MultiStepForm = () => {
     }
   };
 
-  return <div className="container mx-auto p-4 mt-16">{renderStep()}</div>;
+  return <div className="container mx-auto py-4 mt-16">{renderStep()}</div>;
 };
 
 export default MultiStepForm;

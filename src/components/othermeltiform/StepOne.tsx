@@ -43,10 +43,10 @@ const StepOne = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-10 ">
+    <div className="flex flex-col space-y-10">
       <div className="space-y-3">
-        <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
-          A few Quick Question, have you been mentor before or level?
+        <h2 className="text-lg md:text-2xl font-semibold text-[#1F284F] max-w-2xl">
+          A few Quick Question: Have you been mentor before?
         </h2>
         <p className="max-w-4xl">
           this lets know how much help to give you along the way. we won&apos;t

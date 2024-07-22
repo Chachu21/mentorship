@@ -87,7 +87,7 @@ const StepFour: React.FC = () => {
         {experiences.map((experience: experienceType, index: number) => (
           <Card
             key={index}
-            className="w-full py-10 sm:w-[200px] md:w-[350px] cursor-pointer px-3 border-2 border-gray-300"
+            className="w-full py-10 sm:w-[200px] md:w-[350px] cursor-pointer px-1 border-2 border-gray-300"
           >
             <CardContent className="flex flex-col space-y-2">
               <h3 className="text-lg font-semibold">Work Experience</h3>

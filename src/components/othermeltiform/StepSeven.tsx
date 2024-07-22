@@ -41,8 +41,9 @@ const StepSeven = () => {
   return (
     <div className="flex flex-col space-y-10">
       <div className="space-y-3">
-        <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
-          A few Quick Questions, what work are you here to do?
+        <h2 className="text-lg md:text-2xl font-semibold text-[#1F284F] max-w-2xl">
+          <span className="md:flex hidden">A few Quick Questions,</span> what
+          work are you here to do?
         </h2>
         <p className="max-w-4xl">
           Your skills show mentees what you can offer. Help us by listing your

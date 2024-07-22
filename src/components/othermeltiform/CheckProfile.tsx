@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
+import { Card, CardFooter, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { Check } from "lucide-react";
@@ -20,7 +20,7 @@ const CheckProfile = () => {
   const role = data ? data?.role : user?.role;
   const handleSubmit = async () => {
     const id = user?._id ? user?._id : user_id;
-   
+
     const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
       updates: {
         level: profile.level,
@@ -53,26 +53,26 @@ const CheckProfile = () => {
       <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
         Preview Profile
       </h2>
-      <Card className="flex flex-col space-y-5 p-8 max-w-4xl">
+      <Card className="flex flex-col space-y-5 py-8 px-2 max-w-4xl">
         <CardTitle className="text-xl pl-5">
           Looking Good
-          <span className="text-gray-500 text-2xl pl-4">
+          <span className="text-gray-500 text-2xl pl-4 sm:flex block">
             {user.fullName.split(" ")[0]}
           </span>
         </CardTitle>
-        <CardContent>
+        <div>
           make any edits you want, then submit your profile. you can make more
           changes after live
-        </CardContent>
+        </div>
         <CardFooter>
           <Button onClick={handleSubmit}>submit profile</Button>
         </CardFooter>
       </Card>
-      <div className="flex flex-col md:flex-row space-x-3">
+      <div className="flex flex-col space-y-2 md:space-y-0 md:flex-row md:space-x-3">
         <div className="flex flex-col space-y-5 flex-1 order-1">
-          <Card className="p-8">
-            <CardContent className="flex flex-col space-y-5">
-              <div className="flex space-x-2 items-center">
+          <Card className="py-8 px-2">
+            <div className="flex flex-col space-y-5">
+              <div className="flex md:flex-row flex-col space-x-2 items-center">
                 {profile.profileImageUrl && (
                   <Image
                     src={profile.profileImageUrl}
@@ -132,10 +132,10 @@ const CheckProfile = () => {
                 </div>
                 {/* <p>{profile.pricing}</p> */}
               </div>
-            </CardContent>
+            </div>
           </Card>
           <Card className="p-8">
-            <CardContent>
+            <div>
               <h3 className="text-lg font-semibold">Education Details</h3>
               <div className="flex space-y-3 flex-col ">
                 {profile.educations.map((education: any) => (
@@ -156,11 +156,11 @@ const CheckProfile = () => {
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </div>
           </Card>
           {role === "mentor" && (
             <Card className="p-8">
-              <CardContent>
+              <div>
                 <p className="flex space-x-2 justify-between">
                   <span className="text-lg font-semibold">Work Experience</span>
                   {/* <Edit className="text-cc" /> */}
@@ -201,7 +201,7 @@ const CheckProfile = () => {
                     <p>No work experience added.</p>
                   )}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           )}
         </div>
@@ -215,8 +215,7 @@ const CheckProfile = () => {
               profile.languages.map((language: string, index: number) => (
                 <p key={index} className="text-gray-500 flex space-x-2">
                   <Check className="text-cc" />
-                  <span className="capitalize pr-3">{language}</span> very
-                  fleuent
+                  <span className="capitalize pr-3">{language}</span>
                 </p>
               ))
             ) : (

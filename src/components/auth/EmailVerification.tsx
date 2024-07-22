@@ -97,9 +97,9 @@ const EmailVerificationTemplate = () => {
   };
 
   return (
-    <div className="flex items-center justify-center flex-col mt-5">
-      <section className="max-w-2xl mx-auto bg-white">
-        <div className="h-[200px] bg-[#14A800] w-full text-white flex items-center justify-center flex-col gap-5">
+    <div className="flex items-center justify-center flex-col mt-5 container mx-auto">
+      <section className="max-w-2xl  bg-white">
+        <div className="h-[200px] bg-cc w-full text-white flex items-center justify-center flex-col gap-5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-[1px] bg-white"></div>
             <EmailIcon />
@@ -132,7 +132,7 @@ const EmailVerificationTemplate = () => {
                   type="text"
                   value={digit}
                   onChange={(e) => handleChange(index, e.target.value)}
-                  className="w-10 h-10 text-2xl font-medium text-[#14A800] border border-[#14A800] rounded-md text-center"
+                  className="w-10 h-10 text-2xl font-medium text-cc border border-cc rounded-md text-center"
                   maxLength={1}
                 />
               ))}
@@ -172,7 +172,7 @@ const EmailVerificationTemplate = () => {
           This email was sent from{" "}
           <a
             href="mailto:sales@infynno.com"
-            className="text-[#14A800] hover:underline"
+            className="text-cc hover:underline"
             aria-label="sales@infynno.com"
             target="_blank"
             rel="noopener noreferrer"
@@ -180,11 +180,11 @@ const EmailVerificationTemplate = () => {
             mentormentee@gmail.com
           </a>
           . If you&apos;d rather not receive this kind of email, you can
-          <a href="#" className="text-[#14A800] hover:underline">
+          <a href="#" className="text-cc hover:underline">
             unsubscribe
           </a>{" "}
           or{" "}
-          <a href="#" className="text-[#14A800] hover:underline">
+          <a href="#" className="text-cc hover:underline">
             manage your email preferences
           </a>
           .

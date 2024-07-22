@@ -47,16 +47,16 @@ const StepThree = () => {
   };
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="flex flex-col space-y-4 ">
       <div className="space-y-3">
-        <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
+        <h2 className="text-lg md:text-2xl font-semibold text-[#1F284F] max-w-2xl">
           <span className="hidden md:flex">A few quick questions:</span> How
           would you like to tell us about yourself?
         </h2>
         <p className="max-w-4xl text-[16px] font-normal text-gray-600">
           We need to get a sense of your education, experience, and skills.
-          It&apos;s quickest to improve your information -- you can edit it
-          before your profile goes live.
+          It&apos;s quickest to improve your information. you can edit it before
+          your profile goes live.
         </p>
       </div>
       <div>
@@ -79,7 +79,7 @@ const StepThree = () => {
           id="professionalrole"
           value={professionalRole}
           onChange={(e) => setProfessionalRole(e.target.value)}
-          placeholder="Software Engineer / finance management"
+          placeholder="Software Engineer / finance management / construction"
         />
       </div>
       <div className="grid w-full max-w-sm items-center gap-5">

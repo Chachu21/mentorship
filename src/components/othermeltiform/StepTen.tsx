@@ -68,7 +68,7 @@ const StepTen = () => {
   return (
     <div className="flex flex-col space-y-10">
       <div className="space-y-3">
-        <h2 className="text-2xl font-semibold text-[#1F284F] max-w-2xl">
+        <h2 className="text-lg md:text-2xl font-semibold text-[#1F284F] max-w-2xl">
           A few Last details, then you can check and publish your profile
         </h2>
         <p className="max-w-4xl">
