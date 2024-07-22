@@ -275,7 +275,7 @@ const Login = () => {
         </form>
 
         <p className="text-center mb-2">or</p>
-        <div className=" text-center py-4">
+        <div className=" text-center text-[16px] sm:text-lg py-4">
           <p>
             Don&apos;t have an account?{" "}
             <Link href={"/auth"} className="text-cc font-semibold">

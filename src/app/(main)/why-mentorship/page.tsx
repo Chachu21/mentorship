@@ -13,27 +13,29 @@ const AboutUs = () => {
   return (
     <main className="flex flex-col md:mt-32 mt-16 space-y-4">
       <div className="bg-white sm:max-w-4xl w-full">
-        <h1 className="text-3xl font-extrabold mb-8 text-gray-800">About Us</h1>
-        <p className="text-gray-600 text-lg leading-relaxed mb-6">
+        <h1 className="md:text-3xl text-xl font-extrabold mb-8 text-gray-800">
+          About Us
+        </h1>
+        <p className="text-gray-600 md:text-lg text-[16px] leading-relaxed mb-6">
           Welcome to our mentorship system! we are dedicated to connecting
           mentors and mentees to foster growth, learning, and professional
           development. Our platform provides an easy and efficient way for
           individuals to find the right mentor or mentee and build meaningful
           relationships.
         </p>
-        <p className="text-gray-600 text-lg leading-relaxed mb-6">
+        <p className="text-gray-600 md:text-lg text-[16px]  leading-relaxed mb-6">
           Our mission is to empower individuals by providing them with the
           guidance and support they need to succeed. Whether you are looking to
           advance your career, develop new skills, or seek advice on personal
           growth, our mentorship system is here to support you every step of the
           way.
         </p>
-        <p className="text-gray-600 text-lg leading-relaxed mb-6">
+        <p className="text-gray-600 md:text-lg text-[16px]  leading-relaxed mb-6">
           Join us today and embark on your journey towards achieving your goals
           with the support of experienced mentors and a vibrant community of
           learners.
         </p>
-        <p className="text-gray-600 text-lg leading-relaxed">
+        <p className="text-gray-600 md:text-lg text-[16px] leading-relaxed">
           If you have any questions or need assistance, please feel free to
           contact us. We are here to help you make the most out of your
           mentorship experience.
@@ -47,7 +49,7 @@ const AboutUs = () => {
 const SuccessStory = () => {
   return (
     <div className="bg-white sm:max-w-4xl w-full">
-      <h2 className="text-3xl font-extrabold mb-8 text-gray-800">
+      <h2 className="md:text-3xl text-xl font-extrabold mb-8 text-gray-800">
         Success Story
       </h2>
       <div className="flex flex-col md:flex-row items-center mb-6 p-1">
@@ -58,7 +60,7 @@ const SuccessStory = () => {
           height={1000}
           className="w-full md:w-full mb-4 md:mb-0 md:mr-6 rounded-lg shadow-md"
         />
-        <p className="text-gray-600 text-lg leading-relaxed">
+        <p className="text-gray-600 md:text-lg text-[16px]  leading-relaxed">
           Meet Sarah, one of our mentees who achieved her career goals through
           our mentorship program. With the guidance of her mentor, Sarah
           successfully transitioned into a new role and developed skills that
@@ -73,8 +75,8 @@ const SuccessStory = () => {
 
 const HowToFindWork = () => {
   return (
-    <div className="bg-white sm:max-w-4xl w-full  mx-auto mt-10  rounded-lg">
-      <h2 className="text-3xl font-extrabold mb-8 text-gray-900 text-center">
+    <div className="bg-white sm:max-w-4xl w-full  mx-auto mt-10  rounded-lg text-gray-700">
+      <h2 className="md:text-3xl text-xl  font-semibold mb-8 text-gray-900 text-center">
         How to Find Work
       </h2>
       <div className="flex flex-col md:flex-row items-stretch">
@@ -91,7 +93,7 @@ const HowToFindWork = () => {
         {/* Content Section */}
         <div className="w-full md:w-1/2 p-8 text-gray-800 text-lg leading-relaxed flex flex-col justify-center">
           <div className="space-y-4">
-            <div className="flex items-start space-x-4  p-4  shadow-md">
+            <div className="flex items-start space-x-4  p-4  shadow-m">
               <FaUserPlus className="text-blue-500 text-3xl" />
               <p className="text-gray-800 text-base">
                 <strong>Create an Account:</strong> Register on our platform to
@@ -129,10 +131,10 @@ const HowToFindWork = () => {
               </p>
             </div>
           </div>
-          <p className="mt-6 text-center md:text-left">
-            By following these steps, you`&apos;`ll be well on your way to
-            making a significant impact in your career or helping others advance
-            their careers through our mentorship system.
+          <p className="mt-6 md:text-lg text-[16px] text-center md:text-left">
+            By following these steps, you&apos;ll be well on your way to making
+            a significant impact in your career or helping others advance their
+            careers through our mentorship system.
           </p>
         </div>
       </div>

@@ -20,17 +20,19 @@ export default function AuthLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.className} h-full flex flex-col`}>
+      <body
+        className={`${inter.className} h-full flex flex-col  container mx-auto max-w-[1336px]`}
+      >
         <ReactQueryProvider>
           <ReduxProvider>
             <AuthHeader />
             <Suspense fallback={<Loading />}>
-              <main className="flex-grow container mx-auto max-w-screen-2xl">
+              <main className="flex-grow  container mx-auto max-w-[1336px]">
                 {children}
               </main>
             </Suspense>
             <ToastContainer />
-            <footer className="bg-gray-900 container mx-auto max-w-screen-2xl text-center text-white py-16">
+            <footer className="bg-gray-900  container mx-auto max-w-[1336px] text-center text-white py-16">
               <div className="">
                 &copy; {year} Mentorship &reg; plc. all rights reserved.
               </div>

@@ -1,19 +1,8 @@
-"use client";
+import Loading from "@/components/ReusedComponent/Loading";
 import React from "react";
-import { RotatingLines } from "react-loader-spinner";
 
-const Loading = () => {
-  return (
-    <div className="h-screen flex justify-center items-center">
-      <RotatingLines
-        visible={true}
-        width={"96"} // width should be a number
-        strokeWidth={"5"} // strokeWidth should be a number
-        animationDuration="0.75s" // this should be a string and include the unit
-        ariaLabel="rotating-lines-loading"
-      />
-    </div>
-  );
+const loading = () => {
+  return <Loading />;
 };
 
-export default Loading;
+export default loading;

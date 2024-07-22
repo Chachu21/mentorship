@@ -16,10 +16,10 @@ const AuthHeader = () => {
   };
 
   return (
-    <header className="max-w-screen-2xl container mx-auto z-50 bg-white py-2 fixed top-0 left-1/2 transform -translate-x-1/2 ">
+    <header className="max-w-[1336px] container mx-auto z-50 bg-white py-2 fixed top-0 left-1/2 transform -translate-x-1/2 ">
       <div className="flex justify-between items-center">
         <Link href="/" className="font-pacifico">
-          <h1 className="lg:text-2xl text-xl  text-[#14A800]">Mentorship</h1>
+          <h1 className="lg:text-2xl text-xl  text-cc">Mentorship</h1>
         </Link>
         <div className="hidden md:flex">
           {pathname === "/auth/signup" && (
@@ -29,7 +29,7 @@ const AuthHeader = () => {
                   <Link href="/">Find Mentor?</Link>
                   <div
                     onClick={() => handlerolechage("mentee")}
-                    className="text-[#14A800] cursor-pointer"
+                    className="text-cc cursor-pointer"
                   >
                     Apply as Mentee
                   </div>
@@ -40,7 +40,7 @@ const AuthHeader = () => {
                   <p>Find Mentee?</p>
                   <div
                     onClick={() => handlerolechage("mentor")}
-                    className="text-[#14A800] cursor-pointer"
+                    className="text-cc cursor-pointer"
                   >
                     Apply as Mentor
                   </div>

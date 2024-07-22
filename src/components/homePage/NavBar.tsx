@@ -109,6 +109,8 @@ const NavBar = () => {
     if (e.key === "Enter") {
       setIsSearching(true);
       redirectToSearchResults();
+      setSearchQuery("");
+      setShowMobileSearch(false);
     }
   };
 

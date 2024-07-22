@@ -16,7 +16,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const FeedbackForm = () => {
-  // const user = useSelector((state: RootState) => state.users.user);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -86,10 +85,12 @@ const FeedbackForm = () => {
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full p-3 border border-gray-300 rounded-lg outline-[#008B8B] shadow-sm"
+              className="w-full p-3 border border-gray-300 rounded-lg outline-[#008B8B] shadow-sm placeholder:text-sm"
             />
             {formik.touched.name && formik.errors.name ? (
-              <div className="text-red-500">{formik.errors.name}</div>
+              <div className="text-red-500 text-[14px] md:text-[16px]">
+                {formik.errors.name}
+              </div>
             ) : null}
           </div>
           <div className="form-group mb-4">
@@ -104,10 +105,12 @@ const FeedbackForm = () => {
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm outline-[#008B8B]"
+              className="w-full p-3 border border-gray-300 rounded-lg shadow-sm outline-[#008B8B] placeholder:text-sm"
             />
             {formik.touched.email && formik.errors.email ? (
-              <div className="text-red-500">{formik.errors.email}</div>
+              <div className="text-red-500 text-[14px] md:text-[16px]">
+                {formik.errors.email}
+              </div>
             ) : null}
           </div>
           <div className="form-group mb-4">
@@ -128,7 +131,9 @@ const FeedbackForm = () => {
               ))}
             </div>
             {formik.touched.rating && formik.errors.rating ? (
-              <div className="text-red-500">{formik.errors.rating}</div>
+              <div className="text-red-500 text-[14px] md:text-[16px]">
+                {formik.errors.rating}
+              </div>
             ) : null}
           </div>
           <div className="form-group mb-4">
@@ -140,10 +145,12 @@ const FeedbackForm = () => {
               value={formik.values.comment}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full p-3 border border-gray-300 outline-[#008B8B] rounded-lg shadow-sm"
+              className="w-full p-3 border border-gray-300 outline-[#008B8B] rounded-lg shadow-sm placeholder:text-sm"
             />
             {formik.touched.comment && formik.errors.comment ? (
-              <div className="text-red-500">{formik.errors.comment}</div>
+              <div className="text-red-500 text-[14px] md:text-[16px]">
+                {formik.errors.comment}
+              </div>
             ) : null}
           </div>
           <div className="flex justify-between md:justify-end items-center ">

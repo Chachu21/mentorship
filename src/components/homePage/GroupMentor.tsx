@@ -1,8 +1,6 @@
 "use client";
-import { url } from "inspector";
 import { StarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { title } from "process";
 import React from "react";
 const mentorsCatagories = [
   {
@@ -64,15 +62,15 @@ const GroupMentor = () => {
 
   return (
     <div className="flex flex-col space-y-5 md:items-start items-center">
-      <h3 className="text-2xl py-3">Explore Mentors by Expertise</h3>
+      <h3 className="md:text-2xl text-xl py-3">Explore Mentors by Expertise</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {mentorsCatagories.map((mentor) => (
           <div
             onClick={() => handleClicked(mentor?.url)}
             key={mentor.id}
-            className="flex flex-col px-5 py-3 space-y-5 w-[300px] bg-gray-100 hover:bg-gray-200 rounded-lg"
+            className="flex flex-col px-5 py-3 space-y-5 w-[300px] bg-gray-50 hover:bg-gray-100 rounded-lg"
           >
-            <h3 className="text-lg font-semibold">{mentor.title}</h3>
+            <h3 className="text-lg font-semibold text-gray-700">{mentor.title}</h3>
             <div className="flex justify-between items-center pb-12">
               <p className="flex items-center space-x-2">
                 <StarIcon size={22} color="green" />

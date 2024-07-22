@@ -303,7 +303,7 @@ const Register = () => {
                     <p>Find Mentor?</p>
                     <div
                       onClick={() => handlerolechage("mentee")}
-                      className="text-[#14A800]"
+                      className="text-cc"
                     >
                       Apply as Mentee
                     </div>
@@ -314,7 +314,7 @@ const Register = () => {
                     <p>Find Mentee?</p>
                     <div
                       onClick={() => handlerolechage("mentor")}
-                      className="text-[#14A800]"
+                      className="text-cc"
                     >
                       Apply as Mentor
                     </div>

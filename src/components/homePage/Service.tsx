@@ -50,7 +50,7 @@ const Service = () => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className=" md:container  px-0 md:px-6 py-10 md:mx-auto">
-        <h1 className="text-2xl font-semibold text-center text-gray-800 capitalize lg:text-3xl dark:text-white">
+        <h1 className="text-xl font-semibold text-center text-gray-800 capitalize lg:text-[28px] dark:text-white">
           explore our <br /> awesome{" "}
           <span className="text-blue-500">Services</span>
         </h1>

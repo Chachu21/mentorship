@@ -25,7 +25,7 @@ const AuthHome = () => {
           }}
           className={`w-full md:w-72 bg-white border rounded-md flex space-y-3 flex-col py-5 pl-3 md:pl-8 transition-colors ${
             selectedRole === "mentee"
-              ? "border-[#14A800] bg-gray-50"
+              ? "border-cc bg-gray-50"
               : "border-gray-300"
           }`}
         >
@@ -50,7 +50,7 @@ const AuthHome = () => {
           }}
           className={`w-full md:w-72 bg-white border rounded-md flex space-y-3 flex-col py-5 pl-3 md:pl-8 transition-colors ${
             selectedRole === "mentor"
-              ? "border-[#14A800] bg-gray-50"
+              ? "border-cc bg-gray-50"
               : "border-gray-300"
           }`}
         >
@@ -96,7 +96,7 @@ const AuthHome = () => {
       <div>
         <p>
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-[#14A800] underline">
+          <Link href="/auth/login" className="text-cc underline">
             Log In
           </Link>
         </p>
