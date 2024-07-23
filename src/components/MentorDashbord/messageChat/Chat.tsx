@@ -150,7 +150,7 @@ const Chat = () => {
         socket.off("messageReceived");
       };
     }
-  }, [selectedContact, userId]);
+  }, [selectedContact, userId, handleSendMessage]);
 
   const selectContact = (id: string) => {
     setSelectedContact(id);
