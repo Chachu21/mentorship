@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { backend_url } from "@/components/constant";
 
 const Profile = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
@@ -40,9 +41,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/api/v1/users/get/${id}`
-      );
+      const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
       setUserData(res.data.user);
     };
     fetchUserData();
@@ -63,10 +62,9 @@ const Profile = () => {
 
   const handleProfileImageUpload = async () => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: { ...userData, profileImage } }
-      );
+      const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
+        updates: { ...userData, profileImage },
+      });
       if (res.status === 200) {
         console.log(res.data.user);
         setUserData(res.data.user);
@@ -148,10 +146,9 @@ const Profile = () => {
         ...(userData?.experiences || []),
         newExperience,
       ];
-      const res = await axios.put(
-        `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: { ...userData, experiences: updatedExperiences } }
-      );
+      const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
+        updates: { ...userData, experiences: updatedExperiences },
+      });
       if (res.status === 200) {
         setUserData(res.data.user);
         setNewExperience({
@@ -170,10 +167,9 @@ const Profile = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: userData }
-      );
+      const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
+        updates: userData,
+      });
       if (res.status === 200) {
         setUserData(res.data.user);
         setEditSection(null);

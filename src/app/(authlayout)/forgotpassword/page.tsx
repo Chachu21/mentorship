@@ -21,7 +21,7 @@ const ForgotPassword = () => {
           email: email, // Pass values.email
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
 
       if (response) {
         // Password reset email sent successfully

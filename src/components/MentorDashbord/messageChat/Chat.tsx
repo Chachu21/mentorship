@@ -2,11 +2,9 @@
 import { backend_url } from "@/components/constant";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SendHorizontal } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import CreateGroupChat from "./CreateGroupChat";
 import io from "socket.io-client";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -15,45 +13,47 @@ import { RootState } from "@/redux/store";
 const socket = io(`${backend_url}`);
 
 interface Person {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
-  message: Message[];
   unreadMessages: number;
 }
+
 interface Message {
-  id: number;
-  sender: string;
+  _id: string;
+  sender: {
+    _id: string;
+    email: string;
+  };
   receiver: string;
-  text: string;
-  time: string;
+  message: string;
+  chatId: string;
+  createdAt: string;
 }
 
 const Chat = () => {
   const [contacts, setContacts] = useState<Person[]>([]);
-  const [selectedContact, setSelectedContact] = useState<number | null>(null);
-  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [selectedContact, setSelectedContact] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-  const [showCreateGroupChat, setShowCreateGroupChat] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const selectedPerson = contacts.find(
-    (person) => person.id === selectedContact
-  );
-
   const user = useSelector((state: RootState) => state.users.user);
-  const id = user?._id;
-
-  const handleOpenModal = () => setShowCreateGroupChat(true);
-  const handleCloseModal = () => setShowCreateGroupChat(false);
+  const userId = user?._id;
 
   useEffect(() => {
-    // Fetch contacts from the backend
     const fetchContacts = async () => {
       try {
-        const response = await axios.get(`${backend_url}/api/v1/users`);
-        setContacts(response.data);
+        const response = await axios.get(`${backend_url}/api/v1/users/get`);
+        console.log("Fetched Contacts:", response.data);
+
+        const mappedContacts: Person[] = response.data.map((contact: any) => ({
+          id: contact._id,
+          name: contact.fullName,
+          avatar: contact.profileImage?.url || "/assets/profile.jpeg",
+          unreadMessages: contact.no_review || 0,
+        }));
+        setContacts(mappedContacts);
       } catch (error) {
         console.error("Error fetching contacts:", error);
       }
@@ -61,96 +61,99 @@ const Chat = () => {
 
     fetchContacts();
   }, []);
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === "" || selectedContact === null) return;
+    setNewMessage("");
 
-  useEffect(() => {
-    if (selectedContact !== null) {
-      const selectedPerson = contacts.find(
-        (person) => person.id === selectedContact
-      );
-      if (selectedPerson) {
-        setMessages(selectedPerson.message);
-      }
+    try {
+      const response = await axios.post(`${backend_url}/api/v1/messages`, {
+        chatId: selectedContact,
+        message: newMessage,
+        senderId: userId,
+        receiverId: selectedContact,
+      });
+
+      console.log("Sent Message:", response.data);
+
+      setMessages((prevMessages) => [...prevMessages, response.data]);
+      socket.emit("sendMessage", response.data);
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
-  }, [selectedContact, contacts]);
-
-  useEffect(() => {
-    if (selectedContact !== null) {
-      socket.emit("joinRoom", selectedContact);
-    }
-
-    socket.on("newMessage", (message: Message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-
-    return () => {
-      socket.off("newMessage");
-    };
-  }, [selectedContact]);
-
-  const selectContact = (id: number) => {
-    setSelectedContact(id);
-    const updatedContacts = contacts.map((contact) => {
-      if (contact.id === id) {
-        return {
-          ...contact,
-          unreadMessages: 0,
-        };
-      }
-      return contact;
-    });
-    setContacts(updatedContacts);
-    setIsClicked(!isClicked);
   };
-
   useEffect(() => {
-    if (selectedContact) {
+    if (selectedContact && userId) {
       const fetchMessages = async () => {
         try {
           const response = await axios.get(
             `${backend_url}/api/v1/messages/${selectedContact}`
           );
-          setMessages(response.data);
+          console.log("Fetched Messages:", response.data);
+
+          if (!Array.isArray(response.data)) {
+            console.error(
+              "Expected an array of messages but received:",
+              response.data
+            );
+            return;
+          }
+
+          const userIdStr = String(userId);
+          const selectedContactStr = String(selectedContact);
+
+          const filteredMessages = response.data.filter((message: any) => {
+            const senderId = message.sender ? String(message.sender._id) : null;
+            const receiverId =
+              typeof message.receiver === "string"
+                ? String(message.receiver)
+                : null;
+
+            return (
+              (senderId === userIdStr && receiverId === selectedContactStr) ||
+              (senderId === selectedContactStr && receiverId === userIdStr)
+            );
+          });
+
+          console.log("Filtered Messages:", filteredMessages);
+
+          setMessages(filteredMessages);
         } catch (error) {
           console.error("Error fetching messages:", error);
         }
       };
 
       fetchMessages();
+
       socket.emit("joinChat", selectedContact);
 
-      socket.on("messageReceived", (newMessage) => {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      socket.on("messageReceived", (newMessage: any) => {
+        console.log("New Message Received:", newMessage);
+
+        const senderId = newMessage.sender
+          ? String(newMessage.sender._id)
+          : null;
+        const receiverId =
+          typeof newMessage.receiver === "string"
+            ? String(newMessage.receiver)
+            : null;
+
+        if (
+          (senderId === userId && receiverId === selectedContact) ||
+          (senderId === selectedContact && receiverId === userId)
+        ) {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
       });
 
-      // Cleanup function to leave the chat room on unmount
       return () => {
         socket.emit("leaveChat", selectedContact);
         socket.off("messageReceived");
       };
     }
-  }, [selectedContact]);
+  }, [selectedContact, userId]);
 
-  const sendorId = user?._id;
-  const receiverId = selectedPerson?.id;
-  console.log(sendorId);
-  console.log(selectContact);
-
-  // Function to send a message
-  const handleSendMessage = async () => {
-    try {
-      const response = await axios.post(`${backend_url}/api/v1/messages`, {
-        chatId: selectedContact,
-        message: newMessage,
-        sendorId: sendorId,
-        receiverId: receiverId,
-      });
-
-      // Update the local state with the new message
-      setMessages((prevMessages) => [...prevMessages, response.data]);
-      setNewMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
+  const selectContact = (id: string) => {
+    setSelectedContact(id);
   };
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,358 +161,183 @@ const Chat = () => {
     setSearchQuery(query);
     if (query.trim()) {
       try {
-        const response = await axios.get(`${backend_url}/api/v1/users/`, {
+        const response = await axios.get(`${backend_url}/api/v1/users/get`, {
           params: { query },
         });
-        setContacts(response.data);
+
+        const mappedContacts: Person[] = response.data.map((contact: any) => ({
+          id: contact._id,
+          name: contact.fullName,
+          avatar: contact.profileImage?.url || "/default-avatar.png",
+          unreadMessages: contact.no_review || 0,
+        }));
+        setContacts(mappedContacts);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     } else {
-      // Refetch contacts if the search query is cleared
-      const response = await axios.get(`${backend_url}/api/v1/users`);
-      setContacts(response.data);
+      const response = await axios.get(`${backend_url}/api/v1/users/get`);
+      const mappedContacts: Person[] = response.data.map((contact: any) => ({
+        id: contact._id,
+        name: contact.fullName,
+        avatar: contact.profileImage?.url || "/default-avatar.png",
+        unreadMessages: contact.no_review || 0,
+      }));
+      setContacts(mappedContacts);
     }
   };
 
   return (
     <section className="flex h-[calc(100vh-64px)]">
-      {/* for desktop */}
-      <section className="hidden md:flex">
-        <aside className="md:w-1/3 hidden md:flex md:flex-col space-y-5 p-4">
-          <div className="flex space-x-2 items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-8 h-8 text-gray-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-              />
-            </svg>
-            <h2 className="text-gray-700 text-xl">Mentorship Chatting</h2>
-          </div>
-          <div className="flex justify-end items-center">
-            <Button onClick={handleOpenModal}>create group chat</Button>
-          </div>
-          {showCreateGroupChat && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-              <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-                <CreateGroupChat handleCloseModal={handleCloseModal} />
-              </div>
-            </div>
-          )}
-          <form className="max-w-md mx-auto">
-            <label
-              htmlFor="default-search"
-              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-            >
-              Search
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+      {/* Desktop View */}
+      <aside className="w-1/3 p-4 border-r border-gray-300 overflow-y-auto">
+        <div className="flex space-x-2 items-center mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-8 h-8 text-gray-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+            />
+          </svg>
+          <h2 className="text-gray-700 text-xl">Mentorship Chatting</h2>
+        </div>
+        <form>
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search..."
+              onChange={handleSearch}
+              value={searchQuery}
+              className="pr-10"
+            />
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+              <div className="flex items-center justify-center w-6 h-6 bg-gray-200 rounded-full">
                 <svg
-                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 20 20"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-4 h-4 text-gray-500"
                 >
                   <path
-                    stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    d="M3.75 10.5a6.75 6.75 0 1 1 11.737 3.6l4.362 4.361a.75.75 0 0 1-1.06 1.06l-4.362-4.362a6.75 6.75 0 0 1-7.406-8.6z"
                   />
                 </svg>
               </div>
-              <input
-                type="search"
-                id="default-search"
-                className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search "
-                value={searchQuery}
-                onChange={handleSearch}
-                required
-              />
             </div>
-          </form>
-          <Tabs defaultValue="private" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="private">Private Chat</TabsTrigger>
-              <TabsTrigger value="group">Group Chat</TabsTrigger>
-            </TabsList>
-            <TabsContent value="private">
-              <ul className="space-y-2">
-                {contacts.map((contact) => (
-                  <li
-                    key={contact.id}
-                    className={`p-4 border rounded-lg shadow-sm flex items-center justify-between cursor-pointer ${
-                      selectedContact === contact.id
-                        ? "bg-blue-100"
-                        : "bg-white"
-                    }`}
-                    onClick={() => selectContact(contact.id)}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Image
-                        className="w-12 h-12 rounded-full"
-                        src={contact.avatar}
-                        alt={`${contact.name}'s avatar`}
-                        width={40}
-                        height={40}
-                      />
-                      <div>
-                        <h3 className="text-gray-900">{contact.name}</h3>
-                        {contact.unreadMessages > 0 && (
-                          <span className="text-sm text-red-500">
-                            {contact.unreadMessages} unread messages
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </TabsContent>
-            <TabsContent value="group">
-              <ul className="space-y-2">
-                {contacts.map((contact) => (
-                  <li
-                    key={contact.id}
-                    className={`p-4 border rounded-lg shadow-sm flex items-center justify-between cursor-pointer ${
-                      selectedContact === contact.id
-                        ? "bg-blue-100"
-                        : "bg-white"
-                    }`}
-                    onClick={() => selectContact(contact.id)}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Image
-                        className="w-12 h-12 rounded-full"
-                        src={contact.avatar}
-                        alt={`${contact.name}'s avatar`}
-                        width={40}
-                        height={40}
-                      />
-                      <div>
-                        <h3 className="text-gray-900">{contact.name}</h3>
-                        {contact.unreadMessages > 0 && (
-                          <span className="text-sm text-red-500">
-                            {contact.unreadMessages} unread messages
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </TabsContent>
-          </Tabs>
-        </aside>
-      </section>
-
-      {/* for mobile */}
-      <section className="md:hidden flex flex-col h-full">
-        {isClicked ? (
-          <>
-            <div className="flex items-center justify-between bg-blue-500 p-4">
-              <button
-                className="text-white"
-                onClick={() => setIsClicked(!isClicked)}
+          </div>
+        </form>
+        <div className="mt-4">
+          {contacts
+            .filter((contact) =>
+              contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((contact) => (
+              <div
+                key={contact.id}
+                onClick={() => selectContact(contact.id)}
+                className={`flex items-center p-2 cursor-pointer ${
+                  selectedContact === contact.id ? "bg-blue-200" : ""
+                }`}
               >
-                Back
-              </button>
-              {selectedPerson && (
-                <div className="flex items-center space-x-3">
+                <div className="relative w-12 h-12">
                   <Image
-                    className="w-8 h-8 rounded-full"
-                    src={selectedPerson.avatar}
-                    alt={`${selectedPerson.name}'s avatar`}
-                    width={32}
-                    height={32}
+                    src={contact.avatar}
+                    alt={contact.name}
+                    layout="fill"
+                    className="rounded-full object-cover"
                   />
-                  <h3 className="text-white">{selectedPerson.name}</h3>
                 </div>
-              )}
-            </div>
-            <div className="flex-1 overflow-y-auto p-4">
-              {messages && messages.length > 0 ? (
-                messages.map((message) => (
-                  <div key={message.id} className="mb-4">
-                    <div className="bg-gray-100 p-2 rounded-lg">
-                      <p className="text-sm text-gray-600">{message.text}</p>
-                      <p className="text-sm text-gray-600">{message.time}</p>
+                <div className="ml-3">
+                  <p className="font-semibold">{contact.name}</p>
+                  {contact.unreadMessages > 0 && (
+                    <span className="text-red-500 text-sm">
+                      {contact.unreadMessages} unread messages
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+        </div>
+      </aside>
+
+      {/* Mobile View  */}
+      <main className="w-2/3 flex flex-col">
+        {selectedContact ? (
+          <>
+            <header className="p-4 border-b border-gray-300 flex items-center space-x-4">
+              <Image
+                src={
+                  contacts.find((contact) => contact.id === selectedContact)
+                    ?.avatar || "/default-avatar.png" // Default avatar
+                }
+                alt="Avatar"
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
+              <h2 className="text-gray-700 text-xl">
+                {contacts.find((contact) => contact.id === selectedContact)
+                  ?.name || "Chat"}
+              </h2>
+            </header>
+            <section className="flex-1 overflow-auto p-4 border-b border-gray-300">
+              <div>
+                {messages.map((message) => (
+                  <div
+                    key={message._id}
+                    className={`p-2 my-2 ${
+                      message.sender._id === userId ? "text-right" : "text-left"
+                    }`}
+                  >
+                    <div
+                      className={`inline-block px-4 py-2 rounded-lg ${
+                        message.sender._id === userId
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-700"
+                      }`}
+                    >
+                      {message.message}
                     </div>
                   </div>
-                ))
-              ) : (
-                <p>No messages yet.</p>
-              )}
-            </div>
-            <div className="p-4">
-              <Input
-                type="text"
-                placeholder="Type a message"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                className="w-full mb-2"
-              />
-              <Button
-                onClick={handleSendMessage}
-                className="w-full"
-                //icon={<SendHorizontal size={20} />}
-              >
-                Send
-              </Button>
-            </div>
+                ))}
+              </div>
+            </section>
+            <footer className="p-4 border-t border-gray-300">
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className="flex-1"
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={!newMessage.trim()}
+                  className="bg-green-500 text-white font-bold"
+                >
+                  <SendHorizontal />
+                </Button>
+              </div>
+            </footer>
           </>
         ) : (
-          <aside className="flex flex-col space-y-5 p-4">
-            <div className="flex space-x-2 items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-8 h-8 text-gray-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                />
-              </svg>
-              <h2 className="text-gray-700 text-xl">Mentorship Chatting</h2>
-            </div>
-            <div className="flex justify-end items-center">
-              <Button onClick={handleOpenModal}>create group chat</Button>
-            </div>
-            {showCreateGroupChat && (
-              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-                  <CreateGroupChat handleCloseModal={handleCloseModal} />
-                </div>
-              </div>
-            )}
-            <form className="max-w-md mx-auto">
-              <label
-                htmlFor="default-search"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-              >
-                Search
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg
-                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="search"
-                  id="default-search"
-                  className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search "
-                  value={searchQuery}
-                  onChange={handleSearch}
-                  required
-                />
-              </div>
-            </form>
-            <Tabs defaultValue="private" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="private">Private Chat</TabsTrigger>
-                <TabsTrigger value="group">Group Chat</TabsTrigger>
-              </TabsList>
-              <TabsContent value="private">
-                <ul className="space-y-2">
-                  {contacts.map((contact) => (
-                    <li
-                      key={contact.id}
-                      className={`p-4 border rounded-lg shadow-sm flex items-center justify-between cursor-pointer ${
-                        selectedContact === contact.id
-                          ? "bg-blue-100"
-                          : "bg-white"
-                      }`}
-                      onClick={() => selectContact(contact.id)}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Image
-                          className="w-12 h-12 rounded-full"
-                          src={contact.avatar}
-                          alt={`${contact.name}'s avatar`}
-                          width={40}
-                          height={40}
-                        />
-                        <div>
-                          <h3 className="text-gray-900">{contact.name}</h3>
-                          {contact.unreadMessages > 0 && (
-                            <span className="text-sm text-red-500">
-                              {contact.unreadMessages} unread messages
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </TabsContent>
-              <TabsContent value="group">
-                <ul className="space-y-2">
-                  {contacts.map((contact) => (
-                    <li
-                      key={contact.id}
-                      className={`p-4 border rounded-lg shadow-sm flex items-center justify-between cursor-pointer ${
-                        selectedContact === contact.id
-                          ? "bg-blue-100"
-                          : "bg-white"
-                      }`}
-                      onClick={() => selectContact(contact.id)}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <Image
-                          className="w-12 h-12 rounded-full"
-                          src={contact.avatar}
-                          alt={`${contact.name}'s avatar`}
-                          width={40}
-                          height={40}
-                        />
-                        <div>
-                          <h3 className="text-gray-900">{contact.name}</h3>
-                          {contact.unreadMessages > 0 && (
-                            <span className="text-sm text-red-500">
-                              {contact.unreadMessages} unread messages
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </TabsContent>
-            </Tabs>
-          </aside>
+          <div className="flex items-center justify-center flex-1">
+            <p className="text-gray-500">Select a contact to start chatting</p>
+          </div>
         )}
-      </section>
+      </main>
     </section>
   );
 };

@@ -35,7 +35,7 @@
 //   useEffect(() => {
 //     const fetchUserData = async () => {
 //       const res = await axios.get(
-//         `http://localhost:5000/api/v1/users/get/${id}`
+//         `${backend_url}/api/v1/users/get/${id}`
 //       );
 //       setUserData(res.data.user);
 //     };
@@ -58,7 +58,7 @@
 //   const handleProfileImageUpload = async () => {
 //     try {
 //       const res = await axios.put(
-//         `http://localhost:5000/api/v1/users/update/${id}`,
+//         `${backend_url}/api/v1/users/update/${id}`,
 //         { updates: { ...userData, profileImage } }
 //       );
 //       if (res.status === 200) {
@@ -132,7 +132,7 @@
 //     e.preventDefault();
 //     try {
 //       const res = await axios.put(
-//         `http://localhost:5000/api/v1/users/update/${id}`,
+//         `${backend_url}/api/v1/users/update/${id}`,
 //         { updates: userData }
 //       );
 //       if (res.status === 200) {

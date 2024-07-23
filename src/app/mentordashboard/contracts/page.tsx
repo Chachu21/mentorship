@@ -50,7 +50,7 @@ const Contracts = () => {
             },
           }
         );
-        console.log("Contracts fetched:", response.data);
+        // console.log("Contracts fetched:", response.data);
         setContracts(response.data);
       } catch (error) {
         console.error("Error fetching contracts:", error);

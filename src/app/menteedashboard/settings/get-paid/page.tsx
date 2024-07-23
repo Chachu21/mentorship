@@ -24,6 +24,7 @@ import ModelForDelete from "@/components/ReusedComponent/ModelForDelete";
 import { CheckCircle } from "lucide-react";
 import Pay from "@/components/payment/Pay";
 import PayOutModel from "@/components/ReusedComponent/PayOutModel";
+import { backend_url } from "@/components/constant";
 
 interface BankDetails {
   bank_name: string;
@@ -54,9 +55,7 @@ const Paid = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/v1/users/get/${id}`
-        );
+        const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
         setUserData(res.data.user);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -76,7 +75,7 @@ const Paid = () => {
   const handleBankDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/v1/users/update/${id}`, {
+      await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
         updates: { bank_account: [bankDetails] }, // Wrap bankDetails in an array
       });
       setShowForm(false); // Close the dialog after form submission
@@ -102,7 +101,7 @@ const Paid = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/v1/users/update/${id}`, {
+      await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
         updates: { bank_account: [] }, // Set to empty array if that's the expected type
       });
       setShowDeleteDialog(false); // Close the delete dialog
@@ -120,7 +119,7 @@ const Paid = () => {
 
   const approvePayment = async () => {
     try {
-      await axios.post(`http://localhost:5000/api/v1/payments/approve`, {
+      await axios.post(`${backend_url}/api/v1/payments/approve`, {
         userId: id,
         amount: price,
       });
@@ -145,7 +144,7 @@ const Paid = () => {
               variant={price === 0.0 ? "outline" : "default"}
               disabled={price === 0.0}
               className="cursor-pointer"
-             onClick={() => setShowPayOutModel(true)}
+              onClick={() => setShowPayOutModel(true)}
             >
               Get Paid Now
             </Button>{" "}

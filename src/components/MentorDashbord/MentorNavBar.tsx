@@ -161,7 +161,7 @@ const MentorNavBar = () => {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
-                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                  {/* <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link
                       href="/mentordashboard/schedule"
                       legacyBehavior
@@ -173,7 +173,7 @@ const MentorNavBar = () => {
                         <span className="hover:text-[#14A800] ">Calender</span>
                       </NavigationMenuLink>
                     </Link>
-                  </NavigationMenuItem>
+                  </NavigationMenuItem> */}
                 </NavigationMenuList>
               </NavigationMenu>
             </ul>

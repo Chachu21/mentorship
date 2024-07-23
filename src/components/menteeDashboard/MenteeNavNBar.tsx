@@ -189,7 +189,7 @@ const MenteeNavBar = () => {
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
-                  <NavigationMenuItem onClick={toggleMobileMenu}>
+                  {/* <NavigationMenuItem onClick={toggleMobileMenu}>
                     <Link
                       href="/menteedashboard/schedule"
                       legacyBehavior
@@ -201,7 +201,7 @@ const MenteeNavBar = () => {
                         <span className="hover:text-[#14A800] ">Calender</span>
                       </NavigationMenuLink>
                     </Link>
-                  </NavigationMenuItem>
+                  </NavigationMenuItem> */}
                 </NavigationMenuList>
               </NavigationMenu>
             </ul>

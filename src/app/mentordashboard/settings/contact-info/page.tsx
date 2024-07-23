@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ModelForDelete from "@/components/ReusedComponent/ModelForDelete"; // Adjust the import path as needed
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { backend_url } from "@/components/constant";
 
 const Contact = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,9 +25,7 @@ const Contact = () => {
   const id = user?._id ? user?._id : user_id;
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/api/v1/users/get/${id}`
-      );
+      const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
       setUserData(res.data.user);
     };
     fetchUserData();
@@ -34,9 +33,7 @@ const Contact = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/v1/users/delete/${user_id}`
-      );
+      await axios.delete(`${backend_url}/api/v1/users/delete/${user_id}`);
       dispatch(logoutSuccess());
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -55,10 +52,9 @@ const Contact = () => {
     e.preventDefault();
     console.log(userData);
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: userData }
-      );
+      const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
+        updates: userData,
+      });
       const updatedUserData = res.data.user;
       setUserData(updatedUserData);
       isContactEditMode && setIsContactEditMode(false);

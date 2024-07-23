@@ -23,6 +23,7 @@ import { IUser } from "@/type";
 import ModelForDelete from "@/components/ReusedComponent/ModelForDelete";
 import { CheckCircle } from "lucide-react";
 import PayOutModel from "@/components/ReusedComponent/PayOutModel";
+import { backend_url } from "@/components/constant";
 
 interface BankDetails {
   bank_name: string;
@@ -50,9 +51,7 @@ const Paid = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/api/v1/users/get/${id}`
-      );
+      const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
       setUserData(res.data.user);
       console.log(res.data);
     };
@@ -71,7 +70,7 @@ const Paid = () => {
   const handleBankDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/v1/users/update/${id}`, {
+      await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
         updates: { bank_account: [bankDetails] },
       });
       setShowForm(false); // Close the dialog after form submission
@@ -99,10 +98,9 @@ const Paid = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/v1/users/update/${id}`,
-        { updates: { bank_account: [] } }
-      );
+      const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
+        updates: { bank_account: [] },
+      });
       console.log(res.data);
       setShowDeleteDialog(false); // Close the delete dialog
       setUserData((prev) => (prev ? { ...prev, bank_account: [] } : prev)); // Clear bank account data

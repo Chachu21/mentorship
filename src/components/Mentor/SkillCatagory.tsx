@@ -12,7 +12,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
-import { backend_url } from "../constant";
+import { backend_url, frontend_url } from "../constant";
 import { IUser } from "@/type";
 
 interface SkillCategoryProps {
@@ -70,9 +70,7 @@ const SkillCategory = ({ category, slogan }: SkillCategoryProps) => {
   }, [category]);
 
   const handleClicked = (filter: string) => {
-    router.push(
-      `http://localhost:3000${pathname}/mentor-list?filter=${filter}`
-    );
+    router.push(`${frontend_url}${pathname}/mentor-list?filter=${filter}`);
   };
 
   const toggleShowMoreSkills = () => {

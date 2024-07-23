@@ -7,12 +7,12 @@ interface ModalProps {
   actionType: "delete" | "approve";
 }
 
-const Modal: FC<ModalProps> = ({
+const Modal = ({
   showModal,
   closeModal,
   confirmAction,
   actionType,
-}) => {
+}: ModalProps) => {
   if (!showModal) return null;
 
   return (

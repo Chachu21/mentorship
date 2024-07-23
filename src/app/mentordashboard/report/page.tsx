@@ -1,4 +1,5 @@
 "use client";
+import { backend_url } from "@/components/constant";
 import UserTransaction from "@/components/payment/UserTransaction";
 import { RootState } from "@/redux/store";
 import React from "react";
@@ -13,7 +14,7 @@ const ReportPage = () => {
         manage Your Transaction
       </h1>
       <UserTransaction
-        urll={`http://localhost:5000/api/v1/payment/get/${user_id}`}
+        urll={`${backend_url}/api/v1/payment/get/${user_id}`}
         user_id={`${user_id}`}
       />
     </div>
