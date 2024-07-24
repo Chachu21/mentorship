@@ -9,8 +9,8 @@ interface ParsedData {
 
 const allowedRoles: { [key: string]: string[] } = {
   "/admin": ["admin"],
-  // "/mentordashboard": ["mentor"],
-  // "/menteedashboard": ["mentee"],
+  "/mentordashboard": ["mentor"],
+  "/menteedashboard": ["mentee"],
 };
 
 export default function middleware(request: NextRequest) {
@@ -47,7 +47,7 @@ export default function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/admin/:path*",
-    // "/mentordashboard/:path*",
-    // "/menteedashboard/:path*",
+    "/mentordashboard/:path*",
+    "/menteedashboard/:path*",
   ],
 };

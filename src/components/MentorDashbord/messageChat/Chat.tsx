@@ -39,14 +39,19 @@ const Chat = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const user = useSelector((state: RootState) => state.users.user);
-  const userId = user?._id;
+  const id = user?._id;
 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const response = await axios.get(`${backend_url}/api/v1/users/get`);
-        console.log("Fetched Contacts:", response.data);
-
+        const response = await axios.get(
+          `${backend_url}/api/v1/messages/chated/user`,
+          {
+            params: {
+              userId: id,
+            },
+          }
+        );
         const mappedContacts: Person[] = response.data.map((contact: any) => ({
           id: contact._id,
           name: contact.fullName,
@@ -60,7 +65,8 @@ const Chat = () => {
     };
 
     fetchContacts();
-  }, []);
+  }, [id]);
+
   const handleSendMessage = async () => {
     if (newMessage.trim() === "" || selectedContact === null) return;
     setNewMessage("");
@@ -69,11 +75,9 @@ const Chat = () => {
       const response = await axios.post(`${backend_url}/api/v1/messages`, {
         chatId: selectedContact,
         message: newMessage,
-        senderId: userId,
+        senderId: id,
         receiverId: selectedContact,
       });
-
-      console.log("Sent Message:", response.data);
 
       setMessages((prevMessages) => [...prevMessages, response.data]);
       socket.emit("sendMessage", response.data);
@@ -81,15 +85,14 @@ const Chat = () => {
       console.error("Error sending message:", error);
     }
   };
+
   useEffect(() => {
-    if (selectedContact && userId) {
+    if (selectedContact && id) {
       const fetchMessages = async () => {
         try {
           const response = await axios.get(
             `${backend_url}/api/v1/messages/${selectedContact}`
           );
-          console.log("Fetched Messages:", response.data);
-
           if (!Array.isArray(response.data)) {
             console.error(
               "Expected an array of messages but received:",
@@ -98,7 +101,7 @@ const Chat = () => {
             return;
           }
 
-          const userIdStr = String(userId);
+          const userIdStr = String(id);
           const selectedContactStr = String(selectedContact);
 
           const filteredMessages = response.data.filter((message: any) => {
@@ -114,8 +117,6 @@ const Chat = () => {
             );
           });
 
-          console.log("Filtered Messages:", filteredMessages);
-
           setMessages(filteredMessages);
         } catch (error) {
           console.error("Error fetching messages:", error);
@@ -127,8 +128,6 @@ const Chat = () => {
       socket.emit("joinChat", selectedContact);
 
       socket.on("messageReceived", (newMessage: any) => {
-        console.log("New Message Received:", newMessage);
-
         const senderId = newMessage.sender
           ? String(newMessage.sender._id)
           : null;
@@ -138,8 +137,8 @@ const Chat = () => {
             : null;
 
         if (
-          (senderId === userId && receiverId === selectedContact) ||
-          (senderId === selectedContact && receiverId === userId)
+          (senderId === id && receiverId === selectedContact) ||
+          (senderId === selectedContact && receiverId === id)
         ) {
           setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
@@ -150,21 +149,26 @@ const Chat = () => {
         socket.off("messageReceived");
       };
     }
-  }, [selectedContact, userId, handleSendMessage]);
+  }, [selectedContact, id, handleSendMessage]);
 
   const selectContact = (id: string) => {
     setSelectedContact(id);
   };
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const query = e.target.value;
     setSearchQuery(query);
     if (query.trim()) {
       try {
-        const response = await axios.get(`${backend_url}/api/v1/users/get`, {
-          params: { query },
-        });
-
+        const response = await axios.get(
+          `${backend_url}/api/v1/messages/users`,
+          {
+            params: {
+              search: searchQuery,
+            },
+          }
+        );
         const mappedContacts: Person[] = response.data.map((contact: any) => ({
           id: contact._id,
           name: contact.fullName,
@@ -188,10 +192,10 @@ const Chat = () => {
   };
 
   return (
-    <section className="flex h-[calc(100vh-64px)]">
+    <section className="flex flex-col lg:flex-row h-[calc(100vh-64px)]">
       {/* Desktop View */}
-      <aside className="w-1/3 p-4 border-r border-gray-300 overflow-y-auto">
-        <div className="flex space-x-2 items-center mb-4">
+      <aside className="lg:w-1/3 p-4 border-r border-gray-300 overflow-y-auto bg-white lg:shadow-lg">
+        <div className="flex items-center mb-4 space-x-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -246,7 +250,7 @@ const Chat = () => {
               <div
                 key={contact.id}
                 onClick={() => selectContact(contact.id)}
-                className={`flex items-center p-2 cursor-pointer ${
+                className={`flex items-center p-2 cursor-pointer hover:bg-blue-100 transition-colors ${
                   selectedContact === contact.id ? "bg-blue-200" : ""
                 }`}
               >
@@ -272,14 +276,14 @@ const Chat = () => {
       </aside>
 
       {/* Mobile View  */}
-      <main className="w-2/3 flex flex-col">
+      <main className="flex-1 flex flex-col">
         {selectedContact ? (
           <>
-            <header className="p-4 border-b border-gray-300 flex items-center space-x-4">
+            <header className="p-4 border-b border-gray-300 flex items-center space-x-4 bg-white shadow-md">
               <Image
                 src={
                   contacts.find((contact) => contact.id === selectedContact)
-                    ?.avatar || "/default-avatar.png" // Default avatar
+                    ?.avatar || "/default-avatar.png"
                 }
                 alt="Avatar"
                 width={50}
@@ -291,18 +295,18 @@ const Chat = () => {
                   ?.name || "Chat"}
               </h2>
             </header>
-            <section className="flex-1 overflow-auto p-4 border-b border-gray-300">
+            <section className="flex-1 overflow-auto p-4 border-b border-gray-300 bg-white">
               <div>
                 {messages.map((message) => (
                   <div
                     key={message._id}
                     className={`p-2 my-2 ${
-                      message.sender._id === userId ? "text-right" : "text-left"
+                      message.sender._id === id ? "text-right" : "text-left"
                     }`}
                   >
                     <div
                       className={`inline-block px-4 py-2 rounded-lg ${
-                        message.sender._id === userId
+                        message.sender._id === id
                           ? "bg-blue-500 text-white"
                           : "bg-gray-200 text-gray-700"
                       }`}
@@ -313,7 +317,7 @@ const Chat = () => {
                 ))}
               </div>
             </section>
-            <footer className="p-4 border-t border-gray-300">
+            <footer className="p-4 border-t border-gray-300 bg-white">
               <div className="flex items-center space-x-2">
                 <Input
                   type="text"
@@ -333,7 +337,7 @@ const Chat = () => {
             </footer>
           </>
         ) : (
-          <div className="flex items-center justify-center flex-1">
+          <div className="flex items-center justify-center flex-1 bg-gray-100">
             <p className="text-gray-500">Select a contact to start chatting</p>
           </div>
         )}
