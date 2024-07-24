@@ -109,9 +109,9 @@ const StepFive: React.FC = () => {
               </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] md:max-w-[700px] space-y-3">
-              <DialogHeader>
+              {/* <DialogHeader>
                 <DialogTitle className="text-cc">Add Education</DialogTitle>
-              </DialogHeader>
+              </DialogHeader> */}
               <div className="flex flex-col space-y-10">
                 <div className="flex flex-col space-y-4">
                   <Label htmlFor="school" className="">

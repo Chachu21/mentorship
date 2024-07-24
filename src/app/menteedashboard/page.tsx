@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { closeProfile } from "@/redux/features/userSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import {  mentorshipType } from "@/type";
+import { mentorshipType } from "@/type";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,7 @@ const Home: React.FC = () => {
         const res = await axios.get(
           `${backend_url}/api/v1/mentorship/best/match/${id}`
         );
+        console.log(res.data);
         setMentorships(res.data);
       } catch (error) {
         console.error("Error fetching mentorships:", error);

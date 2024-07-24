@@ -11,6 +11,8 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { setData, setRoleBeforeLogin } from "@/redux/features/userSlice";
 import { Button } from "../ui/button";
 import { backend_url } from "../constant";
+import { useState } from "react";
+import Loading from "../ReusedComponent/Loading";
 // Define password rules regex
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
 
@@ -51,6 +53,7 @@ const Register = () => {
   const pathname = usePathname();
   const dispatch = useDispatch<AppDispatch>();
   const role = useSelector((state: RootState) => state.users.roleBeforLogin);
+  const [isSubmit, setSubmit] = useState<boolean>(false);
 
   // useFormik hook for form handling
   const {
@@ -75,6 +78,7 @@ const Register = () => {
     //we have to handle the requests
     onSubmit: async (values, actions) => {
       try {
+        setSubmit(true);
         const response = await axios.post(
           `${backend_url}/api/v1/users/signUp`,
           {
@@ -86,12 +90,15 @@ const Register = () => {
             role: role,
           }
         );
+
         toast.success(response.data.message);
         if (response.status == 201) {
           dispatch(setData(response.data.user));
           navigate.push("/auth/verify-email");
+          setSubmit(false)
         }
       } catch (error) {
+        setSubmit(false);
         const axiosError = error as AxiosError<{ error: string }>;
         if (axiosError.response?.status === 504) {
           toast.error(axiosError.response.data.error);
@@ -112,219 +119,227 @@ const Register = () => {
 
   return (
     <section className="">
-      <div className="md:container md:mx-auto grid grid-cols-1 md:grid-cols-2 items-center content-center mt-1 mb-20 md:mt-3">
-        <div className="hidden md:block order-1 md:order-1">
-          <Image
-            src={register}
-            alt="feedback"
-            className="object-cover items-center rounded-md "
-          />
-        </div>
-        <div className="order-2 md:order-2 w-full bg-gray-50 dark:bg-gray-900 dark:text-white overflow-hidden">
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white shadow-sm rounded text-[#1F284F] px-0 md:px-8 md:my-10 pb-2  space-y-5"
-          >
-            <h2 className="text-2xl font-semibold pt-5 mb-6 text-center text-[#1F284F] ">
-              Create Account as
-              {role == "mentor" ? (
-                <span className="text-cc pl-2">Mentor</span>
-              ) : (
-                <span className="text-cc pl-2">Mentee</span>
-              )}
-            </h2>
-            <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Enter your full name"
-                value={values.name}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full p-3 border ${
-                  errors.name && touched.name
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-lg shadow-sm`}
-              />
-              {errors.name && touched.name && (
-                <p className="text-red-500 text-sm italic">{errors.name}</p>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                id="email"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-              />
-              {errors.email && touched.email && (
-                <p className="text-red-500 text-sm italic">{errors.email}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="phone"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Phone Number
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your phone number"
-                id="phone"
-                value={values.phone}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-              />
-              {errors.phone && touched.phone && (
-                <p className="text-red-500 text-sm italic">{errors.phone}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="password"
-                id="password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-              />
-              {errors.password && touched.password && (
-                <p className="text-red-500 text-sm italic">{errors.password}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                placeholder="Confirm password"
-                id="confirmPassword"
-                value={values.confirmPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-              />
-              {errors.confirmPassword && touched.confirmPassword && (
-                <p className="text-red-500 text-sm italic">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-            <div className="mb-4 flex items-center">
-              <div>
+      {isSubmit ? (
+        <Loading />
+      ) : (
+        <div className="md:container md:mx-auto grid grid-cols-1 md:grid-cols-2 items-center content-center mt-1 mb-20 md:mt-3">
+          <div className="hidden md:block order-1 md:order-1">
+            <Image
+              src={register}
+              alt="feedback"
+              className="object-cover items-center rounded-md "
+            />
+          </div>
+          <div className="order-2 md:order-2 w-full bg-gray-50 dark:bg-gray-900 dark:text-white overflow-hidden">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white shadow-sm rounded text-[#1F284F] px-0 md:px-8 md:my-10 pb-2  space-y-5"
+            >
+              <h2 className="text-2xl font-semibold pt-5 mb-6 text-center text-[#1F284F] ">
+                Create Account as
+                {role == "mentor" ? (
+                  <span className="text-cc pl-2">Mentor</span>
+                ) : (
+                  <span className="text-cc pl-2">Mentee</span>
+                )}
+              </h2>
+              <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Full Name
+                </label>
                 <input
-                  type="checkbox"
-                  id="agreeTerms"
-                  checked={values.agreeTerms}
+                  type="text"
+                  id="name"
+                  placeholder="Enter your full name"
+                  value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`mr-2 w-4 h-4  ${
-                    errors.agreeTerms && touched.agreeTerms
+                  className={`w-full p-3 border ${
+                    errors.name && touched.name
                       ? "border-red-500"
-                      : ""
-                  }`}
+                      : "border-gray-300"
+                  } rounded-lg shadow-sm`}
                 />
+                {errors.name && touched.name && (
+                  <p className="text-red-500 text-sm italic">{errors.name}</p>
+                )}
               </div>
-              <label
-                htmlFor="agreeTerms"
-                className="text-gray-700 text-sm font-semibold"
-              >
-                Yes, I understand and agree to the mentoring Terms of Service,
-                including the{" "}
-                <span className="text-blue-800 cursor-pointer">
-                  <Link href={"#"}>User Agreement</Link>
-                </span>
-                and{" "}
-                <span className="text-blue-800 cursor-pointer">
-                  <Link href={"#"}>Privacy Policy</Link>
-                </span>
-                .
-              </label>
-            </div>
-            {errors.agreeTerms && touched.agreeTerms && (
-              <p className="text-red-500 text-sm italic">{errors.agreeTerms}</p>
-            )}
-            <Button
-              type="submit"
-              className="w-full  text-white font-bold py-2 px-4 rounded"
-              disabled={isSubmitting}
-            >
-              Sign Up
-            </Button>
-          </form>
 
-          <p className="text-center mb-2">or</p>
-          <div className="hidden md:flex justify-center items-center py-4">
-            <p>
-              Already have an account?{" "}
-              <Link
-                href={"/auth/login"}
-                className="text-cc underline font-semibold"
-              >
-                Login
-              </Link>
-            </p>
-          </div>
-          <div className="flex md:hidden items-center justify-center">
-            {pathname === "/auth/signup" && (
-              <div>
-                {role === "mentor" && (
-                  <div className="flex items-center space-x-3 text-sm">
-                    <p>Find Mentor?</p>
-                    <div
-                      onClick={() => handlerolechage("mentee")}
-                      className="text-cc"
-                    >
-                      Apply as Mentee
-                    </div>
-                  </div>
-                )}
-                {role === "mentee" && (
-                  <div className="flex items-center space-x-3 text-sm">
-                    <p>Find Mentee?</p>
-                    <div
-                      onClick={() => handlerolechage("mentor")}
-                      className="text-cc"
-                    >
-                      Apply as Mentor
-                    </div>
-                  </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  id="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+                {errors.email && touched.email && (
+                  <p className="text-red-500 text-sm italic">{errors.email}</p>
                 )}
               </div>
-            )}
+              <div className="mb-4">
+                <label
+                  htmlFor="phone"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your phone number"
+                  id="phone"
+                  value={values.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+                {errors.phone && touched.phone && (
+                  <p className="text-red-500 text-sm italic">{errors.phone}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="password"
+                  id="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+                {errors.password && touched.password && (
+                  <p className="text-red-500 text-sm italic">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Confirm password"
+                  id="confirmPassword"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                />
+                {errors.confirmPassword && touched.confirmPassword && (
+                  <p className="text-red-500 text-sm italic">
+                    {errors.confirmPassword}
+                  </p>
+                )}
+              </div>
+              <div className="mb-4 flex items-center">
+                <div>
+                  <input
+                    type="checkbox"
+                    id="agreeTerms"
+                    checked={values.agreeTerms}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`mr-2 w-4 h-4  ${
+                      errors.agreeTerms && touched.agreeTerms
+                        ? "border-red-500"
+                        : ""
+                    }`}
+                  />
+                </div>
+                <label
+                  htmlFor="agreeTerms"
+                  className="text-gray-700 text-sm font-semibold"
+                >
+                  Yes, I understand and agree to the mentoring Terms of Service,
+                  including the{" "}
+                  <span className="text-blue-800 cursor-pointer">
+                    <Link href={"#"}>User Agreement</Link>
+                  </span>
+                  and{" "}
+                  <span className="text-blue-800 cursor-pointer">
+                    <Link href={"#"}>Privacy Policy</Link>
+                  </span>
+                  .
+                </label>
+              </div>
+              {errors.agreeTerms && touched.agreeTerms && (
+                <p className="text-red-500 text-sm italic">
+                  {errors.agreeTerms}
+                </p>
+              )}
+              <Button
+                type="submit"
+                className="w-full  text-white font-bold py-2 px-4 rounded"
+                disabled={isSubmitting}
+              >
+                Sign Up
+              </Button>
+            </form>
+
+            <p className="text-center mb-2">or</p>
+            <div className="hidden md:flex justify-center items-center py-4">
+              <p>
+                Already have an account?{" "}
+                <Link
+                  href={"/auth/login"}
+                  className="text-cc underline font-semibold"
+                >
+                  Login
+                </Link>
+              </p>
+            </div>
+            <div className="flex md:hidden items-center justify-center">
+              {pathname === "/auth/signup" && (
+                <div>
+                  {role === "mentor" && (
+                    <div className="flex items-center space-x-3 text-sm">
+                      <p>Find Mentor?</p>
+                      <div
+                        onClick={() => handlerolechage("mentee")}
+                        className="text-cc"
+                      >
+                        Apply as Mentee
+                      </div>
+                    </div>
+                  )}
+                  {role === "mentee" && (
+                    <div className="flex items-center space-x-3 text-sm">
+                      <p>Find Mentee?</p>
+                      <div
+                        onClick={() => handlerolechage("mentor")}
+                        className="text-cc"
+                      >
+                        Apply as Mentor
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

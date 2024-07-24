@@ -35,7 +35,8 @@ const Profile = () => {
   const data = useSelector((state: RootState) => state.users.user);
   const user_id = data?._id;
   const id = user?._id ? user?._id : user_id;
-
+  console.log(data);
+  console.log("user_id", id);
   const date = new Date();
   const time = date.toLocaleTimeString(); // Format time as hh:mm:ss
 

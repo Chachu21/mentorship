@@ -101,10 +101,16 @@ const MainPart = () => {
             </div>
           </div> */}
           <div className="flex flex-1 flex-col space-y-5">
-            <DetailPageOfMentee
-              url="mentee"
-              Mentees={searchQuery ? searchResult : mentees}
-            />
+            {searchResult || mentees ? (
+              <DetailPageOfMentee
+                url="mentee"
+                Mentees={searchQuery ? searchResult : mentees}
+              />
+            ) : (
+              <div className="text-xl justify-center items-center">
+                no mentee found
+              </div>
+            )}
           </div>
           <div></div>
         </div>

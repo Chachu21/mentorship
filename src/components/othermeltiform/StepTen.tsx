@@ -16,14 +16,16 @@ const StepTen = () => {
   const dispatch = useDispatch();
   const data = useSelector((state: RootState) => state.form.data);
 
-  const [profileImage, setProfileImage] = useState<string>("");
-  const [profileImageUrl, setProfileImageUrl] = useState(
+  const [profileImage, setProfileImage] = useState<string>(
+    data.profileImage || ""
+  );
+  const [profileImageUrl, setProfileImageUrl] = useState<string>(
     data.profileImageUrl || profile
   );
-  const [region, setAddress] = useState(data.region || "");
-  const [city, setCity] = useState(data.city || "");
-  const [state, setState] = useState(data.state || "");
-  const [zipCode, setZipCode] = useState(data.zipCode || "");
+  const [region, setAddress] = useState<string>(data.region || "");
+  const [city, setCity] = useState<string>(data.city || "");
+  const [state, setState] = useState<string>(data.state || "");
+  const [zipCode, setZipCode] = useState<string>(data.zipCode || "");
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -32,6 +34,11 @@ const StepTen = () => {
   };
 
   const handleNext = () => {
+    if (!profileImage) {
+      alert("Please upload a profile image.");
+      return;
+    }
+
     dispatch(
       setFormData({
         profileImage,

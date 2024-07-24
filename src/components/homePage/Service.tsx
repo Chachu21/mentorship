@@ -72,7 +72,7 @@ const Service = () => {
               <p className="text-gray-500 dark:text-gray-300">
                 {service.description}
               </p>
-
+{/* 
               <a
                 href="#"
                 className="flex items-center -mx-1 text-sm text-blue-500 capitalize transition-colors duration-300 transform dark:text-blue-400 hover:underline hover:text-blue-600 dark:hover:text-blue-500"
@@ -90,7 +90,7 @@ const Service = () => {
                     clipRule="evenodd"
                   ></path>
                 </svg>
-              </a>
+              </a> */}
             </div>
           ))}
         </div>
