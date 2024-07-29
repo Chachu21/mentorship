@@ -15,8 +15,6 @@ const categories = [
   "Design & Creativity Art",
   "Health & Fitness",
   "Lifestyle",
-  "Health & Fitness",
-  "Lifestyle",
   "Social & Business",
   "Marketing & Finances",
   // Add more categories as needed

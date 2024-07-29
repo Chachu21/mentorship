@@ -12,7 +12,7 @@ const AuthHeader = () => {
   const role = useSelector((state: RootState) => state.users.roleBeforLogin);
   const handlerolechage = (role: string) => {
     dispatch(setRoleBeforeLogin(role));
-    console.log(role);
+    // console.log(role);
   };
 
   return (

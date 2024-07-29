@@ -50,7 +50,7 @@ const PasswordUpdate = () => {
     e.preventDefault();
 
     if (password.newPassword !== password.confirmPassword) {
-      console.log("Passwords do not match");
+      // console.log("Passwords do not match");
       return;
     }
 

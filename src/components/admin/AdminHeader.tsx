@@ -44,7 +44,7 @@ const AdminHeader = () => {
       dispatch(logoutSuccess());
       navigate.push("/");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

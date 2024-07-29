@@ -18,7 +18,7 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
   const router = useRouter();
   const user = useSelector((state: RootState) => state.users.user);
   const data = useSelector((state: RootState) => state.users.data);
-  console.log(mentors);
+  // console.log(mentors);
   const id = user ? user?._id : data?._id;
   const handleClicked = (id: string) => {
     router.push(`/${url}/${id}`);

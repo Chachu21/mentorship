@@ -31,7 +31,7 @@ const Contact = () => {
     fetchUserData();
   }, [id]);
 
-  console.log(userData);
+  // console.log(userData);
   const handleDeleteAccount = async () => {
     try {
       await axios.delete(`${backend_url}/api/v1/users/delete/${user_id}`);

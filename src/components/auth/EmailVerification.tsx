@@ -82,7 +82,7 @@ const EmailVerificationTemplate = () => {
         toast.success(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error("something went wrong !");
     }
   };

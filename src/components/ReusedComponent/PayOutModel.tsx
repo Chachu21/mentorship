@@ -68,7 +68,7 @@ const PayOutModel = ({ isOpen, onClose, approve }: PayoutProps) => {
               },
             }
           );
-          console.log(response.data);
+          // console.log(response.data);
           toast.success("Successfully submitted");
           onClose(); // Close the dialog
           approve(); // Approve the payment

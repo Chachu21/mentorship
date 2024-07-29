@@ -25,7 +25,7 @@ const MenteeDetail = () => {
         );
         setMentee(res.data.user);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchmentee();

@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
         console.error("User ID not found in localStorage");
       }
       setSaving(true);
-      console.log(saving);
+      // console.log(saving);
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       // if (axiosError.response?.status === 404) {

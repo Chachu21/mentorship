@@ -38,7 +38,7 @@ const MentorDetailPage = ({ params }: { params: { mentor_id: string } }) => {
       const res = await axios.get(
         `${backend_url}/api/v1/comment/get/mentor/${params.mentor_id}`
       );
-      console.log(res.data);
+      // console.log(res.data);
       setReview(res.data);
     };
     if (reviews !== null && params.mentor_id != null) {

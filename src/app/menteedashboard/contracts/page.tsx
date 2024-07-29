@@ -54,7 +54,7 @@ const Contracts = () => {
             },
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setContracts(response.data);
       } catch (error) {
         console.error("Error fetching contracts:", error);
@@ -113,7 +113,7 @@ const Contracts = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         toast.success("You approved the payment");
         setShowModal(false);

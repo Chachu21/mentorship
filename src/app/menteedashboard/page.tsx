@@ -28,7 +28,7 @@ const Home: React.FC = () => {
         const res = await axios.get(
           `${backend_url}/api/v1/mentorship/best/match/${id}`
         );
-        console.log(res.data);
+        // console.log(res.data);
         setMentorships(res.data);
       } catch (error) {
         console.error("Error fetching mentorships:", error);
@@ -42,7 +42,7 @@ const Home: React.FC = () => {
     const fetchMentorships = async () => {
       try {
         const res = await axios.get(`${backend_url}/api/v1/mentorship/`);
-        console.log(res.data);
+        // console.log(res.data);
         setResently(res.data);
       } catch (error) {
         console.error("Error fetching mentorships:", error);

@@ -34,7 +34,7 @@ const UserManage = () => {
         `${backend_url}/api/v1/users/get`
       );
 
-      console.log("responsedata", response.data);
+      // console.log("responsedata", response.data);
       const filteredData: UserDataType[] = response.data
         .filter((user) => user.role !== "admin")
         .map(({ _id, fullName, email, phoneNumber, location, role }) => ({

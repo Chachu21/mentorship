@@ -11,7 +11,6 @@ import { backend_url } from "@/components/constant";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 const MentorDetailPage = ({ params }: { params: { mentor_id: string } }) => {
   const [userData, setUserData] = useState<IUser | null>(null);

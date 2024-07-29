@@ -53,7 +53,7 @@ const Paid = () => {
     const fetchUserData = async () => {
       const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
       setUserData(res.data.user);
-      console.log(res.data);
+      // console.log(res.data);
     };
 
     fetchUserData();
@@ -80,7 +80,7 @@ const Paid = () => {
         prev ? { ...prev, bank_account: [bankDetails] } : prev
       );
     } catch (error) {
-      console.log("error on catch", error);
+      // console.log("error on catch", error);
     }
   };
 
@@ -101,16 +101,16 @@ const Paid = () => {
       const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
         updates: { bank_account: [] },
       });
-      console.log(res.data);
+      // console.log(res.data);
       setShowDeleteDialog(false); // Close the delete dialog
       setUserData((prev) => (prev ? { ...prev, bank_account: [] } : prev)); // Clear bank account data
     } catch (error) {
-      console.log("error on catch", error);
+      // console.log("error on catch", error);
     }
   };
 
   const approvePayment = () => {
-    console.log("Payment approved");
+    // console.log("Payment approved");
   };
 
   return (

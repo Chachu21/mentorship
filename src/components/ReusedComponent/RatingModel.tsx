@@ -48,7 +48,7 @@ const RatingModel = ({ isOpen, onClose, approve, mentor }: RatingProps) => {
           }
         );
         toast.success("Successfully commented");
-        console.log(response.data);
+        // console.log(response.data);
         onClose(); // Close the dialog
         approve(); // Approve the payment
         window.location.reload();

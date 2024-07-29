@@ -23,6 +23,7 @@ interface ProposalProps {
 const ProposalModal = ({
   mentorship_id,
   isDialogOpen,
+  handleApply,
   setIsDialogOpen,
 }: ProposalProps) => {
   const [mentorship, setMentorship] = useState<mentorshipType | null>(null);
@@ -81,6 +82,7 @@ const ProposalModal = ({
       );
 
       if (res.status === 201) {
+        handleApply();
         setDescription("");
         toast.success(res.data.message);
         router.push("/menteedashboard");

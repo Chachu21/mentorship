@@ -54,6 +54,7 @@ const Login = () => {
           // Secure option if transmitting over HTTPS
         );
         dispatch(loginSuccess(userData));
+        localStorage.removeItem("form");
         toast.success("successfully logged in");
       }
       if (userData.role === "admin") {
@@ -93,7 +94,7 @@ const Login = () => {
         const userData = response.data;
 
         if (response.status === 200) {
-          console.log(userData);
+          // console.log(userData);
           dispatch(loginSuccess(userData));
           cookies.set(
             "data",
@@ -107,6 +108,7 @@ const Login = () => {
         if (userData && userData.role) {
           // Handle role-based navigation
           if (userData.isVerified) {
+            localStorage.removeItem("form");
             toast.success(response.data.message);
             switch (userData.role) {
               case "admin":
@@ -141,7 +143,7 @@ const Login = () => {
           console.error("Axios error:", error);
           if (error.response?.status === 401) {
             // Handle unauthorized error
-            console.log(error.response);
+            // console.log(error.response);
             setError(error.response.data.error);
           } else if (error.response?.status === 500) {
             toast.error(error.response.data.error);

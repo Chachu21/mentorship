@@ -15,10 +15,10 @@ const YourMentorshipPost = () => {
   const [deletePostId, setDeletePostId] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.users.user);
-  console.log(user);
+  // console.log(user);
   const id = user?._id;
   const token = user?.token;
-  console.log(id);
+  // console.log(id);
   // Fetch mentors' posts
   useEffect(() => {
     const fetchPosts = async () => {

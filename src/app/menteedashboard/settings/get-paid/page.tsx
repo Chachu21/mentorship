@@ -51,12 +51,14 @@ const Paid = () => {
   const user_id = data?._id;
   const id = user?._id ? user?._id : user_id;
   const price = userData?.remainingBalance;
+  // console.log(price);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const res = await axios.get(`${backend_url}/api/v1/users/get/${id}`);
         setUserData(res.data.user);
+        // console.log(res.data.user);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

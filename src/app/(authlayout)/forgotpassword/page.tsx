@@ -26,7 +26,7 @@ const ForgotPassword = () => {
       if (response) {
         // Password reset email sent successfully
         // You can display a success message to the user or redirect them to another page
-        console.log("Password reset email sent successfully");
+        // console.log("Password reset email sent successfully");
         setEmail("");
         router.push("/");
       } else {

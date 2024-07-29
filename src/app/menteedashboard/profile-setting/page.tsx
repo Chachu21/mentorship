@@ -66,7 +66,7 @@ const Profile = () => {
         updates: { ...userData, profileImage },
       });
       if (res.status === 200) {
-        console.log(res.data.user);
+        // console.log(res.data.user);
         setUserData(res.data.user);
         window.location.reload();
       }

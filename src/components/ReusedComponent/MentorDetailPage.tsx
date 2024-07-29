@@ -92,24 +92,31 @@ const MentorDetailPage = ({ mentorship_id }: MentorProps) => {
     }
 
     try {
-      const res = await axios.post(
-        `${backend_url}/api/v1/mentorship/apply/${mentorship_id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+      if (mentorship?.amount) {
+        const res = await axios.put(
+          `${backend_url}/api/v1/users/update/${id}`,
+          {
+            updates: {
+              remainingBalance:
+                menteeData.remainingBalance - mentorship?.amount,
+            },
           },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (res.status === 201) {
+          setIsDialogOpen(false);
+          toast.success("Successfully applied for mentorship.");
         }
-      );
-      if (res.status === 201) {
-        setIsDialogOpen(false);
-        toast.success("Successfully applied for mentorship.");
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string }>;
       if (axiosError.response?.status === 400) {
-        toast.warning(axiosError.response.data.error);
+        toast.warning("you alread have proposal for this mentorship");
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }

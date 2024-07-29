@@ -50,7 +50,7 @@ const Contact = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(userData);
+    // console.log(userData);
     try {
       const res = await axios.put(`${backend_url}/api/v1/users/update/${id}`, {
         updates: userData,

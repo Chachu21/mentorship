@@ -64,7 +64,7 @@ const Proposal = () => {
           },
         }
       );
-      console.log(resp.data);
+      // console.log(resp.data);
       if (resp.status === 201) {
         toast.success("You have accepted the mentoring request");
         updateProposal(id, "accepted");
