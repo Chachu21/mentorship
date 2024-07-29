@@ -83,7 +83,7 @@ const MainPart = () => {
         <h1 className="text-lg font-semibold">Expertises categories</h1>
         <div className="flex flex-col">
           <div className="flex flex-1 flex-col space-y-5">
-            {searchResult || mentees ? (
+            {searchResult.length >= 0 || mentees.length >= 0 ? (
               <DetailPageOfMentee
                 url="mentee"
                 Mentees={searchQuery ? searchResult : mentees}

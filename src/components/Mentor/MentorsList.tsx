@@ -173,7 +173,7 @@ const DetailPageOfMentor = ({ url, mentors = [] }: DetailProps) => {
         ))
       ) : (
         <div className="text-center text-3xl text-gray-500">
-          no match mentor
+          no mentor found
         </div>
       )}
     </div>
