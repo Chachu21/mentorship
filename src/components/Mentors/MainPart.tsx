@@ -5,7 +5,6 @@ import { IUser } from "@/type";
 import axios from "axios";
 import { backend_url } from "../constant";
 import { Input } from "../ui/input";
-import MentorDetailPage from "../ReusedComponent/MentorDetailPage";
 
 const MainPart = () => {
   const [mentors, setMentors] = useState<IUser[]>([]);
@@ -83,24 +82,6 @@ const MainPart = () => {
       <div className="flex flex-col space-y-4">
         <h1 className="text-lg font-semibold">List Of Mentors(Experts) </h1>
         <div className="flex flex-col">
-          {/* <div className="md:w-[14%] md:flex hidden flex-col space-y-4">
-            <div className="flex space-x-3 items-center">
-              <input type="radio" defaultChecked className="w-4 h-4" />
-              <span>All Catagories</span>
-            </div>
-            <div className="flex space-x-3 items-center">
-              <input type="radio" />
-              <span>Development and it</span>
-            </div>
-            <div className="flex space-x-3 items-center">
-              <input type="radio" />
-              <span>Markating and sales</span>
-            </div>
-            <div className="flex space-x-3 items-center">
-              <input type="radio" />
-              <span>Social and business</span>
-            </div>
-          </div> */}
           <div className="flex flex-1 flex-col space-y-5">
             <DetailPageOfMentor
               url="mentors"

@@ -51,7 +51,7 @@ const DetailPageOfMentee = ({ url, Mentees = [] }: DetailProps) => {
                   <div className=" border-2 border-cc rounded-full h-[120px] w-[120px] object-fill">
                     <Image
                       src={
-                        mentee
+                        mentee && mentee.profileImage.url
                           ? mentee.profileImage.url
                           : "/assets/profile.jpeg"
                       }

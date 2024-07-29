@@ -82,24 +82,6 @@ const MainPart = () => {
       <div className="flex flex-col space-y-4">
         <h1 className="text-lg font-semibold">Expertises categories</h1>
         <div className="flex flex-col">
-          {/* <div className="md:w-[14%] md:flex hidden flex-col space-y-4">
-            <div className="flex space-x-3 items-center">
-              <input type="radio" defaultChecked className="w-4 h-4" />
-              <span>All Catagories</span>
-            </div>
-            <div className="flex space-x-3 items-center">
-              <input type="radio" />
-              <span>Development and it</span>
-            </div>
-            <div className="flex space-x-3 items-center">
-              <input type="radio" />
-              <span>Markating and sales</span>
-            </div>
-            <div className="flex space-x-3 items-center">
-              <input type="radio" />
-              <span>Social and business</span>
-            </div>
-          </div> */}
           <div className="flex flex-1 flex-col space-y-5">
             {searchResult || mentees ? (
               <DetailPageOfMentee
