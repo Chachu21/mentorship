@@ -107,7 +107,7 @@ const Login = () => {
 
         if (userData && userData.role) {
           // Handle role-based navigation
-          if (userData.isVerified) {
+          if (userData.isVerified && userData.is_account_full_created) {
             localStorage.removeItem("form");
             toast.success(response.data.message);
             switch (userData.role) {
@@ -125,8 +125,14 @@ const Login = () => {
                 break;
             }
           } else {
-            toast.warning("Please verify your account");
-            navigate.push("/auth/verify-email");
+            toast.warning(
+              userData.isVerified
+                ? "Please continue your account setup"
+                : "Please verify your account"
+            );
+            navigate.push(
+              userData.isVerified ? "/auth/welcome" : "/auth/verify-email"
+            );
           }
         } else {
           // Handle error: userData or role property is missing

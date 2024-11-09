@@ -43,6 +43,7 @@ const CheckProfile = () => {
           goal: profile.goal,
           service: profile.goal,
           category: profile.category,
+          is_account_full_created: true,
         },
       });
 
@@ -50,7 +51,7 @@ const CheckProfile = () => {
         router.push("/auth/login");
       }
     } catch (error) {
-      setSubmit(false)
+      setSubmit(false);
     }
   };
 

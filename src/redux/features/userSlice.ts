@@ -8,6 +8,7 @@ interface UserType {
   email: string;
   role: string;
   token: string;
+  is_account_full_created: Boolean;
 }
 
 interface UserState {
